@@ -62,13 +62,14 @@ def validateUserItems():
         selectedDatasetScopes = datasets[userInputs['Dataset']]
         # Checking if dataset covers all scopes of models
         isCovered = all(
-            item in selectedDatasetScopes for item in selectedModelScopes)
+            item in selectedModelScopes for item in selectedDatasetScopes)
         if (isCovered):
             print('Model matches dataset scopes')
             return userInputs
         else:
             difference = [
-                item for item in selectedDatasetScopes if item not in selectedModelScopes]
-            print(f'Selected model does not contain {difference} scope(s)!')
+                item for item in selectedModelScopes if item not in selectedDatasetScopes]
+            print(
+                f'{userInputs["Dataset"]} database does not cover {difference} scope(s) of {userInputs["Model"]}!')
     else:
         print('See you later!')

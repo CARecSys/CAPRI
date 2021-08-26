@@ -1,4 +1,4 @@
-# recSys-pipeline
+# RecSys Framework
 
 ## How to Start?
 
@@ -7,5 +7,4 @@ pip install -r prerequisites.txt
 
 # TODO List
 
-- User should select model, fusion, and data ==> array
-- After running the model, we should store the file like Gowalla_LORE_Sum
+-
