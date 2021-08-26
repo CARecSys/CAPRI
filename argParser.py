@@ -1,5 +1,5 @@
 from PyInquirer import prompt
-from parameters import datasets, models, fusions
+from config import datasets, models, fusions
 
 modelChoices = []
 fusionChoices = []

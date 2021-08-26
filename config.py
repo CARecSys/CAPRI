@@ -1,3 +1,8 @@
+import os
+
+# Paths
+dataDirectory = os.path.abspath('./Data')
+
 # Key: Model name, Value: Covered Contexts
 models = {
     "GeoSoCa": ["Geographical", "Social", "Categorical"],
