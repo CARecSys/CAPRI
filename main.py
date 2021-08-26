@@ -7,7 +7,8 @@ def __init__():
     userInputs = validateUserItems()
     if (userInputs != None):
         # Initialize dataset items
-        loadDataset(userInputs['Dataset'])
+        datasetFiles = loadDataset(userInputs['Dataset'])
+        print(datasetFiles)
 
 
 __init__()

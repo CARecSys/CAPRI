@@ -62,7 +62,7 @@ def validateUserItems():
         selectedDatasetScopes = datasets[userInputs['Dataset']]
         # Checking if dataset covers all scopes of models
         isCovered = all(
-            item in selectedModelScopes for item in selectedDatasetScopes)
+            item in selectedDatasetScopes for item in selectedModelScopes)
         if (isCovered):
             print('Model matches dataset scopes')
             return userInputs
