@@ -64,7 +64,6 @@ def validateUserItems():
         isCovered = all(
             item in selectedDatasetScopes for item in selectedModelScopes)
         if (isCovered):
-            print('Model matches dataset scopes')
             return userInputs
         else:
             difference = [

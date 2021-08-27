@@ -15,7 +15,7 @@ def loadDataset(datasetName):
     # Create a dictionary of dataset items
     for file in fileList:
         fileName = file.split('.')[0]
-        filePath = dataDirectory + file
+        filePath = dataDirectory + '\\' + file
         # Add the absolute path to the items: e.g. 'checkins.txt' ==> 'C\\...\\Datacheckins.txt'
         datasetFiles[fileName] = filePath
     return datasetFiles
