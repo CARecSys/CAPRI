@@ -7,8 +7,6 @@ from lib.FriendBasedCF import FriendBasedCF
 from lib.KernelDensityEstimation import KernelDensityEstimation
 from lib.AdditiveMarkovChain import AdditiveMarkovChain
 
-from lib.metrics import precisionk, recallk
-
 
 def read_friend_data():
     social_data = open(social_file, 'r').readlines()
@@ -96,7 +94,8 @@ def main():
             precision.append(precisionk(actual, predicted[:10]))
             recall.append(recallk(actual, predicted[:10]))
 
-            print(cnt, uid, "pre@10:", np.mean(precision), "rec@10:", np.mean(recall))
+            print(cnt, uid, "pre@10:", np.mean(precision),
+                  "rec@10:", np.mean(recall))
             result_out.write('\t'.join([
                 str(cnt),
                 str(uid),
