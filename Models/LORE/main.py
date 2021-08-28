@@ -1,4 +1,5 @@
 import numpy as np
+from Evaluations.metrics import precisionk, recallk
 from Models.LORE.lib.FriendBasedCF import FriendBasedCF
 from Models.LORE.lib.AdditiveMarkovChain import AdditiveMarkovChain
 from Models.LORE.lib.KernelDensityEstimation import KernelDensityEstimation
@@ -45,7 +46,7 @@ class LOREMain:
         AMC.build_location_location_transition_graph(sortedTrainingCheckins)
         # Add caching policy (prevent a similar setting to be executed again) ---> Read from config
         executionRecord = open(
-            f"../Generated/LORE_{selectedDataset}_top" + str(topK) + ".txt", 'w')
+            f"./Generated/LORE_{selectedDataset}_top" + str(topK) + ".txt", 'w+')
         # Calculating
         print("Evaluating results ...")
         for cnt, uid in enumerate(usersList):

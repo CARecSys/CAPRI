@@ -14,8 +14,8 @@ class KernelDensityEstimation(object):
     def precompute_kernel_parameters(self, sparse_check_in_matrix, poi_coos):
         self.poi_coos = poi_coos
 
-        ctime = time.time()
-        print("Precomputing kernel parameters...", )
+        startTime = time.time()
+        print("Pre-computing kernel parameters...", )
 
         training_locations = defaultdict(list)
         for uid in range(sparse_check_in_matrix.shape[0]):
@@ -28,9 +28,12 @@ class KernelDensityEstimation(object):
         for u in L:
             if len(L[u]) > 1:
                 std = np.std([coo for coo in L[u]], axis=0)
-                bw[u] = 1.0 / (len(L[u])**(1.0/6)) * np.sqrt(0.5 * std.dot(std))
+                bw[u] = 1.0 / (len(L[u])**(1.0/6)) * \
+                    np.sqrt(0.5 * std.dot(std))
 
-        print("Done. Elapsed time:", time.time() - ctime, "s")
+        elapsedTime = time.time() - startTime
+        print("Finished in ",
+              '{:.2f}'.format(elapsedTime), " seconds.")
         self.L = L
         self.bw = bw
 
@@ -40,6 +43,7 @@ class KernelDensityEstimation(object):
     def predict(self, u, lj):
         if u in self.L and u in self.bw:
             lat_j, lng_j = self.poi_coos[lj]
-            x = [np.array([lat_i - lat_j, lng_i - lng_j]) / self.bw[u] for lat_i, lng_i in self.L[u]]
+            x = [np.array([lat_i - lat_j, lng_i - lng_j]) / self.bw[u]
+                 for lat_i, lng_i in self.L[u]]
             return sum(self.K(np.array(x))) / len(self.L[u]) / (self.bw[u] ** 2)
         return 1.0

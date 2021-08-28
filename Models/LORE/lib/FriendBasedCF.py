@@ -17,7 +17,7 @@ def dist(loc1, loc2):
     theta2 = long2*degrees_to_radians
     cos = (math.sin(phi1)*math.sin(phi2)*math.cos(theta1 - theta2) +
            math.cos(phi1)*math.cos(phi2))
-    arc = math.acos( cos )
+    arc = math.acos(cos)
     earth_radius = 6371
     return arc * earth_radius
 
@@ -30,10 +30,11 @@ class FriendBasedCF(object):
     def compute_friend_sim(self, social_relations, poi_coos, sparse_check_in_matrix):
         self.sparse_check_in_matrix = sparse_check_in_matrix
 
-        ctime = time.time()
-        print("Precomputing similarity between friends...", )
+        startTime = time.time()
+        print("Pre-computing similarity between friends...", )
 
-        residence_lids = np.asarray(sparse_check_in_matrix.tocsr().argmax(axis=1)).reshape(-1)
+        residence_lids = np.asarray(
+            sparse_check_in_matrix.tocsr().argmax(axis=1)).reshape(-1)
         residence_coos = [poi_coos[lid] for lid in residence_lids.tolist()]
         max_distance = [-1.0 for _ in range(sparse_check_in_matrix.shape[0])]
 
@@ -48,11 +49,15 @@ class FriendBasedCF(object):
             # Max distance + 1 to smooth.
             self.social_proximity[uid] = [[fid, 1.0 - (dis / (1.0 + max_distance[uid]))]
                                           for fid, dis in self.social_proximity[uid]]
-        print("Done. Elapsed time:", time.time() - ctime, "s")
+        elapsedTime = time.time() - startTime
+        print("Finished in ",
+              '{:.2f}'.format(elapsedTime), " seconds.")
 
     def predict(self, i, j):
         if i in self.social_proximity:
-            numerator = np.sum([weight * self.sparse_check_in_matrix[k, j] for k, weight in self.social_proximity[i]])
-            denominator = np.sum([weight for k, weight in self.social_proximity[i]])
+            numerator = np.sum([weight * self.sparse_check_in_matrix[k, j]
+                               for k, weight in self.social_proximity[i]])
+            denominator = np.sum(
+                [weight for k, weight in self.social_proximity[i]])
             return numerator / denominator
         return 0.0

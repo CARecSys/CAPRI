@@ -11,7 +11,7 @@ class AdditiveMarkovChain(object):
         self.OCount, self.TCount = None, None
 
     def build_location_location_transition_graph(self, sorted_training_check_ins):
-        ctime = time.time()
+        startTime = time.time()
         print("Building location-location transition graph (L2TG)...", )
 
         S = sorted_training_check_ins
@@ -26,7 +26,9 @@ class AdditiveMarkovChain(object):
                     TCount[last_l][l] += 1
                 last_l, last_t = l, t
 
-        print("Done. Elapsed time:", time.time() - ctime, "s")
+        elapsedTime = time.time() - startTime
+        print("Finished in ",
+              '{:.2f}'.format(elapsedTime), " seconds.")
         self.S = S
         self.OCount = OCount
         self.TCount = TCount
@@ -45,7 +47,8 @@ class AdditiveMarkovChain(object):
     def predict(self, u, l):
         if u in self.S:
             n = len(self.S[u])
-            numerator = np.sum([self.W(i, n) * self.TP(li, l) for i, (li, _) in enumerate(self.S[u])])
+            numerator = np.sum([self.W(i, n) * self.TP(li, l)
+                               for i, (li, _) in enumerate(self.S[u])])
             denominator = np.sum([self.W(i, n) for i in range(len(self.S[u]))])
             return 1.0 * numerator / denominator
         return 1.0
