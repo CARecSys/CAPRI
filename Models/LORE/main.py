@@ -1,20 +1,25 @@
-from Models.LORE.utils import readFriendData, readPoiCoos, readSparseTrainingData, readTestData, readTrainingCheckins
+import numpy as np
+from Models.LORE.lib.FriendBasedCF import FriendBasedCF
 from Models.LORE.lib.AdditiveMarkovChain import AdditiveMarkovChain
 from Models.LORE.lib.KernelDensityEstimation import KernelDensityEstimation
-from Models.LORE.lib.FriendBasedCF import FriendBasedCF
+from Models.LORE.utils import readFriendData, readPoiCoos, readSparseTrainingData, readTestData, readTrainingCheckins
 
 
 class LOREMain:
-    def main(datasetFiles):
+    def main(datasetFiles, selectedDataset):
         print("Started processing in LORE model ...")
         # Reading data from selected dataset
         numberOfUsers, numberOfPoI = open(datasetFiles['dataSize'], 'r').readlines()[
             0].strip('\n').split()
         numberOfUsers, numberOfPoI = int(numberOfUsers), int(numberOfPoI)
+        usersList = list(range(numberOfUsers))
+        poiList = list(range(numberOfPoI))
+        np.random.shuffle(usersList)
         # Init values
         topK = 100
-        deltaT = 3600 * 24
         alpha = 0.05
+        deltaT = 3600 * 24
+        precision, recall = [], []
         # Load libraries
         FCF = FriendBasedCF()
         KDE = KernelDensityEstimation()
@@ -38,3 +43,25 @@ class LOREMain:
         FCF.compute_friend_sim(socialRelations, poiCoos, sparseTrainingMatrix)
         KDE.precompute_kernel_parameters(sparseTrainingMatrix, poiCoos)
         AMC.build_location_location_transition_graph(sortedTrainingCheckins)
+        # Add caching policy (prevent a similar setting to be executed again) ---> Read from config
+        executionRecord = open(
+            f"../Generated/LORE_{selectedDataset}_top" + str(topK) + ".txt", 'w')
+        # Calculating
+        print("Evaluating results ...")
+        for cnt, uid in enumerate(usersList):
+            if uid in groundTruth:
+                overallScores = [KDE.predict(uid, lid) * FCF.predict(uid, lid) * AMC.predict(uid, lid)
+                                 if (uid, lid) not in trainingTuples else -1
+                                 for lid in poiList]
+                overallScores = np.array(overallScores)
+                predicted = list(reversed(overallScores.argsort()))[:topK]
+                actual = groundTruth[uid]
+                precision.append(precisionk(actual, predicted[:10]))
+                recall.append(recallk(actual, predicted[:10]))
+                print(cnt, uid, "pre@10:", np.mean(precision),
+                      "rec@10:", np.mean(recall))
+                executionRecord.write('\t'.join([
+                    str(cnt),
+                    str(uid),
+                    ','.join([str(lid) for lid in predicted])
+                ]) + '\n')

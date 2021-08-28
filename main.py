@@ -13,7 +13,7 @@ def __init__():
             'Models.' + userInputs['Model'] + '.main', fromlist=[''])
         selectedModule = getattr(module, userInputs['Model'] + 'Main')
         # From the model, select its 'main' class
-        selectedModule.main(datasetFiles)
+        selectedModule.main(datasetFiles, userInputs['Dataset'])
 
 
 __init__()

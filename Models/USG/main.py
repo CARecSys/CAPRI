@@ -1,3 +1,3 @@
 class USGMain:
-    def main(datasetFiles):
+    def main(datasetFiles, selectedDataset):
         print("Hi from USG")

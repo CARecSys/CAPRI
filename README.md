@@ -14,4 +14,6 @@ Then, Call your model as 'ModelNameMain' as a class in main.py
 
 # TODO List
 
--
+- Add a proper caching policy to check the Generated directory
+- Read from config everywhere
+- topK should be selected by user

@@ -2,6 +2,7 @@ import os
 
 # Paths
 dataDirectory = os.path.abspath('./Data/')
+cachingDirectory = os.path.abspath('./Generated/')
 
 # Key: Model name, Value: Covered Contexts
 models = {
