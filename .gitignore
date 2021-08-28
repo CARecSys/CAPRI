@@ -131,3 +131,6 @@ dmypy.json
 # Generated files
 Generated/*
 !Generated/.gitkeep
+
+# Avoid IDE-specificity
+**/*/.idea/
