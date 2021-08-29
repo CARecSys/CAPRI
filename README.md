@@ -1,4 +1,4 @@
-# CAPRI: Context-Aware interpretable PoI Recommender
+# CAPRI: Context-Aware interpretable Point-of-Interest Recommendation Framework
 
 ![CAPRI-Context-Aware interpretable Point-of-Interest Recommendation Framework](https://github.com/RecSys-lab/CAPRI/blob/main/_contents/cover.jpg "CAPRI-Context-Aware interpretable PoI Recommender")
 
