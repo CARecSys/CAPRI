@@ -72,7 +72,7 @@ Models can be found in **./Models/** directory. In order to add a new model, you
 		+ utils.py
 ```
 
-Note: do not forget to add a ****_init_**.py** file to the directories you make.
+Note: do not forget to add a \***\*_init_**.py\*\* file to the directories you make.
 
 ### Adding a new evaluation
 
@@ -84,3 +84,4 @@ You can simply add the evaluations to the `./Evaluations/metrics.py` file.
 - Enable reading configuration settings from the **config** file in all components
 - Add the impact of **fusions** when running models
 - Some parameters e.g. topK should be selected by user
+- Unify utils in Models and Modes/GeoSoCa

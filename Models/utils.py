@@ -66,6 +66,16 @@ def readPoiCoos(poiFile):
     return poiCoos
 
 
+def readCategoryData(categoryFile, numberOfCategories, numberOfPoI):
+    categoryData = open(categoryFile, 'r').readlines()
+    poiCategoryMatrix = np.zeros((numberOfPoI, numberOfCategories))
+    for dataInstance in categoryData:
+        lid, cid = dataInstance.strip().split()
+        lid, cid = int(lid), int(cid)
+        poiCategoryMatrix[lid, cid] = 1.0
+    return poiCategoryMatrix
+
+
 def normalize(scores):
     maxScore = max(scores)
     if not maxScore == 0:

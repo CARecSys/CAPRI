@@ -8,7 +8,7 @@ from Models.utils import normalize, readTrainingData, readFriendData, readTestDa
 
 class USGMain:
     def main(datasetFiles, selectedDataset):
-        print("Started processing in LORE model ...")
+        print("Started processing in USG model ...")
         # Reading data from selected dataset
         numberOfUsers, numberOfPoI = open(datasetFiles['dataSize'], 'r').readlines()[
             0].strip('\n').split()
