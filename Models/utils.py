@@ -1,3 +1,4 @@
+import numpy as np
 import scipy.sparse as sparse
 from collections import defaultdict
 
@@ -14,6 +15,16 @@ def readSparseTrainingData(trainFile, numberOfUsers, numberOfPoI):
     return sparseTrainingMatrix, trainingTuples
 
 
+def readTrainingData(trainFile, numberOfUsers, numberOfPoI):
+    trainingData = open(trainFile, 'r').readlines()
+    trainingMatrix = np.zeros((numberOfUsers, numberOfPoI))
+    for dataInstance in trainingData:
+        uid, lid, _ = dataInstance.strip().split()
+        uid, lid = int(uid), int(lid)
+        trainingMatrix[uid, lid] = 1.0
+    return trainingMatrix
+
+
 def readTrainingCheckins(checkinFile, sparseTrainingMatrix):
     checkinData = open(checkinFile, 'r').readlines()
     trainingCheckins = defaultdict(list)
@@ -27,7 +38,7 @@ def readTrainingCheckins(checkinFile, sparseTrainingMatrix):
 
 def readFriendData(socialFile):
     socialData = open(socialFile, 'r').readlines()
-    socialRelations = []
+    socialRelations = defaultdict(list)
     for dataInstance in socialData:
         uid1, uid2 = dataInstance.strip().split()
         uid1, uid2 = int(uid1), int(uid2)
@@ -53,3 +64,10 @@ def readPoiCoos(poiFile):
         lid, lat, lng = int(lid), float(lat), float(lng)
         poiCoos[lid] = (lat, lng)
     return poiCoos
+
+
+def normalize(scores):
+    maxScore = max(scores)
+    if not maxScore == 0:
+        scores = [s / maxScore for s in scores]
+    return scores

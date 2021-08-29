@@ -3,7 +3,7 @@ from Evaluations.metrics import precisionk, recallk
 from Models.LORE.lib.FriendBasedCF import FriendBasedCF
 from Models.LORE.lib.AdditiveMarkovChain import AdditiveMarkovChain
 from Models.LORE.lib.KernelDensityEstimation import KernelDensityEstimation
-from Models.LORE.utils import readFriendData, readPoiCoos, readSparseTrainingData, readTestData, readTrainingCheckins
+from Models.utils import readFriendData, readPoiCoos, readSparseTrainingData, readTestData, readTrainingCheckins
 
 
 class LOREMain:
