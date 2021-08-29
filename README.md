@@ -1,6 +1,6 @@
 # CAPRI: Context-Aware interpretable PoI Recommender
 
-![CAPRI-Context-Aware interpretable PoI Recommender](https://github.com/RecSys-lab/CAPRI/blob/main/_contents/cover.jpg "CAPRI-Context-Aware interpretable PoI Recommender")
+![CAPRI-Context-Aware interpretable Point-of-Interest Recommendation Framework](https://github.com/RecSys-lab/CAPRI/blob/main/_contents/cover.jpg "CAPRI-Context-Aware interpretable PoI Recommender")
 
 This repository contains a framework for Recommender Systems (RecSys), allowing users to choose a dataset on a model based on their demand.
 
