@@ -1,4 +1,4 @@
-# RecSys Framework
+# CAPRI: Context-Aware interpretable PoI Recommender
 
 This repository contains a framework for Recommender Systems (RecSys), allowing users to choose a dataset on a model based on their demand.
 
@@ -28,6 +28,7 @@ Contribution to the project can be done through various approaches:
 ### Adding a new dataset
 
 All datasets can be found in **./Data/** directory. In order to add a new dataset, you should:
+
 - Modify the **config.py** file and add a record to the datasets dictionary. The key of the item should be the dataset's name (CapitalCase) and the value is an array of strings containing the dataset scopes (all CapitalCase). For instance
 
 ```python
@@ -51,6 +52,7 @@ All datasets can be found in **./Data/** directory. In order to add a new datase
 ### Adding a new model
 
 Models can be found in **./Models/** directory. In order to add a new model, you should:
+
 - Modify the **config.py** file and add a record to the models dictionary. The key of the item should be the model's name (CapitalCase) and the value is an array of strings containing the scopes that mode covers (all CapitalCase). For instance
 
 ```python
@@ -68,7 +70,7 @@ Models can be found in **./Models/** directory. In order to add a new model, you
 		+ utils.py
 ```
 
-Note: do not forget to add a **___init___.py** file to the directories you make.
+Note: do not forget to add a ****_init_**.py** file to the directories you make.
 
 ### Adding a new evaluation
 
@@ -76,7 +78,7 @@ You can simply add the evaluations to the `./Evaluations/metrics.py` file.
 
 ## ⚠️ TODOs
 
-- Add a proper **caching policy** to check the *Generated* directory
-- Enable reading configuration settings from the **config**  file in all components
+- Add a proper **caching policy** to check the _Generated_ directory
+- Enable reading configuration settings from the **config** file in all components
 - Add the impact of **fusions** when running models
 - Some parameters e.g. topK should be selected by user
