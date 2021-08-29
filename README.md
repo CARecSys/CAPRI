@@ -25,16 +25,16 @@ Start the project by running the `main.py` in the root directory. With this, the
 
 Contribution to the project can be done through various approaches:
 
-#### Adding a new dataset
+### Adding a new dataset
 
 All datasets can be found in **./Data/** directory. In order to add a new dataset, you should:
-- Modify the **config.py** file and add a record to the datasets dictionary. The key of the item should be dataset name (CapitalCase) and the value is an array of strings containing the dataset scopes (all CapitalCase). For instance
+- Modify the **config.py** file and add a record to the datasets dictionary. The key of the item should be the dataset's name (CapitalCase) and the value is an array of strings containing the dataset scopes (all CapitalCase). For instance
 
 ```python
 "DatasetName":  ["Scope1", "Scope2", "Scope3"]
 ```
 
-- Add a folder to the **./Data/** directory with the exact same name selected in the previous step. This way, your configs are attached to the dataset folder. In the created folder, add files of the dataset (preferably camelCase, e.g. socialRelations). Note that for each of these files, a variable with the exact same name will be automatically generated and fed to the models section. You can find a sample for the dataset sturcture here:
+- Add a folder to the **./Data/** directory with the exact same name selected in the previous step. This way, your configs are attached to the dataset. In the created folder, add files of the dataset (preferably camelCase, e.g. socialRelations). Note that for each of these files, a variable with the exact same name will be automatically generated and fed to the models section. You can find a sample for the dataset sturcture here:
 
 ```bash
 + Data/
@@ -48,15 +48,31 @@ All datasets can be found in **./Data/** directory. In order to add a new datase
 		+ datasetFile6
 ```
 
-#### Adding a new model
+### Adding a new model
 
+Models can be found in **./Models/** directory. In order to add a new model, you should:
+- Modify the **config.py** file and add a record to the models dictionary. The key of the item should be the model's name (CapitalCase) and the value is an array of strings containing the scopes that mode covers (all CapitalCase). For instance
 
-If you want to add a new model, define its name in CapitalCase and its covered scopes in config.py, models
-The same can goes foe datasets
-If you want to add evaluation metrics, consider adding them in Evaluations folder
-Define your models (with the exact same name in config.py) in Models directory
-Your model shoul have a main.py to be able to be read from the main.py in Root
-Then, Call your model as 'ModelNameMain' as a class in main.py
+```python
+"ModelName":  ["Scope1", "Scope2", "Scope3"]
+```
+
+- Add a folder to the **./Models/** directory with the exact same name selected in the previous step. This way, your configs are attached to the model. In the created folder, add files of the model (preferably camelCase, e.g. socialRelations). Models contain a **maing.py** file that holds the contents of the model. Also, a **utils.py** file keeps the utilities that can be used in the model, and a **/lib/** directory that contains the libraries used in the model. You can find a sample for the dataset sturcture here:
+
+```bash
++ Models/
+	+ Model1
+		+ lib/
+		+ __init__.py
+		+ main.py
+		+ utils.py
+```
+
+Note: do not forget to add a **___init___.py** file to the directories you make.
+
+### Adding a new evaluation
+
+You can simply add the evaluations to the `./Evaluations/metrics.py` file.
 
 ## ⚠️ TODOs
 
