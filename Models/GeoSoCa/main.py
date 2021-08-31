@@ -39,9 +39,9 @@ class GeoSoCaMain:
         # Computations
         AKDE.precompute_kernel_parameters(trainingMatrix, poiCoos)
         SC.compute_beta(trainingMatrix, socialRelations)
-        SC.save_result("../temp/")
+        SC.save_result("../savedModels/")
         CC.compute_gamma(trainingMatrix, poiCategoryMatrix)
-        CC.save_result("../temp/")
+        CC.save_result("../savedModels/")
         # Add caching policy (prevent a similar setting to be executed again) ---> Read from config
         executionRecord = open(
             f"./Generated/GeoSoCa_{selectedDataset}_top" + str(topRestricted) + ".txt", 'w+')

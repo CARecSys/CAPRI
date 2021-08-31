@@ -128,9 +128,13 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
-# Generated files
+# Generated execution results
 Generated/*
 !Generated/.gitkeep
+
+# Saved models
+Models/GeoSoCa/savedModels/*
+!Models/GeoSoCa/savedModels/.gitkeep
 
 # Avoid IDE-specificity
 **/*/.idea/
