@@ -133,8 +133,8 @@ Generated/*
 !Generated/.gitkeep
 
 # Saved models
-Models/GeoSoCa/savedModels/*
-!Models/GeoSoCa/savedModels/.gitkeep
+Models/**/savedModels/*
+!Models/**/savedModels/.gitkeep
 
 # Avoid IDE-specificity
 **/*/.idea/
