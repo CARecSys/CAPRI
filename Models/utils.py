@@ -1,3 +1,4 @@
+import os
 import time
 import numpy as np
 import scipy.sparse as sparse
@@ -84,15 +85,24 @@ def normalize(scores):
     return scores
 
 
-def loadModel(self, path):
+def loadModel(modelName, datasetName, numberOfItems):
     startTime = time.time()
-    print("Loading model ...",)
-    self.recScore = np.load(path + "recScore.npy")
-    print("Loaded in ", time.time() - startTime, "seconds")
+    print("Looking for model ...",)
+    fileName = f'{modelName}_{datasetName}_{numberOfItems}'
+    path = os.path.abspath(f'./{modelName}/savedModels/{fileName}.npy')
+    content = np.load(path)
+    print(content)
+    elapsedTime = time.time() - startTime
+    print(f"Loaded file in ",
+          '{:.2f}'.format(elapsedTime), " seconds.")
 
 
-def saveModel(self, path):
+def saveModel(content, modelName, datasetName, numberOfItems):
     startTime = time.time()
     print("Saving result...",)
-    np.save(path + "recScore", self.recScore)
-    print("Done. Elapsed time:", time.time() - startTime, "s")
+    fileName = f'{modelName}_{datasetName}_{numberOfItems}'
+    path = os.path.abspath(f'./{modelName}/savedModels/')
+    np.save(path + fileName, content)
+    elapsedTime = time.time() - startTime
+    print(f"Saved file in ",
+          '{:.2f}'.format(elapsedTime), " seconds ({path}/{fileName}.npy)")
