@@ -61,7 +61,7 @@ Models can be found in **./Models/** directory. In order to add a new model, you
 "ModelName":  ["Scope1", "Scope2", "Scope3"]
 ```
 
-- Add a folder to the **./Models/** directory with the exact same name selected in the previous step. This way, your configs are attached to the model. In the created folder, add files of the model (preferably camelCase, e.g. socialRelations). Models contain a **maing.py** file that holds the contents of the model. Also, a **utils.py** file keeps the utilities that can be used in the model, and a **/lib/** directory that contains the libraries used in the model. You can find a sample for the dataset sturcture here:
+- Add a folder to the **./Models/** directory with the exact same name selected in the previous step. This way, your configs are attached to the model. In the created folder, add files of the model (preferably camelCase, e.g. socialRelations). Models contain a **main.py** file that holds the contents of the model. Also, a **utils.py** file keeps the utilities that can be used in the model, and a **/lib/** directory that contains the libraries used in the model. You can find a sample for the dataset sturcture here:
 
 ```bash
 + Models/
@@ -72,7 +72,7 @@ Models can be found in **./Models/** directory. In order to add a new model, you
 		+ utils.py
 ```
 
-Note: do not forget to add a \***\*_init_**.py\*\* file to the directories you make.
+Note: do not forget to add a **_init_**.py file to the directories you make.
 
 ### Adding a new evaluation
 
@@ -85,3 +85,4 @@ You can simply add the evaluations to the `./Evaluations/metrics.py` file.
 - Add the impact of **fusions** when running models
 - Some parameters e.g. topK should be selected by user
 - Unify utils in Models and Modes/GeoSoCa
+- We will need a pre-processing stage for unifying Utils methods

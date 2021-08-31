@@ -17,7 +17,7 @@ class LOREMain:
         poiList = list(range(numberOfPoI))
         np.random.shuffle(usersList)
         # Init values
-        topK = 100
+        topRestricted = 100
         alpha = 0.05
         deltaT = 3600 * 24
         precision, recall = [], []
@@ -46,7 +46,7 @@ class LOREMain:
         AMC.build_location_location_transition_graph(sortedTrainingCheckins)
         # Add caching policy (prevent a similar setting to be executed again) ---> Read from config
         executionRecord = open(
-            f"./Generated/LORE_{selectedDataset}_top" + str(topK) + ".txt", 'w+')
+            f"./Generated/LORE_{selectedDataset}_top" + str(topRestricted) + ".txt", 'w+')
         # Calculating
         print("Evaluating results ...")
         for cnt, uid in enumerate(usersList):
@@ -55,7 +55,8 @@ class LOREMain:
                                  if (uid, lid) not in trainingTuples else -1
                                  for lid in poiList]
                 overallScores = np.array(overallScores)
-                predicted = list(reversed(overallScores.argsort()))[:topK]
+                predicted = list(reversed(overallScores.argsort()))[
+                    :topRestricted]
                 actual = groundTruth[uid]
                 precision.append(precisionk(actual, predicted[:10]))
                 recall.append(recallk(actual, predicted[:10]))

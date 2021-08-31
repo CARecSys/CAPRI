@@ -8,29 +8,29 @@ class SocialCorrelation(object):
         self.X = None
 
     def load_result(self, path):
-        ctime = time.time()
+        startTime = time.time()
         print("Loading result...",)
         self.X = np.load(path + "X.npy")
         self.beta = 1.0 + 1.0 / np.mean(np.log(1.0 + self.X[self.X > 0]))
-        print("Done. Elapsed time:", time.time() - ctime, "s")
+        print("Done. Elapsed time:", time.time() - startTime, "s")
 
     def save_result(self, path):
-        ctime = time.time()
+        startTime = time.time()
         print("Saving result...",)
         np.save(path + "X", self.X)
-        print("Done. Elapsed time:", time.time() - ctime, "s")
+        print("Done. Elapsed time:", time.time() - startTime, "s")
 
-    def compute_beta(self, check_in_matrix, social_matrix):
-        ctime = time.time()
+    def compute_beta(self, checkinMatrix, socialMatrix):
+        startTime = time.time()
         print("Precomputing social correlation parameter beta...", )
 
-        S = social_matrix
-        R = check_in_matrix
+        S = socialMatrix
+        R = checkinMatrix
 
         X = S.dot(R)
         beta = 1.0 + 1.0 / np.mean(np.log(1.0 + X[X > 0]))
 
-        print("Done. Elapsed time:", time.time() - ctime, "s")
+        print("Done. Elapsed time:", time.time() - startTime, "s")
 
         self.beta = beta
         self.X = X

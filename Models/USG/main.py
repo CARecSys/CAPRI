@@ -17,7 +17,7 @@ class USGMain:
         poiList = list(range(numberOfPoI))
         np.random.shuffle(usersList)
         # Init values
-        topK = 100
+        topRestricted = 100
         alpha = 0.1
         beta = 0.1
         precision, recall = [], []
@@ -41,7 +41,7 @@ class USGMain:
         G.fit_distance_distribution(trainingMatrix, poiCoos)
         # Add caching policy (prevent a similar setting to be executed again) ---> Read from config
         executionRecord = open(
-            f"./Generated/USG_{selectedDataset}_top" + str(topK) + ".txt", 'w+')
+            f"./Generated/USG_{selectedDataset}_top" + str(topRestricted) + ".txt", 'w+')
         # Calculating
         print("Evaluating results ...")
         for cnt, uid in enumerate(usersList):
@@ -60,7 +60,8 @@ class USGMain:
                 G_scores = np.array(G_scores)
                 overallScores = (1.0 - alpha - beta) * U_scores + \
                     alpha * S_scores + beta * G_scores
-                predicted = list(reversed(overallScores.argsort()))[:topK]
+                predicted = list(reversed(overallScores.argsort()))[
+                    :topRestricted]
                 actual = groundTruth[uid]
                 precision.append(precisionk(actual, predicted[:10]))
                 recall.append(recallk(actual, predicted[:10]))

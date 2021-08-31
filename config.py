@@ -4,6 +4,11 @@ import os
 dataDirectory = os.path.abspath('./Data/')
 cachingDirectory = os.path.abspath('./Generated/')
 
+# Default Parameters
+topK = 10
+topRestricted = 100  # Restricted list for computation
+sparsityRatio = 100
+
 # Key: Model name, Value: Covered Contexts
 models = {
     "GeoSoCa": ["Geographical", "Social", "Categorical"],

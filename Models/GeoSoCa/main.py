@@ -19,7 +19,7 @@ class GeoSoCaMain:
         poiList = list(range(numberOfPoI))
         np.random.shuffle(usersList)
         # Init values
-        topK = 100
+        topRestricted = 100
         alpha = 0.5
         precision, recall = [], []
         # Load libraries
@@ -39,12 +39,12 @@ class GeoSoCaMain:
         # Computations
         AKDE.precompute_kernel_parameters(trainingMatrix, poiCoos)
         SC.compute_beta(trainingMatrix, socialRelations)
-        SC.save_result("./temp/")
+        SC.save_result("../temp/")
         CC.compute_gamma(trainingMatrix, poiCategoryMatrix)
-        SC.save_result("./temp/")
+        CC.save_result("../temp/")
         # Add caching policy (prevent a similar setting to be executed again) ---> Read from config
         executionRecord = open(
-            f"./Generated/GeoSoCa_{selectedDataset}_top" + str(topK) + ".txt", 'w+')
+            f"./Generated/GeoSoCa_{selectedDataset}_top" + str(topRestricted) + ".txt", 'w+')
         # Calculating
         print("Evaluating results ...")
         for cnt, uid in enumerate(usersList):
@@ -53,7 +53,8 @@ class GeoSoCaMain:
                                  if trainingMatrix[uid, lid] == 0 else -1
                                  for lid in poiList]
                 overallScores = np.array(overallScores)
-                predicted = list(reversed(overallScores.argsort()))[:topK]
+                predicted = list(reversed(overallScores.argsort()))[
+                    :topRestricted]
                 actual = groundTruth[uid]
 
                 precision.append(precisionk(actual, predicted[:10]))
