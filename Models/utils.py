@@ -1,3 +1,4 @@
+import time
 import numpy as np
 import scipy.sparse as sparse
 from collections import defaultdict
@@ -81,3 +82,17 @@ def normalize(scores):
     if not maxScore == 0:
         scores = [s / maxScore for s in scores]
     return scores
+
+
+def loadModel(self, path):
+    startTime = time.time()
+    print("Loading model ...",)
+    self.recScore = np.load(path + "recScore.npy")
+    print("Loaded in ", time.time() - startTime, "seconds")
+
+
+def saveModel(self, path):
+    startTime = time.time()
+    print("Saving result...",)
+    np.save(path + "recScore", self.recScore)
+    print("Done. Elapsed time:", time.time() - startTime, "s")

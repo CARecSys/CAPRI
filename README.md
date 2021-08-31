@@ -61,15 +61,28 @@ Models can be found in **./Models/** directory. In order to add a new model, you
 "ModelName":  ["Scope1", "Scope2", "Scope3"]
 ```
 
-- Add a folder to the **./Models/** directory with the exact same name selected in the previous step. This way, your configs are attached to the model. In the created folder, add files of the model (preferably camelCase, e.g. socialRelations). Models contain a **main.py** file that holds the contents of the model. Also, a **utils.py** file keeps the utilities that can be used in the model, and a **/lib/** directory that contains the libraries used in the model. You can find a sample for the dataset sturcture here:
+- Add a folder to the **./Models/** directory with the exact same name selected in the previous step. This way, your configs are attached to the model. In the created folder, add files of the model (preferably camelCase, e.g. socialRelations). Models contain a **main.py** file that holds the contents of the model. The file **main.py** contains a class with the exact name of the model and the letter 'Main' (e.g. ModelNameMain). This class should contain a main function with two argument: (i) datasetFiles dictionary, (ii) the name of the selected dataset. For a better description, check the code sample below:
+
+```python
+import numpy as np
+...
+
+class NewModelMain:
+	def main(datasetFiles, selectedDataset):
+		print('Other codes goes here')
+```
+
+There is a **utils.py** file in the **./Models/** directory that keeps the utilities that can be used in all models. If you are thinking about a customized utilities with other functions, you can add an **extendedUtils.py** file in the model's directory. Also, a **/lib/** directory is considered in each model folders that contains the libraries used in the model. You can find a sample for the dataset sturcture here:
 
 ```bash
 + Models/
-	+ Model1
+	+ Model1/
 		+ lib/
 		+ __init__.py
 		+ main.py
-		+ utils.py
+		+ extendedUtils.py
+	+ utils.py
+	+ __init__.py
 ```
 
 Note: do not forget to add a **_init_**.py file to the directories you make.
@@ -81,6 +94,7 @@ You can simply add the evaluations to the `./Evaluations/metrics.py` file.
 ## ⚠️ TODOs
 
 - Add a proper **caching policy** to check the _Generated_ directory
+- Unifying **saveModel** and **loadModel** in utils.py
 - Enable reading configuration settings from the **config** file in all components
 - Add the impact of **fusions** when running models
 - Some parameters e.g. topK should be selected by user

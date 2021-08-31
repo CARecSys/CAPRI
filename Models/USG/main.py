@@ -36,9 +36,9 @@ class USGMain:
         # Reading PoI data
         poiCoos = readPoiCoos(datasetFiles['poiCoos'])
         # Computations
-        U.pre_compute_rec_scores(trainingMatrix)
-        S.compute_friend_sim(socialRelations, trainingMatrix)
-        G.fit_distance_distribution(trainingMatrix, poiCoos)
+        U.preComputeRecScores(trainingMatrix)
+        S.friendsSimilarityCalculation(socialRelations, trainingMatrix)
+        G.fitDistanceDistribution(trainingMatrix, poiCoos)
         # Add caching policy (prevent a similar setting to be executed again) ---> Read from config
         executionRecord = open(
             f"./Generated/USG_{selectedDataset}_top" + str(topRestricted) + ".txt", 'w+')
