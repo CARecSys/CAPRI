@@ -4,27 +4,26 @@ from collections import defaultdict
 
 
 class AdditiveMarkovChain(object):
-    def __init__(self, delta_t, alpha):
+    def __init__(self, deltaT, alpha):
         self.alpha = alpha
-        self.delta_t = delta_t
+        self.deltaT = deltaT
         self.S = None
         self.OCount, self.TCount = None, None
 
-    def build_location_location_transition_graph(self, sorted_training_check_ins):
+    def buildLocationToLocationTransitionGraph(self, sortedTrainingCheckins):
         startTime = time.time()
         print("Building location-location transition graph (L2TG)...", )
-
-        S = sorted_training_check_ins
+        S = sortedTrainingCheckins
         OCount = defaultdict(int)
         TCount = defaultdict(lambda: defaultdict(int))
         for u in S:
-            last_l, last_t = S[u][0]
+            lastL, lastT = S[u][0]
             for i in range(1, len(S[u])):
                 l, t = S[u][i]
-                if t - last_t <= self.delta_t:
-                    OCount[last_l] += 1
-                    TCount[last_l][l] += 1
-                last_l, last_t = l, t
+                if t - lastT <= self.deltaT:
+                    OCount[lastL] += 1
+                    TCount[lastL][l] += 1
+                lastL, lastT = l, t
 
         elapsedTime = time.time() - startTime
         print("Finished in ",
@@ -33,11 +32,11 @@ class AdditiveMarkovChain(object):
         self.OCount = OCount
         self.TCount = TCount
 
-    def TP(self, l, next_l):
+    def TP(self, l, nextL):
         if l not in self.OCount:
-            return 1.0 if l == next_l else 0.0
-        elif l in self.TCount and next_l in self.TCount[l]:
-            return 1.0 * self.TCount[l][next_l] / self.OCount[l]
+            return 1.0 if l == nextL else 0.0
+        elif l in self.TCount and nextL in self.TCount[l]:
+            return 1.0 * self.TCount[l][nextL] / self.OCount[l]
         else:
             return 0.0
 

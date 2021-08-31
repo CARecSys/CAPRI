@@ -41,9 +41,10 @@ class LOREMain:
         # Reading PoI data
         poiCoos = readPoiCoos(datasetFiles['poiCoos'])
         # Computations
-        FCF.compute_friend_sim(socialRelations, poiCoos, sparseTrainingMatrix)
-        KDE.precompute_kernel_parameters(sparseTrainingMatrix, poiCoos)
-        AMC.build_location_location_transition_graph(sortedTrainingCheckins)
+        FCF.friendsSimilarityCalculation(
+            socialRelations, poiCoos, sparseTrainingMatrix)
+        KDE.precomputeKernelParameters(sparseTrainingMatrix, poiCoos)
+        AMC.buildLocationToLocationTransitionGraph(sortedTrainingCheckins)
         # Add caching policy (prevent a similar setting to be executed again) ---> Read from config
         executionRecord = open(
             f"./Generated/LORE_{selectedDataset}_top" + str(topRestricted) + ".txt", 'w+')

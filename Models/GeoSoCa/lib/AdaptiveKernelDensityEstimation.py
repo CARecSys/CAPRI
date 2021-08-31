@@ -16,16 +16,16 @@ class AdaptiveKernelDensityEstimation(object):
         self.H1, self.H2 = None, None
         self.h = None
 
-    def precompute_kernel_parameters(self, checkinMatrix, poiCoos):
+    def precomputeKernelParameters(self, checkinMatrix, poiCoos):
         self.poiCoos = poiCoos
 
         ctime = time.time()
         print("Precomputing kernel parameters...", )
 
-        training_locations = defaultdict(list)
+        trainingLocations = defaultdict(list)
         for uid in range(checkinMatrix.shape[0]):
-            training_locations[uid] = [[lid, np.array(poiCoos[lid])]
-                                       for lid in checkinMatrix[uid].nonzero()[0].tolist()]
+            trainingLocations[uid] = [[lid, np.array(poiCoos[lid])]
+                                      for lid in checkinMatrix[uid].nonzero()[0].tolist()]
 
         N = {uid: np.sum(checkinMatrix[uid])
              for uid in range(checkinMatrix.shape[0])}
@@ -33,7 +33,7 @@ class AdaptiveKernelDensityEstimation(object):
         self.checkinMatrix = checkinMatrix
         self.N = N
 
-        R = training_locations
+        R = trainingLocations
         self.R = R
 
         H1, H2 = {}, {}

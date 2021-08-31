@@ -37,11 +37,11 @@ class GeoSoCaMain:
         poiCategoryMatrix = readCategoryData(
             datasetFiles['poiCategories'], numberOfCategories, numberOfPoI)
         # Computations
-        AKDE.precompute_kernel_parameters(trainingMatrix, poiCoos)
+        AKDE.precomputeKernelParameters(trainingMatrix, poiCoos)
         SC.compute_beta(trainingMatrix, socialRelations)
-        SC.save_result("../savedModels/")
+        # SC.save_result("../savedModels/")
         CC.compute_gamma(trainingMatrix, poiCategoryMatrix)
-        CC.save_result("../savedModels/")
+        # CC.save_result("../savedModels/")
         # Add caching policy (prevent a similar setting to be executed again) ---> Read from config
         executionRecord = open(
             f"./Generated/GeoSoCa_{selectedDataset}_top" + str(topRestricted) + ".txt", 'w+')
