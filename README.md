@@ -4,6 +4,9 @@
 
 This repository contains a framework for Recommender Systems (RecSys), allowing users to choose a dataset on a model based on their demand.
 
+## CAPRI
+![CAPRI](https://github.com/RecSys-lab/CAPRI/blob/main/_contents/CAPRIFramework.png "CAPRI-Context-Aware interpretable PoI Recommender")
+
 ## ☑️ Prerequisites
 
 You will need below libraries to be installed before running the application:
