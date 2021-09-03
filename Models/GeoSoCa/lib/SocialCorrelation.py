@@ -7,33 +7,21 @@ class SocialCorrelation(object):
         self.beta = None
         self.X = None
 
-    def load_result(self, path):
-        startTime = time.time()
-        print("Loading result...",)
-        self.X = np.load(path + "X.npy")
+    def loadModel(self, loadedModel):
+        self.X = loadedModel
         self.beta = 1.0 + 1.0 / np.mean(np.log(1.0 + self.X[self.X > 0]))
-        print("Done. Elapsed time:", time.time() - startTime, "s")
 
-    def save_result(self, path):
+    def computeBeta(self, checkinMatrix, socialMatrix):
         startTime = time.time()
-        print("Saving result...",)
-        np.save(path + "X", self.X)
-        print("Done. Elapsed time:", time.time() - startTime, "s")
-
-    def compute_beta(self, checkinMatrix, socialMatrix):
-        startTime = time.time()
-        print("Precomputing social correlation parameter beta...", )
-
+        print("Precomputing social correlation parameter Beta...", )
         S = socialMatrix
         R = checkinMatrix
-
         X = S.dot(R)
         beta = 1.0 + 1.0 / np.mean(np.log(1.0 + X[X > 0]))
-
-        print("Done. Elapsed time:", time.time() - startTime, "s")
-
         self.beta = beta
         self.X = X
+        elapsedTime = '{:.2f}'.format(time.time() - startTime)
+        print(f"Finished in {elapsedTime} seconds.")
 
     def predict(self, u, l):
         return 1.0 - (1.0 + self.X[u, l]) ** (1 - self.beta)

@@ -6,13 +6,13 @@ from collections import defaultdict
 
 class AdaptiveKernelDensityEstimation(object):
     def __init__(self, alpha=0.5):
+        self.R = None
+        self.N = None
+        self.h = None
         self.alpha = alpha
         self.poiCoos = None
         self.checkinMatrix = None
-        self.R = None
-        self.N = None
         self.H1, self.H2 = None, None
-        self.h = None
 
     def precomputeKernelParameters(self, checkinMatrix, poiCoos):
         self.poiCoos = poiCoos
@@ -36,7 +36,6 @@ class AdaptiveKernelDensityEstimation(object):
                                     for lid, coo in R[uid]], axis=0) / N[uid]
             H1[uid], H2[uid] = 1.06 / \
                 (len(R[uid])**0.2) * np.sqrt(meanCooSqDiff)
-
         self.H1, self.H2 = H1, H2
         h = defaultdict(lambda: defaultdict(int))
         for uid in R:

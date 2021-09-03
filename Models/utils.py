@@ -47,18 +47,26 @@ def readTrainingCheckins(checkinFile, sparseTrainingMatrix):
     return trainingCheckins
 
 
-# appendType: 'list' for GeoSoCa and USG, 2) 'dictionary' for USG
+# appendType: 'list' for LORE, 2) 'dictionary' for USG, 3) 'ndarray' for GeoSoCa
+# numberOfUsers is only needed for GeoSoCa, others should get None
 def readFriendData(socialFile, appendType, numberOfUsers):
     socialData = open(socialFile, 'r').readlines()
     # TODO: we may replace this condition with a more compact one
-    if appendType == 'list':  # LORE, GeoSoCa
-        # GeoSoCa needs numberOfUsers, but LORE doesn't
-        socialRelations = [] if numberOfUsers == None else np.zeros(
-            (numberOfUsers, numberOfUsers))
+    if appendType == 'list':  # LORE
+        socialRelations = []
         for dataInstance in socialData:
             uid1, uid2 = dataInstance.strip().split()
             uid1, uid2 = int(uid1), int(uid2)
             socialRelations.append([uid1, uid2])
+        return socialRelations
+    elif appendType == 'ndarray':  # GeoSoCa
+        # GeoSoCa needs numberOfUsers
+        socialRelations = np.zeros((numberOfUsers, numberOfUsers))
+        for dataInstance in socialData:
+            uid1, uid2 = dataInstance.strip().split()
+            uid1, uid2 = int(uid1), int(uid2)
+            socialRelations[uid1, uid2] = 1.0
+            socialRelations[uid2, uid1] = 1.0
         return socialRelations
     else:  # USG
         socialRelations = defaultdict(list)
@@ -107,24 +115,28 @@ def normalize(scores):
     return scores
 
 
-def loadModel(modelName, datasetName, numberOfItems):
-    startTime = time.time()
-    print("Looking for model ...",)
-    fileName = f'{modelName}_{datasetName}_{numberOfItems}'
-    path = os.path.abspath(f'./{modelName}/savedModels/{fileName}.npy')
-    content = np.load(path)
-    print(content)
-    elapsedTime = time.time() - startTime
-    print(f"Loaded file in ",
-          '{:.2f}'.format(elapsedTime), " seconds.")
+def loadModel(modelName, datasetName, moduleName):
+    print("Searching in previously saved models ...",)
+    fileName = f'{modelName}_{datasetName}_{moduleName}'
+    path = os.path.abspath(f'./Models/{modelName}/savedModels/{fileName}.npy')
+    fileExists = os.path.exists(path)
+    if fileExists == True:
+        content = np.load(path)
+        print("Model loaded from previously execution results!")
+        return content
+    else:
+        print("Model doesn't exist! It should be created!")
+        return []
 
 
-def saveModel(content, modelName, datasetName, numberOfItems):
+def saveModel(content, modelName, datasetName, moduleName):
     startTime = time.time()
-    print("Saving result...",)
-    fileName = f'{modelName}_{datasetName}_{numberOfItems}'
-    path = os.path.abspath(f'./{modelName}/savedModels/')
-    np.save(path + fileName, content)
-    elapsedTime = time.time() - startTime
-    print(f"Saved file in ",
-          '{:.2f}'.format(elapsedTime), " seconds ({path}/{fileName}.npy)")
+    print("Saving model ...",)
+    fileName = f'{modelName}_{datasetName}_{moduleName}'
+    path = os.path.abspath(f'./Models/{modelName}/savedModels/{fileName}.npy')
+    fileExists = os.path.exists(path)
+    if fileExists == False:
+        open(path, 'w+')
+    np.save(path, content)
+    elapsedTime = '{:.2f}'.format(time.time() - startTime)
+    print(f"Model saved in {path}/{fileName}.npy (took {elapsedTime} seconds)")

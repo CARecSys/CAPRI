@@ -5,9 +5,9 @@ from collections import defaultdict
 
 class AdditiveMarkovChain(object):
     def __init__(self, deltaT, alpha):
+        self.S = None
         self.alpha = alpha
         self.deltaT = deltaT
-        self.S = None
         self.OCount, self.TCount = None, None
 
     def buildLocationToLocationTransitionGraph(self, sortedTrainingCheckins):
@@ -24,7 +24,6 @@ class AdditiveMarkovChain(object):
                     OCount[lastL] += 1
                     TCount[lastL][l] += 1
                 lastL, lastT = l, t
-
         elapsedTime = time.time() - startTime
         print("Finished in", '{:.2f}'.format(elapsedTime), "seconds.")
         self.S = S

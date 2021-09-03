@@ -68,8 +68,8 @@ class USGMain:
                 actual = groundTruth[uid]
                 precision.append(precisionk(actual, predicted[:topK]))
                 recall.append(recallk(actual, predicted[:topK]))
-                print(cnt, uid, "Precision@{topK}: ", np.mean(precision),
-                      "Recall@{topK}: ", np.mean(recall))
+                print(cnt, uid, f"Precision@{topK}:", '{:.4f}'.format(np.mean(precision)),
+                      f", Recall@{topK}:", '{:.4f}'.format(np.mean(recall)))
                 executionRecord.write('\t'.join([
                     str(cnt),
                     str(uid),

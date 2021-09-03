@@ -3,7 +3,7 @@ from Evaluations.metrics import precisionk, recallk
 from Models.GeoSoCa.lib.SocialCorrelation import SocialCorrelation
 from Models.GeoSoCa.lib.CategoricalCorrelation import CategoricalCorrelation
 from Models.GeoSoCa.lib.AdaptiveKernelDensityEstimation import AdaptiveKernelDensityEstimation
-from Models.utils import readPoiCoos, readTestData, readCategoryData, readTrainingData, readFriendData
+from Models.utils import readPoiCoos, readTestData, readCategoryData, readTrainingData, readFriendData, saveModel, loadModel
 
 
 class GeoSoCaMain:
@@ -18,6 +18,7 @@ class GeoSoCaMain:
         poiList = list(range(numberOfPoI))
         np.random.shuffle(usersList)
         # Init values
+        modelName = 'GeoSoCa'
         topK = parameters['topK']
         datasetName = parameters['datasetName']
         topRestricted = parameters['topRestricted']
@@ -32,17 +33,27 @@ class GeoSoCaMain:
         trainingMatrix = readTrainingData(
             datasetFiles['train'], numberOfUsers, numberOfPoI, True)
         socialRelations = readFriendData(
-            datasetFiles['socialRelations'], 'list', numberOfUsers)
+            datasetFiles['socialRelations'], 'ndarray', numberOfUsers)
         groundTruth = readTestData(datasetFiles['test'])
         poiCoos = readPoiCoos(datasetFiles['poiCoos'])
         poiCategoryMatrix = readCategoryData(
             datasetFiles['poiCategories'], numberOfCategories, numberOfPoI)
-        # Computations
+        # Adaptive Kernel Density Estimation Calculations
         AKDE.precomputeKernelParameters(trainingMatrix, poiCoos)
-        SC.compute_beta(trainingMatrix, socialRelations)
-        # SC.save_result("../savedModels/")
-        CC.compute_gamma(trainingMatrix, poiCategoryMatrix)
-        # CC.save_result("../savedModels/")
+        # Social Correlation Calculations
+        loadedModel = loadModel(modelName, datasetName, 'Beta')
+        if loadedModel == []:  # It should be created
+            SC.computeBeta(trainingMatrix, socialRelations)
+            saveModel(SC.X, modelName, datasetName, 'Beta')
+        else:  # It should be loaded
+            SC.loadModel(loadedModel)
+        # Category Correlation Calculations
+        loadedModel = loadModel(modelName, datasetName, 'Gamma')
+        if loadedModel == []:  # It should be created
+            CC.computeGamma(trainingMatrix, poiCategoryMatrix)
+            saveModel(CC.Y, modelName, datasetName, 'Gamma')
+        else:  # It should be loaded
+            CC.loadModel(loadedModel)
         # Add caching policy (prevent a similar setting to be executed again) ---> Read from config
         executionRecord = open(
             f"./Generated/GeoSoCa_{datasetName}_top" + str(topRestricted) + ".txt", 'w+')
@@ -59,8 +70,8 @@ class GeoSoCaMain:
                 actual = groundTruth[uid]
                 precision.append(precisionk(actual, predicted[:topK]))
                 recall.append(recallk(actual, predicted[:topK]))
-                print(cnt, uid, "Precision@{topK}: ", np.mean(precision),
-                      "Recall@{topK}: ", np.mean(recall))
+                print(cnt, uid, f"Precision@{topK}:", '{:.4f}'.format(np.mean(precision)),
+                      f", Recall@{topK}:", '{:.4f}'.format(np.mean(recall)))
                 executionRecord.write('\t'.join([
                     str(cnt),
                     str(uid),
