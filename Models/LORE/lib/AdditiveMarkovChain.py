@@ -26,8 +26,7 @@ class AdditiveMarkovChain(object):
                 lastL, lastT = l, t
 
         elapsedTime = time.time() - startTime
-        print("Finished in ",
-              '{:.2f}'.format(elapsedTime), " seconds.")
+        print("Finished in", '{:.2f}'.format(elapsedTime), "seconds.")
         self.S = S
         self.OCount = OCount
         self.TCount = TCount

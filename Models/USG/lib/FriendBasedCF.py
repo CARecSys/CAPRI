@@ -30,8 +30,7 @@ class FriendBasedCF(object):
                         self.socialProximity[uid].append(
                             [fid, jaccardFriend, jaccardCheckin])
         elapsedTime = time.time() - startTime
-        print("Finished in ",
-              '{:.2f}'.format(elapsedTime), " seconds.")
+        print("Finished in", '{:.2f}'.format(elapsedTime), "seconds.")
 
     def predict(self, i, j):
         if i in self.socialProximity:

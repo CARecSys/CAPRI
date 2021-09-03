@@ -1,7 +1,6 @@
 import time
 import math
 import numpy as np
-
 from collections import defaultdict
 
 
@@ -10,7 +9,6 @@ class AdaptiveKernelDensityEstimation(object):
         self.alpha = alpha
         self.poiCoos = None
         self.checkinMatrix = None
-
         self.R = None
         self.N = None
         self.H1, self.H2 = None, None
@@ -18,54 +16,46 @@ class AdaptiveKernelDensityEstimation(object):
 
     def precomputeKernelParameters(self, checkinMatrix, poiCoos):
         self.poiCoos = poiCoos
-
-        ctime = time.time()
+        startTime = time.time()
         print("Precomputing kernel parameters...", )
-
         trainingLocations = defaultdict(list)
         for uid in range(checkinMatrix.shape[0]):
             trainingLocations[uid] = [[lid, np.array(poiCoos[lid])]
                                       for lid in checkinMatrix[uid].nonzero()[0].tolist()]
-
         N = {uid: np.sum(checkinMatrix[uid])
              for uid in range(checkinMatrix.shape[0])}
-
         self.checkinMatrix = checkinMatrix
         self.N = N
-
         R = trainingLocations
         self.R = R
-
         H1, H2 = {}, {}
         for uid in R:
             meanCoo = np.sum([checkinMatrix[uid, lid] * coo
                               for lid, coo in R[uid]], axis=0) / N[uid]
-
-            # The equation (5) in the paper is not correct.
-            meanCoo_sq_diff = np.sum([checkinMatrix[uid, lid] * (coo - meanCoo) ** 2
-                                      for lid, coo in R[uid]], axis=0) / N[uid]
+            meanCooSqDiff = np.sum([checkinMatrix[uid, lid] * (coo - meanCoo) ** 2
+                                    for lid, coo in R[uid]], axis=0) / N[uid]
             H1[uid], H2[uid] = 1.06 / \
-                (len(R[uid])**0.2) * np.sqrt(meanCoo_sq_diff)
+                (len(R[uid])**0.2) * np.sqrt(meanCooSqDiff)
 
         self.H1, self.H2 = H1, H2
-
         h = defaultdict(lambda: defaultdict(int))
         for uid in R:
             if not H1[uid] == 0 and not H2[uid] == 0:
-                f_geo_vals = {li[0]: self.f_geo_with_fixed_bandwidth(
+                fGeoValues = {li[0]: self.fGeoWithFixedBandwidth(
                     uid, li, R) for li in R[uid]}
-                g = np.prod(list(f_geo_vals.values())) ** (1.0 / len(R[uid]))
-                for lid, f_geo_val in f_geo_vals.items():
+                g = np.prod(list(fGeoValues.values())) ** (1.0 / len(R[uid]))
+                for lid, f_geo_val in fGeoValues.items():
                     h[uid][lid] = (g / f_geo_val) ** self.alpha
         self.h = h
-        print("Done. Elapsed time:", time.time() - ctime, "s")
+        elapsedTime = time.time() - startTime
+        print("Finished in", '{:.2f}'.format(elapsedTime), "seconds.")
 
-    def f_geo_with_fixed_bandwidth(self, u, l, R):
+    def fGeoWithFixedBandwidth(self, u, l, R):
         l, (lat, lng) = l
         return np.sum([self.checkinMatrix[u, li] * self.K_H(u, lat, lng, lat_i, lng_i)
                        for li, (lat_i, lng_i) in R[u]]) / self.N[u]
 
-    def f_geo_with_local_bandwidth(self, u, l, R):
+    def fGeoWithLocalBandwidth(self, u, l, R):
         l, (lat, lng) = l
         return np.sum([self.checkinMatrix[u, li] * self.K_Hh(u, lat, lng, lat_i, lng_i, li)
                        for li, (lat_i, lng_i) in R[u]]) / self.N[u]
@@ -83,5 +73,5 @@ class AdaptiveKernelDensityEstimation(object):
     def predict(self, u, l):
         if not self.H1[u] == 0 and not self.H2[u] == 0 and not sum(self.h[u].values()) == 0:
             l = [l, self.poiCoos[l]]
-            return self.f_geo_with_local_bandwidth(u, l, self.R)
+            return self.fGeoWithLocalBandwidth(u, l, self.R)
         return 1.0

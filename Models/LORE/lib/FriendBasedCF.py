@@ -48,8 +48,7 @@ class FriendBasedCF(object):
             self.socialProximity[uid] = [[fid, 1.0 - (dis / (1.0 + maxDistance[uid]))]
                                          for fid, dis in self.socialProximity[uid]]
         elapsedTime = time.time() - startTime
-        print("Finished in ",
-              '{:.2f}'.format(elapsedTime), " seconds.")
+        print("Finished in", '{:.2f}'.format(elapsedTime), "seconds.")
 
     def predict(self, i, j):
         if i in self.socialProximity:

@@ -1,7 +1,6 @@
 import time
 import math
 import numpy as np
-
 from collections import defaultdict
 
 
@@ -26,10 +25,8 @@ class KernelDensityEstimation(object):
                 std = np.std([coo for coo in L[u]], axis=0)
                 bw[u] = 1.0 / (len(L[u])**(1.0/6)) * \
                     np.sqrt(0.5 * std.dot(std))
-
         elapsedTime = time.time() - startTime
-        print("Finished in ",
-              '{:.2f}'.format(elapsedTime), " seconds.")
+        print("Finished in", '{:.2f}'.format(elapsedTime), "seconds.")
         self.L = L
         self.bw = bw
 
