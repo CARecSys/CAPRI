@@ -37,7 +37,8 @@ class LOREMain:
         sortedTrainingCheckins = {uid: sorted(trainingCheckins[uid], key=lambda k: k[1])
                                   for uid in trainingCheckins}
         # Reading social data
-        socialRelations = readFriendData(datasetFiles['socialRelations'])
+        socialRelations = readFriendData(
+            datasetFiles['socialRelations'], 'list', None)
         # Reading Ground-truth data
         groundTruth = readTestData(datasetFiles['test'])
         # Reading PoI data

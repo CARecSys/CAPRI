@@ -17,13 +17,22 @@ def readSparseTrainingData(trainFile, numberOfUsers, numberOfPoI):
     return sparseTrainingMatrix, trainingTuples
 
 
-def readTrainingData(trainFile, numberOfUsers, numberOfPoI):
+# withFrequency: True for GeoSoCa, False for USG
+def readTrainingData(trainFile, numberOfUsers, numberOfPoI, withFrequency):
     trainingData = open(trainFile, 'r').readlines()
     trainingMatrix = np.zeros((numberOfUsers, numberOfPoI))
-    for dataInstance in trainingData:
-        uid, lid, _ = dataInstance.strip().split()
-        uid, lid = int(uid), int(lid)
-        trainingMatrix[uid, lid] = 1.0
+    # TODO: we may replace this condition with a more compact one
+    # e.g. value = freq if withFrequency == True else 1.0
+    if withFrequency == True:
+        for dataInstance in trainingData:
+            uid, lid, freq = dataInstance.strip().split()
+            uid, lid, freq = int(uid), int(lid), int(freq)
+            trainingMatrix[uid, lid] = freq
+    else:
+        for dataInstance in trainingData:
+            uid, lid, _ = dataInstance.strip().split()
+            uid, lid = int(uid), int(lid)
+            trainingMatrix[uid, lid] = 1.0
     return trainingMatrix
 
 
@@ -38,14 +47,27 @@ def readTrainingCheckins(checkinFile, sparseTrainingMatrix):
     return trainingCheckins
 
 
-def readFriendData(socialFile):
+# appendType: 'list' for GeoSoCa and USG, 2) 'dictionary' for USG
+def readFriendData(socialFile, appendType, numberOfUsers):
     socialData = open(socialFile, 'r').readlines()
-    socialRelations = defaultdict(list)
-    for dataInstance in socialData:
-        uid1, uid2 = dataInstance.strip().split()
-        uid1, uid2 = int(uid1), int(uid2)
-        socialRelations.append([uid1, uid2])
-    return socialRelations
+    # TODO: we may replace this condition with a more compact one
+    if appendType == 'list':  # LORE, GeoSoCa
+        # GeoSoCa needs numberOfUsers, but LORE doesn't
+        socialRelations = [] if numberOfUsers == None else np.zeros(
+            (numberOfUsers, numberOfUsers))
+        for dataInstance in socialData:
+            uid1, uid2 = dataInstance.strip().split()
+            uid1, uid2 = int(uid1), int(uid2)
+            socialRelations.append([uid1, uid2])
+        return socialRelations
+    else:  # USG
+        socialRelations = defaultdict(list)
+        for dataInstance in socialData:
+            uid1, uid2 = dataInstance.strip().split()
+            uid1, uid2 = int(uid1), int(uid2)
+            socialRelations[uid1].append(uid2)
+            socialRelations[uid2].append(uid1)
+        return socialRelations
 
 
 def readTestData(testFile):

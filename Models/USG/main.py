@@ -30,11 +30,12 @@ class USGMain:
         print("Reading dataset instances ...")
         # Loading training items
         trainingMatrix = readTrainingData(
-            datasetFiles['train'], numberOfUsers, numberOfPoI)
+            datasetFiles['train'], numberOfUsers, numberOfPoI, False)
         # Reading Ground-truth data
         groundTruth = readTestData(datasetFiles['test'])
         # Reading social data
-        socialRelations = readFriendData(datasetFiles['socialRelations'])
+        socialRelations = readFriendData(
+            datasetFiles['socialRelations'], 'dictionary', None)
         # Reading PoI data
         poiCoos = readPoiCoos(datasetFiles['poiCoos'])
         # Computations

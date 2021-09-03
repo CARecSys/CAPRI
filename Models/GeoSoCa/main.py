@@ -1,10 +1,9 @@
 import numpy as np
 from Evaluations.metrics import precisionk, recallk
-from Models.utils import readPoiCoos, readTestData, readCategoryData
 from Models.GeoSoCa.lib.SocialCorrelation import SocialCorrelation
-from Models.GeoSoCa.utilsExtended import readFriendData, readTrainingData
 from Models.GeoSoCa.lib.CategoricalCorrelation import CategoricalCorrelation
 from Models.GeoSoCa.lib.AdaptiveKernelDensityEstimation import AdaptiveKernelDensityEstimation
+from Models.utils import readPoiCoos, readTestData, readCategoryData, readTrainingData, readFriendData
 
 
 class GeoSoCaMain:
@@ -31,9 +30,9 @@ class GeoSoCaMain:
         print("Reading dataset instances ...")
         # Loading trainin items
         trainingMatrix = readTrainingData(
-            datasetFiles['train'], numberOfUsers, numberOfPoI)
+            datasetFiles['train'], numberOfUsers, numberOfPoI, True)
         socialRelations = readFriendData(
-            datasetFiles['socialRelations'], numberOfUsers)
+            datasetFiles['socialRelations'], 'list', numberOfUsers)
         groundTruth = readTestData(datasetFiles['test'])
         poiCoos = readPoiCoos(datasetFiles['poiCoos'])
         poiCategoryMatrix = readCategoryData(

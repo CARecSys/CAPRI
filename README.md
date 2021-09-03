@@ -99,7 +99,5 @@ You can simply add the evaluations to the `./Evaluations/metrics.py` file.
 
 - Add a proper **caching policy** to check the _Generated_ directory
 - Unifying **saveModel** and **loadModel** in utils.py
-- Enable reading configuration settings from the **config** file in all components
 - Add the impact of **fusions** when running models
-- We will need a pre-processing stage for unifying Utils methods
 - Add a logging functionality
