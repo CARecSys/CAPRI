@@ -5,6 +5,7 @@
 This repository contains a framework for Recommender Systems (RecSys), allowing users to choose a dataset on a model based on their demand.
 
 ## CAPRI Overview
+
 ![CAPRI](https://github.com/RecSys-lab/CAPRI/blob/main/_contents/CAPRIFramework.png "CAPRI-Context-Aware interpretable PoI Recommender")
 
 ## ☑️ Prerequisites
@@ -64,14 +65,14 @@ Models can be found in **./Models/** directory. In order to add a new model, you
 "ModelName":  ["Scope1", "Scope2", "Scope3"]
 ```
 
-- Add a folder to the **./Models/** directory with the exact same name selected in the previous step. This way, your configs are attached to the model. In the created folder, add files of the model (preferably camelCase, e.g. socialRelations). Models contain a **main.py** file that holds the contents of the model. The file **main.py** contains a class with the exact name of the model and the letter 'Main' (e.g. ModelNameMain). This class should contain a main function with two argument: (i) datasetFiles dictionary, (ii) the name of the selected dataset. For a better description, check the code sample below:
+- Add a folder to the **./Models/** directory with the exact same name selected in the previous step. This way, your configs are attached to the model. In the created folder, add files of the model (preferably camelCase, e.g. socialRelations). Models contain a **main.py** file that holds the contents of the model. The file **main.py** contains a class with the exact name of the model and the letter 'Main' (e.g. ModelNameMain). This class should contain a main function with two argument: (i) datasetFiles dictionary, (ii) the parameters of the selected model (including top-K items for evaluation, sparsity ratio, restricted list for computation, and dataset name). For a better description, check the code sample below:
 
 ```python
 import numpy as np
 ...
 
 class NewModelMain:
-	def main(datasetFiles, selectedDataset):
+	def main(datasetFiles, parameters):
 		print('Other codes goes here')
 ```
 
@@ -100,6 +101,5 @@ You can simply add the evaluations to the `./Evaluations/metrics.py` file.
 - Unifying **saveModel** and **loadModel** in utils.py
 - Enable reading configuration settings from the **config** file in all components
 - Add the impact of **fusions** when running models
-- Some parameters e.g. topK should be selected by user
-- Unify utils in Models and Modes/GeoSoCa
 - We will need a pre-processing stage for unifying Utils methods
+- Add a logging functionality

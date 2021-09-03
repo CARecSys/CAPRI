@@ -7,7 +7,7 @@ from Models.utils import normalize, readTrainingData, readFriendData, readTestDa
 
 
 class USGMain:
-    def main(datasetFiles, selectedDataset):
+    def main(datasetFiles, parameters):
         print("Started processing in USG model ...")
         # Reading data from selected dataset
         numberOfUsers, numberOfPoI = open(datasetFiles['dataSize'], 'r').readlines()[
@@ -17,10 +17,12 @@ class USGMain:
         poiList = list(range(numberOfPoI))
         np.random.shuffle(usersList)
         # Init values
-        topRestricted = 100
-        alpha = 0.1
         beta = 0.1
+        alpha = 0.1
         precision, recall = [], []
+        topK = parameters['topK']
+        datasetName = parameters['datasetName']
+        topRestricted = parameters['topRestricted']
         # Load libraries
         U = UserBasedCF()
         S = FriendBasedCF(eta=0.05)
@@ -41,7 +43,7 @@ class USGMain:
         G.fitDistanceDistribution(trainingMatrix, poiCoos)
         # Add caching policy (prevent a similar setting to be executed again) ---> Read from config
         executionRecord = open(
-            f"./Generated/USG_{selectedDataset}_top" + str(topRestricted) + ".txt", 'w+')
+            f"./Generated/USG_{datasetName}_top" + str(topRestricted) + ".txt", 'w+')
         # Calculating
         print("Evaluating results ...")
         for cnt, uid in enumerate(usersList):
@@ -63,10 +65,10 @@ class USGMain:
                 predicted = list(reversed(overallScores.argsort()))[
                     :topRestricted]
                 actual = groundTruth[uid]
-                precision.append(precisionk(actual, predicted[:10]))
-                recall.append(recallk(actual, predicted[:10]))
-                print(cnt, uid, "pre@10:", np.mean(precision),
-                      "rec@10:", np.mean(recall))
+                precision.append(precisionk(actual, predicted[:topK]))
+                recall.append(recallk(actual, predicted[:topK]))
+                print(cnt, uid, "Precision@{topK}: ", np.mean(precision),
+                      "Recall@{topK}: ", np.mean(recall))
                 executionRecord.write('\t'.join([
                     str(cnt),
                     str(uid),

@@ -8,7 +8,7 @@ from Models.GeoSoCa.lib.AdaptiveKernelDensityEstimation import AdaptiveKernelDen
 
 
 class GeoSoCaMain:
-    def main(datasetFiles, selectedDataset):
+    def main(datasetFiles, parameters):
         print("Started processing in GeoSoCa model ...")
         # Reading data from selected dataset
         numberOfUsers, numberOfPoI, numberOfCategories = open(datasetFiles['dataSize'], 'r').readlines()[
@@ -19,7 +19,9 @@ class GeoSoCaMain:
         poiList = list(range(numberOfPoI))
         np.random.shuffle(usersList)
         # Init values
-        topRestricted = 100
+        topK = parameters['topK']
+        datasetName = parameters['datasetName']
+        topRestricted = parameters['topRestricted']
         alpha = 0.5
         precision, recall = [], []
         # Load libraries
@@ -44,7 +46,7 @@ class GeoSoCaMain:
         # CC.save_result("../savedModels/")
         # Add caching policy (prevent a similar setting to be executed again) ---> Read from config
         executionRecord = open(
-            f"./Generated/GeoSoCa_{selectedDataset}_top" + str(topRestricted) + ".txt", 'w+')
+            f"./Generated/GeoSoCa_{datasetName}_top" + str(topRestricted) + ".txt", 'w+')
         # Calculating
         print("Evaluating results ...")
         for cnt, uid in enumerate(usersList):
@@ -56,12 +58,10 @@ class GeoSoCaMain:
                 predicted = list(reversed(overallScores.argsort()))[
                     :topRestricted]
                 actual = groundTruth[uid]
-
-                precision.append(precisionk(actual, predicted[:10]))
-                recall.append(recallk(actual, predicted[:10]))
-
-                print(cnt, uid, "pre@10:", np.mean(precision),
-                      "rec@10:", np.mean(recall))
+                precision.append(precisionk(actual, predicted[:topK]))
+                recall.append(recallk(actual, predicted[:topK]))
+                print(cnt, uid, "Precision@{topK}: ", np.mean(precision),
+                      "Recall@{topK}: ", np.mean(recall))
                 executionRecord.write('\t'.join([
                     str(cnt),
                     str(uid),

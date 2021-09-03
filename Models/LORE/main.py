@@ -7,7 +7,7 @@ from Models.utils import readFriendData, readPoiCoos, readSparseTrainingData, re
 
 
 class LOREMain:
-    def main(datasetFiles, selectedDataset):
+    def main(datasetFiles, parameters):
         print("Started processing in LORE model ...")
         # Reading data from selected dataset
         numberOfUsers, numberOfPoI = open(datasetFiles['dataSize'], 'r').readlines()[
@@ -17,10 +17,12 @@ class LOREMain:
         poiList = list(range(numberOfPoI))
         np.random.shuffle(usersList)
         # Init values
-        topRestricted = 100
         alpha = 0.05
         deltaT = 3600 * 24
         precision, recall = [], []
+        topK = parameters['topK']
+        datasetName = parameters['datasetName']
+        topRestricted = parameters['topRestricted']
         # Load libraries
         FCF = FriendBasedCF()
         KDE = KernelDensityEstimation()
@@ -47,7 +49,7 @@ class LOREMain:
         AMC.buildLocationToLocationTransitionGraph(sortedTrainingCheckins)
         # Add caching policy (prevent a similar setting to be executed again) ---> Read from config
         executionRecord = open(
-            f"./Generated/LORE_{selectedDataset}_top" + str(topRestricted) + ".txt", 'w+')
+            f"./Generated/LORE_{datasetName}_top" + str(topRestricted) + ".txt", 'w+')
         # Calculating
         print("Evaluating results ...")
         for cnt, uid in enumerate(usersList):
@@ -59,10 +61,10 @@ class LOREMain:
                 predicted = list(reversed(overallScores.argsort()))[
                     :topRestricted]
                 actual = groundTruth[uid]
-                precision.append(precisionk(actual, predicted[:10]))
-                recall.append(recallk(actual, predicted[:10]))
-                print(cnt, uid, "pre@10:", np.mean(precision),
-                      "rec@10:", np.mean(recall))
+                precision.append(precisionk(actual, predicted[:topK]))
+                recall.append(recallk(actual, predicted[:topK]))
+                print(cnt, uid, "Precision@{topK}: ", np.mean(precision),
+                      "Recall@{topK}: ", np.mean(recall))
                 executionRecord.write('\t'.join([
                     str(cnt),
                     str(uid),
