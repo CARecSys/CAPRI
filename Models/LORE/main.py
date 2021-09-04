@@ -19,6 +19,7 @@ class LOREMain:
         # Init values
         alpha = 0.05
         deltaT = 3600 * 24
+        modelName = 'LORE'
         precision, recall = [], []
         topK = parameters['topK']
         datasetName = parameters['datasetName']
@@ -48,7 +49,7 @@ class LOREMain:
             socialRelations, poiCoos, sparseTrainingMatrix)
         KDE.precomputeKernelParameters(sparseTrainingMatrix, poiCoos)
         AMC.buildLocationToLocationTransitionGraph(sortedTrainingCheckins)
-        # Add caching policy (prevent a similar setting to be executed again) ---> Read from config
+        # Add caching policy (prevent a similar setting to be executed again)
         executionRecord = open(
             f"./Generated/LORE_{datasetName}_top" + str(topRestricted) + ".txt", 'w+')
         # Calculating

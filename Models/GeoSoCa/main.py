@@ -54,7 +54,7 @@ class GeoSoCaMain:
             saveModel(CC.Y, modelName, datasetName, 'Gamma')
         else:  # It should be loaded
             CC.loadModel(loadedModel)
-        # Add caching policy (prevent a similar setting to be executed again) ---> Read from config
+        # Add caching policy (prevent a similar setting to be executed again)
         executionRecord = open(
             f"./Generated/GeoSoCa_{datasetName}_top" + str(topRestricted) + ".txt", 'w+')
         # Calculating

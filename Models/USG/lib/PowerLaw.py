@@ -72,8 +72,9 @@ class PowerLaw(object):
             for n in range(len(x)):
                 Ew += 0.5 * (w0 + w1 * x[n] - t[n])**2
             Ew += 0.5 * lambda_w * (w0**2 + w1**2)
-        print("Finished in", time.time() - startTime, "seconds")
         self.a, self.b = 10**w0, w1
+        elapsedTime = '{:.2f}'.format(time.time() - startTime)
+        print(f"Finished in {elapsedTime} seconds.")
 
     def pr_d(self, d):
         d = max(0.01, d)

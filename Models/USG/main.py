@@ -3,7 +3,7 @@ from Models.USG.lib.PowerLaw import PowerLaw
 from Models.USG.lib.UserBasedCF import UserBasedCF
 from Evaluations.metrics import precisionk, recallk
 from Models.USG.lib.FriendBasedCF import FriendBasedCF
-from Models.utils import normalize, readTrainingData, readFriendData, readTestData, readPoiCoos
+from Models.utils import normalize, readTrainingData, readFriendData, readTestData, readPoiCoos, saveModel, loadModel
 
 
 class USGMain:
@@ -19,6 +19,7 @@ class USGMain:
         # Init values
         beta = 0.1
         alpha = 0.1
+        modelName = 'USG'
         precision, recall = [], []
         topK = parameters['topK']
         datasetName = parameters['datasetName']
@@ -38,11 +39,16 @@ class USGMain:
             datasetFiles['socialRelations'], 'dictionary', None)
         # Reading PoI data
         poiCoos = readPoiCoos(datasetFiles['poiCoos'])
-        # Computations
-        U.preComputeRecScores(trainingMatrix)
+        # User-based Collaborative Filtering Calculations
+        loadedModel = loadModel(modelName, datasetName, 'recScore')
+        if loadedModel == []:  # It should be created
+            U.preComputeRecScores(trainingMatrix)
+            saveModel(U.recScore, modelName, datasetName, 'recScore')
+        else:  # It should be loaded
+            U.loadModel(loadedModel)
         S.friendsSimilarityCalculation(socialRelations, trainingMatrix)
         G.fitDistanceDistribution(trainingMatrix, poiCoos)
-        # Add caching policy (prevent a similar setting to be executed again) ---> Read from config
+        # Add caching policy (prevent a similar setting to be executed again)
         executionRecord = open(
             f"./Generated/USG_{datasetName}_top" + str(topRestricted) + ".txt", 'w+')
         # Calculating
