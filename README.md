@@ -101,3 +101,28 @@ You can simply add the evaluations to the `./Evaluations/metrics.py` file.
 - Unifying **saveModel** and **loadModel** in utils.py
 - Add the impact of **fusions** when running models
 - Add a logging functionality
+
+## Cite
+If you find **LitePOI** useful for your research or development, please cite the following [paper](https://arxiv.org/):
+```
+@inproceedings{RecsysLab2021CAPRI,
+  title={TBD},
+  author={TBA},
+  booktitle={TBA},
+  year={2021}
+}
+```
+
+## Team
+CAPRI is developed by
+* Ali Tourani (TBD)
+* Hossein A. Rahmani(rahmanidashti@alumni.znu.ac.ir)
+* Yashar Deldjoo (yashar.deldjoo@poliba.it)
+
+<!-- It is maintained by [SisInfLab Group](http://sisinflab.poliba.it/) and [Hossein A. Rahmani](https://rahmanidashti.github.io/). -->
+
+<!-- <b id="f1"><sup>*</sup></b> Corresponding authors -->
+<!-- <sup id="a1">[*](#f1)</sup>  -->
+
+## Acknowledgements
+TBA
