@@ -116,7 +116,7 @@ If you find **LitePOI** useful for your research or development, please cite the
 ## Team
 CAPRI is developed by
 * Ali Tourani (TBD)
-* Hossein A. Rahmani(rahmanidashti@alumni.znu.ac.ir)
+* Hossein A. Rahmani (rahmanidashti@alumni.znu.ac.ir)
 * Yashar Deldjoo (yashar.deldjoo@poliba.it)
 
 <!-- It is maintained by [SisInfLab Group](http://sisinflab.poliba.it/) and [Hossein A. Rahmani](https://rahmanidashti.github.io/). -->
