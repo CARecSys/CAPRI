@@ -14,6 +14,7 @@ def __init__():
             "topK": topK,
             "topRestricted": topRestricted,
             "sparsityRatio": sparsityRatio,
+            "fusion": userInputs['Fusion'],
             "datasetName": userInputs['Dataset'],
         }
         # Dynamically load Model modules
