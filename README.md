@@ -126,7 +126,7 @@ CAPRI is developed with ❤️ by:
 
 | <a href="https://github.com/yasdel"><img src="https://yasdel.github.io/images/yashar_avator.jpg" width="70"></a> | <a href="https://github.com/rahmanidashti"><img src="https://github.com/rahmanidashti.png?size=70"></a> | <a href="https://github.com/alitourani"><img src="https://github.com/alitourani.png?size=70"></a> |
 | ---------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------- |
-| Yashar Deldjoo ([📩](mailto:yashar.deldjoo@poliba.it "yashar.deldjoo@poliba.it"))                                | Hossein A. Rahmani ([📩](mailto:rahmanidashti@alumni.znu.ac.ir "rahmanidashti@alumni.znu.ac.ir"))       | Ali Tourani ([📩](mailto:tourani@msc.guilan.ac.ir "tourani@msc.guilan.ac.ir"))                    |
+| [Yashar Deldjoo](mailto:yashar.deldjoo@poliba.it "yashar.deldjoo@poliba.it")                                     | [Hossein A. Rahmani](mailto:rahmanidashti@alumni.znu.ac.ir "rahmanidashti@alumni.znu.ac.ir")            | [Ali Tourani](mailto:tourani@msc.guilan.ac.ir "tourani@msc.guilan.ac.ir")                         |
 
 ## Acknowledgements
 
