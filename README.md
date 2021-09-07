@@ -109,7 +109,7 @@ There are many ways to contribute to **CAPRI**! You can contribute code, make im
 
 ## Cite
 
-If you find **LitePOI** useful for your research or development, please cite the following [paper](https://arxiv.org/):
+If you find **CAPRI** useful for your research or development, please cite the following [paper](https://arxiv.org/):
 
 ```
 @inproceedings{RecsysLab2021CAPRI,
