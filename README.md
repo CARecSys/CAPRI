@@ -106,7 +106,7 @@ You can simply add the evaluations to the `./Evaluations/metrics.py` file.
 There are many ways to contribute to **CAPRI**! You can contribute code, make improvements to the documentation, report or investigate [bugs and issues](https://github.com/RecSys-Lab/CAPRI/issues). We welcome all contributions from bug fixes to new features and extensions. Feel free to share with us your custom configuration files. We are creating a vault of reproducible experiments, and we would be glad of mentioning your contribution. Reference **CAPRI** in your blogs, papers, and articles. Also, talk about **CAPRI** on social media with the hashtag **#capri**.
 
 ## Cite
-If you find **LitePOI** useful for your research or development, please cite the following [paper](https://arxiv.org/):
+If you find **CAPRI** useful for your research or development, please cite the following [paper](https://arxiv.org/):
 ```
 @inproceedings{RecsysLab2021CAPRI,
   title={TBD},
