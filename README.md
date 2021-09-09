@@ -93,7 +93,12 @@ Note: do not forget to add a **_init_**.py file to the directories you make.
 
 ### Adding a new evaluation
 
-You can simply add the evaluations to the `./Evaluations/metrics.py` file.
+You can simply add the evaluations to the `./Evaluations/metrics.py` file. Please note that to ensure the evaluation modules work correctly, we use the Python unit test library which can be found in `./Evaluations/test.py`. To find out more about how unit tests work, check [this Digital-Ocean link](https://jingwen-z.github.io/how-to-apply-mock-with-python-unittest-module/ "this Digital-Ocean link"). Hereby, please always consider adding a unit test for the evaluation modules you add.
+To run the test module, you can run the following command:
+
+```bash
+python -m unittest test.py
+```
 
 ## ⚙️ Contributing
 
