@@ -1,5 +1,5 @@
 import unittest
-from metrics import precisionk, recallk, diversity, mapk, ndcgk, novelty, catalogCoverage, personalization
+from Evaluations.metrics import precisionk, recallk, diversity, mapk, ndcgk, novelty, catalogCoverage, personalization
 
 
 class TestMetrics(unittest.TestCase):

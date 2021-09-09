@@ -48,7 +48,7 @@ def recallk(actual, predicted):
     return 1.0 * len(set(actual) & set(predicted)) / len(actual)
 
 
-def diversity(predicted, itemsSimilarityMatrix):
+def listDiversity(predicted, itemsSimilarityMatrix):
     pairCount = 0
     similarity = 0
     pairs = itertools.combinations(predicted, 2)

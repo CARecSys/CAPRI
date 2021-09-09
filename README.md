@@ -116,7 +116,7 @@ CAPRI is developed with ❤️ by:
 
 TBA
 
-## 📝 Cite
+## 📝 Citation
 
 If you find **CAPRI** useful for your research or development, please cite the following [paper](https://arxiv.org/):
 
@@ -136,3 +136,4 @@ If you find **CAPRI** useful for your research or development, please cite the f
 - Add the impact of **fusions** when running models
 - Add a logging functionality
 - Add a unit-test structure for metrics
+- Add a separate metric class for fairness
