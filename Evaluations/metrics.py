@@ -6,9 +6,23 @@ import scipy.sparse as sp
 from sklearn.metrics.pairwise import cosine_similarity
 
 
-def mapk(actual, predicted, k):
+def mapk(actual: list, predicted: list, k: int):
     """
-    Computes mAP or mean Average Precision: the average of average precisions
+    Computes mean Average Precision at k (mAPk) for a set of predictions
+    Parameters
+    ----------
+    actual: list
+        A list of ground truth numeric/character vectors of relevant documents
+        example: ['X', 'Y', 'Z']
+    predicted: list
+        A list of predicted numeric/character vectors of retrieved documents for the corresponding element of actual
+        example: ['X', 'Y', 'Z']
+    k: integer
+        The number of elements of predicted to consider in the calculation
+    Returns
+    ----------
+    result:
+        mean Average Precision at k (mAPk)
     """
     score = 0.0
     numberOfHits = 0.0
@@ -18,12 +32,22 @@ def mapk(actual, predicted, k):
             score += numberOfHits / (i+1.0)
     if not actual:
         return 0.0
-    return score / min(len(actual), k)
+    result = score / min(len(actual), k)
+    return result
 
 
-def ndcgk(actual, predicted, k):
+def ndcgk(actual, predicted, k: int):
     """
-    Computes the Normalized Discounted Cumulative Gain (NDCG): a ranking quality analyzer
+    Computes the Normalized Discounted Cumulative Gain (NDCG) a ranking quality analyzer
+    Parameters
+    ----------
+
+    Returns
+    ----------
+
+    ----------
+    Metric Defintion:
+
     """
     idcg = 1.0
     dcg = 1.0 if predicted[0] in actual else 0.0
@@ -37,6 +61,20 @@ def ndcgk(actual, predicted, k):
 def precisionk(actual, predicted):
     """
     Computes the correct Positive Predictions over Total Positive Predictions (TP / TP+FP)
+    Parameters
+    ----------
+    actual: list
+        A list of ground truth numeric/character vectors of relevant documents
+        example: ['X', 'Y', 'Z']
+    predicted: list
+        A list of predicted numeric/character vectors of retrieved documents for the corresponding element of actual
+        example: ['X', 'Y', 'Z']
+    Returns
+    ----------
+
+    ----------
+    Metric Defintion:
+
     """
     return 1.0 * len(set(actual) & set(predicted)) / len(predicted)
 
@@ -44,11 +82,37 @@ def precisionk(actual, predicted):
 def recallk(actual, predicted):
     """
     Computes the correct Positive Predictions over Actual Positive Values (TP / TP+FN)
+    Parameters
+    ----------
+    actual: list
+        A list of ground truth numeric/character vectors of relevant documents
+        example: ['X', 'Y', 'Z']
+    predicted: list
+        A list of predicted numeric/character vectors of retrieved documents for the corresponding element of actual
+        example: ['X', 'Y', 'Z']
+    Returns
+    ----------
+
+    ----------
+    Metric Defintion:
+
     """
     return 1.0 * len(set(actual) & set(predicted)) / len(actual)
 
 
 def listDiversity(predicted, itemsSimilarityMatrix):
+    """
+    Computes the correct Positive Predictions over Actual Positive Values (TP / TP+FN)
+    Parameters
+    ----------
+
+    Returns
+    ----------
+
+    ----------
+    Metric Defintion:
+
+    """
     pairCount = 0
     similarity = 0
     pairs = itertools.combinations(predicted, 2)
@@ -67,7 +131,7 @@ def novelty(predicted: list, pop: dict, u: int, k: int):
     Computes the novelty for a list of recommended items for a user
     Parameters
     ----------
-    predicted : a list of recommedned items
+    predicted: a list of recommedned items
         Ordered predictions
         example: ['X', 'Y', 'Z']
     pop: dictionary
@@ -106,7 +170,7 @@ def catalogCoverage(predicted: List[list], catalog: set):
     Computes the catalog coverage for k lists of recommendations
     Parameters
     ----------
-    predicted : a list of lists
+    predicted: a list of lists
         Ordered predictions
         example: [['X', 'Y', 'Z'], ['X', 'Y', 'Z']]
     catalog: list
@@ -140,7 +204,7 @@ def personalization(predicted: List[list]):
     A model is "personalizing" well if the set of recommendations for each user is different.
     Parameters:
     ----------
-    predicted : a list of lists
+    predicted: a list of lists
         Ordered predictions
         example: [['X', 'Y', 'Z'], ['X', 'Y', 'Z']]
     Returns:
