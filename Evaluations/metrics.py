@@ -36,18 +36,25 @@ def mapk(actual: list, predicted: list, k: int):
     return result
 
 
-def ndcgk(actual, predicted, k: int):
+def ndcgk(actual: list, predicted: list, k: int):
     """
     Computes the Normalized Discounted Cumulative Gain (NDCG) a ranking quality analyzer
     Parameters
     ----------
-
+        actual: list
+        A list of ground truth numeric/character vectors of relevant documents
+        example: ['X', 'Y', 'Z']
+    predicted: list
+        A list of predicted numeric/character vectors of retrieved documents for the corresponding element of actual
+        example: ['X', 'Y', 'Z']
     Returns
     ----------
-
+    ndcg:
+        Normalized DCG score
     ----------
     Metric Defintion:
-
+    Jarvelin, K., & Kekalainen, J. (2002). Cumulated gain-based evaluation of IR techniques.
+    ACM Transactions on Information Systems (TOIS), 20(4), 422-446.
     """
     idcg = 1.0
     dcg = 1.0 if predicted[0] in actual else 0.0
@@ -55,10 +62,11 @@ def ndcgk(actual, predicted, k: int):
         if p in actual:
             dcg += 1.0 / np.log(i+2)
         idcg += 1.0 / np.log(i+2)
-    return dcg / idcg
+    ndcg = dcg / idcg
+    return ndcg
 
 
-def precisionk(actual, predicted):
+def precisionk(actual: list, predicted: list):
     """
     Computes the correct Positive Predictions over Total Positive Predictions (TP / TP+FP)
     Parameters
@@ -71,15 +79,12 @@ def precisionk(actual, predicted):
         example: ['X', 'Y', 'Z']
     Returns
     ----------
-
-    ----------
-    Metric Defintion:
-
+        precision at k
     """
     return 1.0 * len(set(actual) & set(predicted)) / len(predicted)
 
 
-def recallk(actual, predicted):
+def recallk(actual: list, predicted: list):
     """
     Computes the correct Positive Predictions over Actual Positive Values (TP / TP+FN)
     Parameters
@@ -92,26 +97,22 @@ def recallk(actual, predicted):
         example: ['X', 'Y', 'Z']
     Returns
     ----------
-
-    ----------
-    Metric Defintion:
-
+        recall at k
     """
     return 1.0 * len(set(actual) & set(predicted)) / len(actual)
 
 
-def listDiversity(predicted, itemsSimilarityMatrix):
+def listDiversity(predicted: list, itemsSimilarityMatrix):
     """
     Computes the correct Positive Predictions over Actual Positive Values (TP / TP+FN)
     Parameters
     ----------
-
+    predicted: list
+        A list of predicted numeric/character vectors of retrieved documents for the corresponding element of actual
+        example: ['X', 'Y', 'Z']
     Returns
     ----------
-
-    ----------
-    Metric Defintion:
-
+        diversity
     """
     pairCount = 0
     similarity = 0
@@ -168,6 +169,7 @@ def novelty(predicted: list, pop: dict, u: int, k: int):
 def catalogCoverage(predicted: List[list], catalog: set):
     """
     Computes the catalog coverage for k lists of recommendations
+    Coverage is the percent of items in the training data the model is able to recommend on a test set
     Parameters
     ----------
     predicted: a list of lists
@@ -175,7 +177,7 @@ def catalogCoverage(predicted: List[list], catalog: set):
         example: [['X', 'Y', 'Z'], ['X', 'Y', 'Z']]
     catalog: list
         A list of all unique items in the training data
-        example: ['A', 'B', 'C', 'X', 'Y', Z]
+        example: ['A', 'B', 'C', 'X', 'Y', 'Z']
     k: integer
         The number of observed recommendation lists
         which randomly choosed in our offline setup
@@ -214,7 +216,7 @@ def personalization(predicted: List[list]):
 
     def makeRecMatrix(predicted: List[list]):
         df = pd.DataFrame(data=predicted).reset_index().melt(
-            idVars='index', valueName='item',
+            id_vars='index', value_name='item',
         )
         df = df[['index', 'item']].pivot(
             index='index', columns='item', values='item')
@@ -225,13 +227,10 @@ def personalization(predicted: List[list]):
     # Create matrix for recommendations
     predicted = np.array(predicted)
     recMatrixSparse = makeRecMatrix(predicted)
-
     # Calculate similarity for every user's recommendation list
     similarity = cosine_similarity(X=recMatrixSparse, dense_output=False)
-
     # Get indicies for upper right triangle w/o diagonal
     upperRight = np.triu_indices(similarity.shape[0], k=1)
-
     # Calculate average similarity
     personalization = np.mean(similarity[upperRight])
     return 1-personalization
