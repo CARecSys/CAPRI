@@ -31,7 +31,7 @@ def mapk(actual: list, predicted: list, k: int):
     return result
 
 
-def ndcgk(actual: list, predicted: list, k: int):
+def ndcgk(actual: list, predicted: list):
     """
     Computes the Normalized Discounted Cumulative Gain (NDCG) a ranking quality analyzer
     Parameters
