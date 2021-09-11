@@ -1,7 +1,7 @@
 import unittest
 import numpy as np
-from metricsAccuracy import precisionk, recallk, mapk, ndcgk
-from metricsBeyoundAccuracy import listDiversity, novelty, catalogCoverage, personalization
+from metrics.accuracy import precisionk, recallk, mapk, ndcgk
+from metrics.beyoundAccuracy import listDiversity, novelty, catalogCoverage, personalization
 
 
 class TestMetrics(unittest.TestCase):

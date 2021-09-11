@@ -135,4 +135,6 @@ If you find **CAPRI** useful for your research or development, please cite the f
 - Add the impact of **fusions** when running models
 - Add a logging functionality
 - Add a separate metric class for fairness
-- Improved unit-tests for evaluations
+- Improve unit-tests for evaluations
+- Improve calling evaluations modules in Models
+- improved process of saving numpy arrays
