@@ -132,7 +132,6 @@ If you find **CAPRI** useful for your research or development, please cite the f
 ## ⚠️ TODOs
 
 - Add a proper **caching policy** to check the _Generated_ directory
-- Unifying **saveModel** and **loadModel** in utils.py
 - Add the impact of **fusions** when running models
 - Add a logging functionality
 - Add a separate metric class for fairness

@@ -1,6 +1,7 @@
 import unittest
 import numpy as np
-from metrics import precisionk, recallk, listDiversity, mapk, ndcgk, novelty, catalogCoverage, personalization
+from metricsAccuracy import precisionk, recallk, mapk, ndcgk
+from metricsBeyoundAccuracy import listDiversity, novelty, catalogCoverage, personalization
 
 
 class TestMetrics(unittest.TestCase):
@@ -27,16 +28,16 @@ class TestMetrics(unittest.TestCase):
                        np.asarray([3, 2, 0, 0, 1]), 1)
         self.assertEqual(actual, expected)
 
-    # Precision (TODO: check again)
+    # Precision
     def test_precision_correct(self):
         expected = 0.5
-        actual = precisionk([1, 1, 1, 0, 0, 0], [1, 1, 1, 1, 1, 1])
+        actual = precisionk([1, 2, 3, 4, 5, 6], [1, 2, 3, 7, 8, 9])
         self.assertEqual(actual, expected)
 
     # Recall
     def test_recall_correct(self):
-        expected = 0.6666667
-        actual = recallk([1, 1, 1, 0, 0, 0], [1, 0, 1, 1, 1, 1])
+        expected = 0.5
+        actual = recallk([1, 2, 3, 4, 5, 0], [1, 2, 3, 7, 8, 9])
         self.assertEqual(actual, expected)
 
     # Diversity

@@ -1,2 +1,2 @@
-from . import metrics
-from . import test
+from . import metricsAccuracy
+from . import metricsBeyoundAccuracy

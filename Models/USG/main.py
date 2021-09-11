@@ -1,7 +1,7 @@
 import numpy as np
 from Models.USG.lib.PowerLaw import PowerLaw
 from Models.USG.lib.UserBasedCF import UserBasedCF
-from Evaluations.metrics import precisionk, recallk
+from Evaluations.metricsAccuracy import precisionk, recallk
 from Models.USG.lib.FriendBasedCF import FriendBasedCF
 from Models.utils import normalize, readTrainingData, readFriendData, readTestData, readPoiCoos, saveModel, loadModel
 

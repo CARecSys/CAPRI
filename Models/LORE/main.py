@@ -1,5 +1,5 @@
 import numpy as np
-from Evaluations.metrics import precisionk, recallk
+from Evaluations.metricsAccuracy import precisionk, recallk
 from Models.LORE.lib.FriendBasedCF import FriendBasedCF
 from Models.LORE.lib.AdditiveMarkovChain import AdditiveMarkovChain
 from Models.LORE.lib.KernelDensityEstimation import KernelDensityEstimation

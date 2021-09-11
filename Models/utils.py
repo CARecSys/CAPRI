@@ -132,11 +132,11 @@ def loadModel(modelName, datasetName, moduleName):
 def saveModel(content, modelName, datasetName, moduleName):
     startTime = time.time()
     fileName = f'{modelName}_{datasetName}_{moduleName}.npy'
-    print("Saving model {fileName} ...",)
+    print(f"Saving model {fileName} ...",)
     path = os.path.abspath(f'./Models/{modelName}/savedModels/{fileName}')
     fileExists = os.path.exists(path)
     if fileExists == False:
         open(path, 'w+')
     np.save(path, content)
     elapsedTime = '{:.2f}'.format(time.time() - startTime)
-    print(f"Model saved in {path}/{fileName} (took {elapsedTime} seconds)")
+    print(f"Model saved in {path}\{fileName} (took {elapsedTime} seconds)")

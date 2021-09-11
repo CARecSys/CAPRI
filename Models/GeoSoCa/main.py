@@ -1,5 +1,5 @@
 import numpy as np
-from Evaluations.metrics import precisionk, recallk
+from Evaluations.metricsAccuracy import precisionk, recallk
 from Models.GeoSoCa.lib.SocialCorrelation import SocialCorrelation
 from Models.GeoSoCa.lib.CategoricalCorrelation import CategoricalCorrelation
 from Models.GeoSoCa.lib.AdaptiveKernelDensityEstimation import AdaptiveKernelDensityEstimation
@@ -18,12 +18,16 @@ class GeoSoCaMain:
         poiList = list(range(numberOfPoI))
         np.random.shuffle(usersList)
         # Init values
+        alpha = 0.5
         modelName = 'GeoSoCa'
         topK = parameters['topK']
         datasetName = parameters['datasetName']
         topRestricted = parameters['topRestricted']
-        alpha = 0.5
+        sparsityRatio = parameters['sparsityRatio']
         precision, recall = [], []
+        SCScores = np.zeros((numberOfUsers, numberOfPoI))
+        CCScores = np.zeros((numberOfUsers, numberOfPoI))
+        AKDEScores = np.zeros((numberOfUsers, numberOfPoI))
         # Load libraries
         AKDE = AdaptiveKernelDensityEstimation(alpha)
         SC = SocialCorrelation()
@@ -57,23 +61,73 @@ class GeoSoCaMain:
         # Add caching policy (prevent a similar setting to be executed again)
         executionRecord = open(
             f"./Generated/GeoSoCa_{datasetName}_top" + str(topRestricted) + ".txt", 'w+')
+        # Processing items
+        usersList = usersList[0:9]  # ------------ Temp ------------
+        print("Preparing Adaptive Kernel Density Estimation matrix ...")
+        loadedModel = loadModel(modelName, datasetName,
+                                f'AKDE_{sparsityRatio}')
+        if loadedModel == []:  # It should be created
+            for cnt, uid in enumerate(usersList):
+                if uid in groundTruth:
+                    for lid in poiList:
+                        AKDEScores[uid, lid] = AKDE.predict(uid, lid)
+            saveModel(AKDEScores, modelName, datasetName,
+                      f'AKDE_{sparsityRatio}')
+        else:  # It should be loaded
+            AKDEScores = loadedModel
+        print("Preparing Social Correlation matrix ...")
+        loadedModel = loadModel(modelName, datasetName,
+                                f'SC_{sparsityRatio}')
+        if loadedModel == []:  # It should be created
+            for cnt, uid in enumerate(usersList):
+                if uid in groundTruth:
+                    for lid in poiList:
+                        SCScores[uid, lid] = SC.predict(uid, lid)
+            saveModel(SCScores, modelName, datasetName,
+                      f'SC_{sparsityRatio}')
+        else:  # It should be loaded
+            SCScores = loadedModel
+        print("Preparing Categorical Correlation matrix ...")
+        loadedModel = loadModel(modelName, datasetName,
+                                f'CC_{sparsityRatio}')
+        if loadedModel == []:  # It should be created
+            for cnt, uid in enumerate(usersList):
+                if uid in groundTruth:
+                    for lid in poiList:
+                        CCScores[uid, lid] = CC.predict(uid, lid)
+            saveModel(CCScores, modelName, datasetName,
+                      f'CC_{sparsityRatio}')
+        else:  # It should be loaded
+            CCScores = loadedModel
+
         # Calculating
-        print("Evaluating results ...")
-        for cnt, uid in enumerate(usersList):
-            if uid in groundTruth:
-                overallScores = [AKDE.predict(uid, lid) * SC.predict(uid, lid) * CC.predict(uid, lid)
-                                 if trainingMatrix[uid, lid] == 0 else -1
-                                 for lid in poiList]
-                overallScores = np.array(overallScores)
-                predicted = list(reversed(overallScores.argsort()))[
-                    :topRestricted]
-                actual = groundTruth[uid]
-                precision.append(precisionk(actual, predicted[:topK]))
-                recall.append(recallk(actual, predicted[:topK]))
-                print(cnt, uid, f"Precision@{topK}:", '{:.4f}'.format(np.mean(precision)),
-                      f", Recall@{topK}:", '{:.4f}'.format(np.mean(recall)))
-                executionRecord.write('\t'.join([
-                    str(cnt),
-                    str(uid),
-                    ','.join([str(lid) for lid in predicted])
-                ]) + '\n')
+        # print("Evaluating results ...")
+        # for cnt, uid in enumerate(usersList):
+        #     if uid in groundTruth:
+        #         #
+        #         for lid in poiList:
+        #             if trainingMatrix[uid, lid] == 0:
+        #                 AKDEScores[uid, lid] = AKDE.predict(uid, lid)
+        #                 # SCScores[uid, lid] = SC.predict(uid, lid)
+        #                 # CCScores[uid, lid] = CC.predict(uid, lid)
+        #             else:
+        #                 AKDEScores[uid, lid] = -1
+        # saveModel(AKDEScores, modelName, datasetName,
+        #           f'AKDE_{sparsityRatio}')
+        # GeoSoCa_Dataset_AKDE_sparsityRatio
+        # overallScores = [AKDEScores * SCScores * CCScores
+        #                  if trainingMatrix[uid, lid] == 0 else -1
+        #                  for lid in poiList]
+        # overallScores = np.array(overallScores)
+        # predicted = list(reversed(overallScores.argsort()))[
+        #     :topRestricted]
+        # actual = groundTruth[uid]
+        # precision.append(precisionk(actual, predicted[:topK]))
+        # recall.append(recallk(actual, predicted[:topK]))
+        # print(cnt, uid, f"Precision@{topK}:", '{:.4f}'.format(np.mean(precision)),
+        #       f", Recall@{topK}:", '{:.4f}'.format(np.mean(recall)))
+        # executionRecord.write('\t'.join([
+        #     str(cnt),
+        #     str(uid),
+        #     ','.join([str(lid) for lid in predicted])
+        # ]) + '\n')
