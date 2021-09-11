@@ -56,32 +56,37 @@ class TestMetrics(unittest.TestCase):
         self.assertEqual(calculated, expected)
 
     # -------------------- Beyound-Accuracy Metrics ------------------
-    # # Diversity
-    # def test_diversity_correct(self):
-    #     expected = 0.0
-    #     actual = listDiversity([1, 2, 3], [1, 2])
-    #     self.assertEqual(actual, expected)
+    # Diversity
+    def test_diversity_correct(self):
+        predicted = [0, 0, 0]
+        itemsSimilarityMatrix = np.array(
+            [[1, 2, 3, 4], [5, 6, 7, 8], [9, 0, 3, 1]])
+        expected = 0.0
+        calculated = listDiversity(predicted, itemsSimilarityMatrix)
+        self.assertEqual(calculated, expected)
 
-    # # Novelty
-    # def test_novelty_correct(self):
-    #     predicted = ['X', 'Y', 'Z']
-    #     pop = {1198: 893, 1270: 876, 593: 876, 2762: 867}
-    #     numberOfUsers = 100
-    #     listLength = 10
-    #     process = novelty(predicted, pop, numberOfUsers, listLength)
-    #     expected = 10
-    #     self.assertEqual(process, expected)
+    # Novelty
+    def test_novelty_correct(self):
+        predicted = [1, 2, 3]
+        pop = {1: 10, 2: 20, 3: 30}
+        numberOfUsers = 100
+        listLength = 10
+        expected = 0.74
+        calculated = novelty(predicted, pop, numberOfUsers, listLength)
+        self.assertAlmostEqual(calculated, expected, 2)
 
-    # # Catalog Coverage
-    # def test_catalogCoverage_correct(self):
-    #     expected = 83.33
-    #     actual = catalogCoverage(
-    #         [['A', 'B', 'C', 'D'], ['A', 'B', 'C', 'Z']], ['A', 'B', 'C', 'X', 'Y', 'Z'])
-    #     self.assertEqual(actual, expected)
+    # Catalog Coverage
+    def test_catalogCoverage_correct(self):
+        predicted = [['A', 'B', 'C', 'D'], ['A', 'B', 'C', 'Z']]
+        catalog = ['A', 'B', 'C', 'X', 'Y', 'Z']
+        expected = 83.3
+        calculated = catalogCoverage(predicted, catalog)
+        self.assertAlmostEqual(calculated, expected, 1)
 
-    # # Personalization
-    # def test_personalization_correct(self):
-    #     expected = 0.25
-    #     actual = personalization(
-    #         [['A', 'B', 'C', 'D'], ['A', 'B', 'C', 'X'], ['A', 'B', 'C', 'Z']])
-    #     self.assertEqual(actual, expected)
+    # Personalization
+    def test_personalization_correct(self):
+        predicted = [['A', 'B', 'C', 'D'], [
+            'A', 'B', 'C', 'X'], ['A', 'B', 'C', 'Z']]
+        expected = 0.25
+        calculated = personalization(predicted)
+        self.assertEqual(calculated, expected)

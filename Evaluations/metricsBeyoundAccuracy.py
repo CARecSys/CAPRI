@@ -50,8 +50,6 @@ def novelty(predicted: list, pop: dict, u: int, k: int):
     ----------
     novelty:
         The novelty of the recommendations in system level
-    mean_self_information:
-        The novelty of the recommendations in recommended top-N list level
     ----------
     Metric Defintion:
     Zhou, T., Kuscsik, Z., Liu, J. G., Medo, M., Wakeling, J. R., & Zhang, Y. C. (2010).
