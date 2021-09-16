@@ -33,7 +33,7 @@ class GeoSoCaMain:
         SC = SocialCorrelation()
         CC = CategoricalCorrelation()
         print("Reading dataset instances ...")
-        # Loading trainin items
+        # Loading training items
         trainingMatrix = readTrainingData(
             datasetFiles['train'], numberOfUsers, numberOfPoI, True)
         socialRelations = readFriendData(
@@ -62,7 +62,7 @@ class GeoSoCaMain:
         executionRecord = open(
             f"./Generated/GeoSoCa_{datasetName}_top" + str(topRestricted) + ".txt", 'w+')
         # Processing items
-        usersList = usersList[0:9]  # ------------ Temp ------------
+        # usersList = usersList[0:9]  # ------------ Temp ------------
         print("Preparing Adaptive Kernel Density Estimation matrix ...")
         loadedModel = loadModel(modelName, datasetName,
                                 f'AKDE_{sparsityRatio}')
@@ -101,19 +101,21 @@ class GeoSoCaMain:
             CCScores = loadedModel
         # Evaluating
         print("Evaluating results ...")
-        overallScores = [AKDEScores * SCScores * CCScores
-                         if trainingMatrix[uid, lid] == 0 else -1
-                         for lid in poiList]
-        overallScores = np.array(overallScores)
-        predicted = list(reversed(overallScores.argsort()))[
-            :topRestricted]
-        actual = groundTruth[uid]
-        precision.append(precisionk(actual, predicted[:topK]))
-        recall.append(recallk(actual, predicted[:topK]))
-        print(cnt, uid, f"Precision@{topK}:", '{:.4f}'.format(np.mean(precision)),
-              f", Recall@{topK}:", '{:.4f}'.format(np.mean(recall)))
-        executionRecord.write('\t'.join([
-            str(cnt),
-            str(uid),
-            ','.join([str(lid) for lid in predicted])
-        ]) + '\n')
+        for cnt, uid in enumerate(usersList):
+            if uid in groundTruth:
+                overallScores = [AKDEScores[uid, lid] * SCScores[uid, lid] * CCScores[uid, lid]
+                                 if trainingMatrix[uid, lid] == 0 else -1
+                                 for lid in poiList]
+                overallScores = np.array(overallScores)
+                predicted = list(reversed(overallScores.argsort()))[
+                    :topRestricted]
+                actual = groundTruth[uid]
+                precision.append(precisionk(actual, predicted[:topK]))
+                recall.append(recallk(actual, predicted[:topK]))
+                print(cnt, uid, f"Precision@{topK}:", '{:.4f}'.format(np.mean(precision)),
+                      f", Recall@{topK}:", '{:.4f}'.format(np.mean(recall)))
+                executionRecord.write('\t'.join([
+                    str(cnt),
+                    str(uid),
+                    ','.join([str(lid) for lid in predicted])
+                ]) + '\n')

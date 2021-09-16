@@ -3,7 +3,7 @@ from Models.LORE.lib.FriendBasedCF import FriendBasedCF
 from Evaluations.metrics.accuracy import precisionk, recallk
 from Models.LORE.lib.AdditiveMarkovChain import AdditiveMarkovChain
 from Models.LORE.lib.KernelDensityEstimation import KernelDensityEstimation
-from Models.utils import readFriendData, readPoiCoos, readSparseTrainingData, readTestData, readTrainingCheckins
+from Models.utils import readFriendData, readPoiCoos, readSparseTrainingData, readTestData, readTrainingCheckins, saveModel, loadModel
 
 
 class LOREMain:
@@ -24,6 +24,10 @@ class LOREMain:
         topK = parameters['topK']
         datasetName = parameters['datasetName']
         topRestricted = parameters['topRestricted']
+        sparsityRatio = parameters['sparsityRatio']
+        FCFScores = np.zeros((numberOfUsers, numberOfPoI))
+        KDEScores = np.zeros((numberOfUsers, numberOfPoI))
+        AMCScores = np.zeros((numberOfUsers, numberOfPoI))
         # Load libraries
         FCF = FriendBasedCF()
         KDE = KernelDensityEstimation()
@@ -52,11 +56,48 @@ class LOREMain:
         # Add caching policy (prevent a similar setting to be executed again)
         executionRecord = open(
             f"./Generated/LORE_{datasetName}_top" + str(topRestricted) + ".txt", 'w+')
+        # Processing items
+        print("Preparing Friend-based CF matrix ...")
+        loadedModel = loadModel(modelName, datasetName,
+                                f'FCF_{sparsityRatio}')
+        if loadedModel == []:  # It should be created
+            for cnt, uid in enumerate(usersList):
+                if uid in groundTruth:
+                    for lid in poiList:
+                        FCFScores[uid, lid] = FCF.predict(uid, lid)
+            saveModel(FCFScores, modelName, datasetName,
+                      f'FCF_{sparsityRatio}')
+        else:  # It should be loaded
+            FCFScores = loadedModel
+        print("Preparing Kernel Density Estimation matrix ...")
+        loadedModel = loadModel(modelName, datasetName,
+                                f'KDE_{sparsityRatio}')
+        if loadedModel == []:  # It should be created
+            for cnt, uid in enumerate(usersList):
+                if uid in groundTruth:
+                    for lid in poiList:
+                        KDEScores[uid, lid] = KDE.predict(uid, lid)
+            saveModel(KDEScores, modelName, datasetName,
+                      f'KDE_{sparsityRatio}')
+        else:  # It should be loaded
+            KDEScores = loadedModel
+        print("Preparing Additive Markov Chain matrix ...")
+        loadedModel = loadModel(modelName, datasetName,
+                                f'AMC_{sparsityRatio}')
+        if loadedModel == []:  # It should be created
+            for cnt, uid in enumerate(usersList):
+                if uid in groundTruth:
+                    for lid in poiList:
+                        AMCScores[uid, lid] = AMC.predict(uid, lid)
+            saveModel(AMCScores, modelName, datasetName,
+                      f'AMC_{sparsityRatio}')
+        else:  # It should be loaded
+            AMCScores = loadedModel
         # Calculating
         print("Evaluating results ...")
         for cnt, uid in enumerate(usersList):
             if uid in groundTruth:
-                overallScores = [KDE.predict(uid, lid) * FCF.predict(uid, lid) * AMC.predict(uid, lid)
+                overallScores = [KDEScores[uid, lid] * FCFScores[uid, lid] * AMCScores[uid, lid]
                                  if (uid, lid) not in trainingTuples else -1
                                  for lid in poiList]
                 overallScores = np.array(overallScores)

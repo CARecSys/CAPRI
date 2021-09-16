@@ -24,6 +24,10 @@ class USGMain:
         topK = parameters['topK']
         datasetName = parameters['datasetName']
         topRestricted = parameters['topRestricted']
+        sparsityRatio = parameters['sparsityRatio']
+        UScores = np.zeros((numberOfUsers, numberOfPoI))
+        SScores = np.zeros((numberOfUsers, numberOfPoI))
+        GScores = np.zeros((numberOfUsers, numberOfPoI))
         # Load libraries
         U = UserBasedCF()
         S = FriendBasedCF(eta=0.05)
@@ -51,17 +55,57 @@ class USGMain:
         # Add caching policy (prevent a similar setting to be executed again)
         executionRecord = open(
             f"./Generated/USG_{datasetName}_top" + str(topRestricted) + ".txt", 'w+')
+        # Processing items
+        print("Preparing User-based CF matrix ...")
+        loadedModel = loadModel(modelName, datasetName,
+                                f'U_{sparsityRatio}')
+        if loadedModel == []:  # It should be created
+            for cnt, uid in enumerate(usersList):
+                if uid in groundTruth:
+                    for lid in poiList:
+                        UScores[uid, lid] = U.predict(uid, lid)
+                    UScores = np.array(UScores)
+            saveModel(UScores, modelName, datasetName,
+                      f'U_{sparsityRatio}')
+        else:  # It should be loaded
+            UScores = loadedModel
+        print("Preparing Friend Based CF matrix ...")
+        loadedModel = loadModel(modelName, datasetName,
+                                f'S_{sparsityRatio}')
+        if loadedModel == []:  # It should be created
+            for cnt, uid in enumerate(usersList):
+                if uid in groundTruth:
+                    for lid in poiList:
+                        SScores[uid, lid] = S.predict(uid, lid)
+                    SScores = np.array(SScores)
+            saveModel(SScores, modelName, datasetName,
+                      f'S_{sparsityRatio}')
+        else:  # It should be loaded
+            SScores = loadedModel
+        print("Preparing Power Law matrix ...")
+        loadedModel = loadModel(modelName, datasetName,
+                                f'G_{sparsityRatio}')
+        if loadedModel == []:  # It should be created
+            for cnt, uid in enumerate(usersList):
+                if uid in groundTruth:
+                    for lid in poiList:
+                        GScores[uid, lid] = G.predict(uid, lid)
+                    GScores = np.array(GScores)
+            saveModel(GScores, modelName, datasetName,
+                      f'G_{sparsityRatio}')
+        else:  # It should be loaded
+            GScores = loadedModel
         # Calculating
         print("Evaluating results ...")
         for cnt, uid in enumerate(usersList):
             if uid in groundTruth:
-                U_scores = normalize([U.predict(uid, lid)
+                U_scores = normalize([UScores[uid, lid]
                                       if trainingMatrix[uid, lid] == 0 else -1
                                       for lid in poiList])
-                S_scores = normalize([S.predict(uid, lid)
+                S_scores = normalize([SScores[uid, lid]
                                       if trainingMatrix[uid, lid] == 0 else -1
                                       for lid in poiList])
-                G_scores = normalize([G.predict(uid, lid)
+                G_scores = normalize([GScores[uid, lid]
                                       if trainingMatrix[uid, lid] == 0 else -1
                                       for lid in poiList])
                 U_scores = np.array(U_scores)
