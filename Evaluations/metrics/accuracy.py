@@ -1,21 +1,63 @@
 import numpy as np
 
 
+def precisionk(actual: list, recommended: list):
+    """
+    Computes the number of relevant results among the top k recommended items
+    Parameters
+    ----------
+    actual: list
+        A list of ground truth items
+        example: [X, Y, Z]
+    recommended: list
+        A list of items recommended by the system
+        example: [x, y, z]
+    ----------
+    Returns
+        precision at k
+    """
+    relevantResults = set(actual) & set(recommended)
+    assert 0 <= len(
+        relevantResults), f"The number of relevant results is not true (currently: {len(relevantResults)})"
+    return 1.0 * len(relevantResults) / len(recommended)
+
+
+def recallk(actual: list, recommended: list):
+    """
+    Computes the correct Positive Predictions over Actual Positive Values (TP / TP+FN)
+    Parameters
+    ----------
+    actual: list
+        A list of ground truth items
+        example: [X, Y, Z]
+    recommended: list
+        A list of items recommended by the system
+        example: [x, y, z]
+    ----------
+    Returns
+        recall at k
+    """
+    relevantResults = set(actual) & set(recommended)
+    assert 0 <= len(
+        relevantResults), f"The number of relevant results is not true (currently: {len(relevantResults)})"
+    return 1.0 * len(relevantResults) / len(actual)
+
+
 def mapk(actual: list, predicted: list, k: int):
     """
     Computes mean Average Precision at k (mAPk) for a set of predictions
     Parameters
     ----------
     actual: list
-        A list of ground truth numeric/character vectors of relevant documents
-        example: ['X', 'Y', 'Z']
+        A list of ground truth items
+        example: [X, Y, Z]
     predicted: list
-        A list of predicted numeric/character vectors of retrieved documents for the corresponding element of actual
-        example: ['X', 'Y', 'Z']
+        A list of predicted items, recommended by the system
+        example: [x, y, z]
     k: integer
         The number of elements of predicted to consider in the calculation
-    Returns
     ----------
+    Returns
     result:
         mean Average Precision at k (mAPk)
     """
@@ -37,13 +79,13 @@ def ndcgk(actual: list, predicted: list):
     Parameters
     ----------
         actual: list
-        A list of ground truth numeric/character vectors of relevant documents
-        example: ['X', 'Y', 'Z']
+        A list of ground truth items
+        example: [X, Y, Z]
     predicted: list
-        A list of predicted numeric/character vectors of retrieved documents for the corresponding element of actual
-        example: ['X', 'Y', 'Z']
-    Returns
+        A list of predicted items, recommended by the system
+        example: [x, y, z]
     ----------
+    Returns
     ndcg:
         Normalized DCG score
     ----------
@@ -59,39 +101,3 @@ def ndcgk(actual: list, predicted: list):
         idcg += 1.0 / np.log(i+2)
     ndcg = dcg / idcg
     return ndcg
-
-
-def precisionk(actual: list, predicted: list):
-    """
-    Computes the correct Positive Predictions over Total Positive Predictions (TP / TP+FP)
-    Parameters
-    ----------
-    actual: list
-        A list of ground truth numeric/character vectors of relevant documents
-        example: ['X', 'Y', 'Z']
-    predicted: list
-        A list of predicted numeric/character vectors of retrieved documents for the corresponding element of actual
-        example: ['X', 'Y', 'Z']
-    Returns
-    ----------
-        precision at k
-    """
-    return 1.0 * len(set(actual) & set(predicted)) / len(predicted)
-
-
-def recallk(actual: list, predicted: list):
-    """
-    Computes the correct Positive Predictions over Actual Positive Values (TP / TP+FN)
-    Parameters
-    ----------
-    actual: list
-        A list of ground truth numeric/character vectors of relevant documents
-        example: ['X', 'Y', 'Z']
-    predicted: list
-        A list of predicted numeric/character vectors of retrieved documents for the corresponding element of actual
-        example: ['X', 'Y', 'Z']
-    Returns
-    ----------
-        recall at k
-    """
-    return 1.0 * len(set(actual) & set(predicted)) / len(actual)
