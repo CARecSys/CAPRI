@@ -4,16 +4,18 @@ import numpy as np
 def precisionk(actual: list, recommended: list):
     """
     Computes the number of relevant results among the top k recommended items
+
     Parameters
     ----------
     actual: list
         A list of ground truth items
         example: [X, Y, Z]
     recommended: list
-        A list of items recommended by the system
+        A list of ground truth items (all possible relevant items)
         example: [x, y, z]
-    ----------
+
     Returns
+    ----------
         precision at k
     """
     relevantResults = set(actual) & set(recommended)
@@ -24,17 +26,19 @@ def precisionk(actual: list, recommended: list):
 
 def recallk(actual: list, recommended: list):
     """
-    Computes the correct Positive Predictions over Actual Positive Values (TP / TP+FN)
+    The number of relevant results among the top k recommended items divided by the total number of relevant items
+
     Parameters
     ----------
     actual: list
-        A list of ground truth items
+        A list of ground truth items (all possible relevant items)
         example: [X, Y, Z]
     recommended: list
         A list of items recommended by the system
         example: [x, y, z]
-    ----------
+
     Returns
+    ----------
         recall at k
     """
     relevantResults = set(actual) & set(recommended)
@@ -43,23 +47,25 @@ def recallk(actual: list, recommended: list):
     return 1.0 * len(relevantResults) / len(actual)
 
 
-def mapk(actual: list, predicted: list, k: int):
+def mapk(actual: list, predicted: list, k: int = 10):
     """
-    Computes mean Average Precision at k (mAPk) for a set of predictions
+    Computes mean Average Precision at k (mAPk) for a set of recommended items
+
     Parameters
     ----------
     actual: list
-        A list of ground truth items
+        A list of ground truth items (order doesn't matter)
         example: [X, Y, Z]
     predicted: list
-        A list of predicted items, recommended by the system
+        A list of predicted items, recommended by the system (order matters)
         example: [x, y, z]
-    k: integer
+    k: integer, optional (default to 10)
         The number of elements of predicted to consider in the calculation
-    ----------
+
     Returns
-    result:
-        mean Average Precision at k (mAPk)
+    ----------
+    score:
+        The mean Average Precision at k (mAPk)
     """
     score = 0.0
     numberOfHits = 0.0
@@ -69,13 +75,14 @@ def mapk(actual: list, predicted: list, k: int):
             score += numberOfHits / (i+1.0)
     if not actual:
         return 0.0
-    result = score / min(len(actual), k)
-    return result
+    score = score / min(len(actual), k)
+    return score
 
 
 def ndcgk(actual: list, predicted: list):
     """
     Computes the Normalized Discounted Cumulative Gain (NDCG) a ranking quality analyzer
+
     Parameters
     ----------
         actual: list
@@ -84,8 +91,9 @@ def ndcgk(actual: list, predicted: list):
     predicted: list
         A list of predicted items, recommended by the system
         example: [x, y, z]
-    ----------
+
     Returns
+    ----------
     ndcg:
         Normalized DCG score
     ----------

@@ -5,32 +5,7 @@ from metrics.beyoundAccuracy import listDiversity, novelty, catalogCoverage, per
 
 
 class TestMetrics(unittest.TestCase):
-    # # Map-K
-    # def test_mapk_joint(self):
-    #     k = 10
-    #     actual = ['1', '5', '7', '9']
-    #     predicted = ['1', '5', '7', '9']
-    #     expected = 1.0
-    #     calculated = mapk(actual, predicted, k)
-    #     self.assertEqual(calculated, expected)
-
-    # def test_mapk_coverage(self):
-    #     k = 5
-    #     actual = range(1, 5)
-    #     predicted = range(1, 4)
-    #     expected = 0.75
-    #     calculated = mapk(actual, predicted, k)
-    #     self.assertEqual(calculated, expected)
-
-    # def test_mapk_disjoint(self):
-    #     k = 2
-    #     actual = [1, 2, 3, 4]
-    #     predicted = [5, 6, 7]
-    #     expected = 0.0
-    #     calculated = mapk(actual, predicted, k)
-    #     self.assertEqual(calculated, expected)
-
-    # Precision
+    # Precision@k
     def test_precision1(self):
         actual = [2, 4, 5, 10]
         recommended = [1, 2, 3, 4, 5]
@@ -52,7 +27,7 @@ class TestMetrics(unittest.TestCase):
         calculated = precisionk(actual, recommended)
         self.assertEqual(calculated, expected)
 
-    # Recall
+    # Recall@k
     def test_recall1(self):
         actual = [2, 4, 5, 10]
         recommended = [1, 2, 3, 4, 5]
@@ -72,6 +47,42 @@ class TestMetrics(unittest.TestCase):
         recommended = [1, 3, 6, 7, 8]
         expected = 0.0
         calculated = recallk(actual, recommended)
+        self.assertEqual(calculated, expected)
+
+    # mAP@K
+    def test_mapk1(self):
+        actual = [2, 4, 5, 10]
+        predicted = [1, 2, 3, 4, 5]
+        expected = (1. / 2 + 2. / 4 + 3. / 5) / 4
+        calculated = mapk(actual, predicted)  # k=10 as default
+        self.assertEqual(calculated, expected)
+
+    def test_mapk2(self):
+        actual = [2, 4, 5, 10]
+        predicted = [10, 5, 2, 4, 3]
+        expected = 1.0
+        calculated = mapk(actual, predicted)
+        self.assertEqual(calculated, expected)
+
+    def test_mapk3(self):
+        actual = [2, 4, 5, 10]
+        predicted = [1, 3, 6, 7, 8]
+        expected = 0.0
+        calculated = mapk(actual, predicted)
+        self.assertEqual(calculated, expected)
+
+    def test_mapk4(self):
+        actual = [2, 4, 5, 10]
+        predicted = [11, 12, 13, 14, 15, 16, 2, 4, 5, 10]
+        expected = (1. / 7 + 2. / 8 + 3. / 9 + 4. / 10) / 4
+        calculated = mapk(actual, predicted)
+        self.assertEqual(calculated, expected)
+
+    def test_mapk5(self):
+        actual = [2, 4, 5, 10]
+        predicted = [2, 11, 12, 13, 14, 15, 4, 5, 10, 16]
+        expected = (1. + 2. / 7 + 3. / 8 + 4. / 9) / 4
+        calculated = mapk(actual, predicted)
         self.assertEqual(calculated, expected)
 
     # # NDCG
