@@ -8,7 +8,7 @@ from sklearn.metrics.pairwise import cosine_similarity
 
 def listDiversity(predicted: list, itemsSimilarityMatrix):
     """
-    Computes the correct Positive Predictions over Actual Positive Values (TP / TP+FN)
+    Computes the diversity for a list of recommended items for a user
 
     Parameters
     ----------
