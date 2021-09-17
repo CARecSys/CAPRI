@@ -9,11 +9,13 @@ from sklearn.metrics.pairwise import cosine_similarity
 def listDiversity(predicted: list, itemsSimilarityMatrix):
     """
     Computes the correct Positive Predictions over Actual Positive Values (TP / TP+FN)
+
     Parameters
     ----------
     predicted: list
         A list of predicted numeric/character vectors of retrieved documents for the corresponding element of actual
         example: ['X', 'Y', 'Z']
+
     Returns
     ----------
         diversity
@@ -34,6 +36,7 @@ def listDiversity(predicted: list, itemsSimilarityMatrix):
 def novelty(predicted: list, pop: dict, u: int, k: int):
     """
     Computes the novelty for a list of recommended items for a user
+
     Parameters
     ----------
     predicted: a list of recommedned items
@@ -46,12 +49,14 @@ def novelty(predicted: list, pop: dict, u: int, k: int):
         The number of users in the training data
     k: integer
         The length of recommended lists per user
+
     Returns
     ----------
     novelty:
         The novelty of the recommendations in system level
+
+    Metric Definition
     ----------
-    Metric Defintion:
     Zhou, T., Kuscsik, Z., Liu, J. G., Medo, M., Wakeling, J. R., & Zhang, Y. C. (2010).
     Solving the apparent diversity-accuracy dilemma of recommender systems.
     Proceedings of the National Academy of Sciences, 107(10), 4511-4515.
@@ -72,6 +77,7 @@ def catalogCoverage(predicted: List[list], catalog: set):
     """
     Computes the catalog coverage for k lists of recommendations
     Coverage is the percent of items in the training data the model is able to recommend on a test set
+
     Parameters
     ----------
     predicted: a list of lists
@@ -83,13 +89,15 @@ def catalogCoverage(predicted: List[list], catalog: set):
     k: integer
         The number of observed recommendation lists
         which randomly choosed in our offline setup
+
     Returns
     ----------
     catalogCoverage:
         The catalog coverage of the recommendations as a percent
         rounded to 2 decimal places
+
+    Metric Definition
     ----------
-    Metric Defintion:
     Ge, M., Delgado-Battenfeld, C., & Jannach, D. (2010, September).
     Beyond accuracy: evaluating recommender systems by coverage and serendipity.
     In Proceedings of the fourth ACM conference on Recommender systems (pp. 257-260). ACM.
@@ -106,12 +114,14 @@ def personalization(predicted: List[list]):
     A high score indicates good personalization (user's lists of recommendations are different).
     A low score indicates poor personalization (user's lists of recommendations are very similar).
     A model is "personalizing" well if the set of recommendations for each user is different.
-    Parameters:
+
+    Parameters
     ----------
     predicted: a list of lists
         Ordered predictions
         example: [['X', 'Y', 'Z'], ['X', 'Y', 'Z']]
-    Returns:
+
+    Returns
     -------
         The personalization score for all recommendations.
     """

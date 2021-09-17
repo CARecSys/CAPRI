@@ -81,7 +81,7 @@ def mapk(actual: list, predicted: list, k: int = 10):
 
 def ndcgk(actual: list, predicted: list):
     """
-    Computes the Normalized Discounted Cumulative Gain (NDCG) a ranking quality analyzer
+    Computes the Normalized Discounted Cumulative Gain (NDCG) for top k items in the ranked output
 
     Parameters
     ----------
@@ -96,8 +96,9 @@ def ndcgk(actual: list, predicted: list):
     ----------
     ndcg:
         Normalized DCG score
+
+    Metric Defintion
     ----------
-    Metric Defintion:
     Jarvelin, K., & Kekalainen, J. (2002). Cumulated gain-based evaluation of IR techniques.
     ACM Transactions on Information Systems (TOIS), 20(4), 422-446.
     """

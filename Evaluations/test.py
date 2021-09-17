@@ -5,6 +5,7 @@ from metrics.beyoundAccuracy import listDiversity, novelty, catalogCoverage, per
 
 
 class TestMetrics(unittest.TestCase):
+    # -------------------- Accuracy Metrics ------------------
     # Precision@k
     def test_precision1(self):
         actual = [2, 4, 5, 10]
@@ -85,46 +86,60 @@ class TestMetrics(unittest.TestCase):
         calculated = mapk(actual, predicted)
         self.assertEqual(calculated, expected)
 
-    # # NDCG
-    # def test_ndcgk_correct(self):
-    #     actual = [3, 2, 1, 0, 4]
-    #     predicted = [4, 1, 2, 3, 0]
-    #     expected = 1.0
-    #     calculated = ndcgk(actual, predicted)
-    #     self.assertEqual(calculated, expected)
+    # NDCG
+    def test_ndcgk1(self):
+        actual = [2, 4, 5, 10]
+        predicted = [5, 4, 3, 2]
+        expected = 1.0
+        calculated = ndcgk(actual, predicted)
+        self.assertEqual(calculated, expected)
 
-    # # -------------------- Beyound-Accuracy Metrics ------------------
-    # # Diversity
-    # def test_diversity_correct(self):
-    #     predicted = [0, 0, 0]
-    #     itemsSimilarityMatrix = np.array(
-    #         [[1, 2, 3, 4], [5, 6, 7, 8], [9, 0, 3, 1]])
-    #     expected = 0.0
-    #     calculated = listDiversity(predicted, itemsSimilarityMatrix)
-    #     self.assertEqual(calculated, expected)
+    def test_ndcgk2(self):
+        actual = [2, 4, 5, 10]
+        predicted = [5, 4, 3, 2]
+        expected = 1.0
+        calculated = ndcgk(actual, predicted)
+        self.assertEqual(calculated, expected)
 
-    # # Novelty
-    # def test_novelty_correct(self):
-    #     predicted = [1, 2, 3]
-    #     pop = {1: 10, 2: 20, 3: 30}
-    #     numberOfUsers = 100
-    #     listLength = 10
-    #     expected = 0.74
-    #     calculated = novelty(predicted, pop, numberOfUsers, listLength)
-    #     self.assertAlmostEqual(calculated, expected, 2)
+    def test_ndcgk3(self):
+        actual = [2, 4, 5, 10]
+        predicted = [5, 4, 3, 2]
+        expected = 1.0
+        calculated = ndcgk(actual, predicted)
+        self.assertEqual(calculated, expected)
 
-    # # Catalog Coverage
-    # def test_catalogCoverage_correct(self):
-    #     predicted = [['A', 'B', 'C', 'D'], ['A', 'B', 'C', 'Z']]
-    #     catalog = ['A', 'B', 'C', 'X', 'Y', 'Z']
-    #     expected = 83.3
-    #     calculated = catalogCoverage(predicted, catalog)
-    #     self.assertAlmostEqual(calculated, expected, 1)
+    # -------------------- Beyound-Accuracy Metrics ------------------
+    # Diversity
+    def test_diversity_correct(self):
+        predicted = [0, 0, 0]
+        itemsSimilarityMatrix = np.array(
+            [[1, 2, 3, 4], [5, 6, 7, 8], [9, 0, 3, 1]])
+        expected = 0.0
+        calculated = listDiversity(predicted, itemsSimilarityMatrix)
+        self.assertEqual(calculated, expected)
 
-    # # Personalization
-    # def test_personalization_correct(self):
-    #     predicted = [['A', 'B', 'C', 'D'], [
-    #         'A', 'B', 'C', 'X'], ['A', 'B', 'C', 'Z']]
-    #     expected = 0.25
-    #     calculated = personalization(predicted)
-    #     self.assertEqual(calculated, expected)
+    # Novelty
+    def test_novelty_correct(self):
+        predicted = [1, 2, 3]
+        pop = {1: 10, 2: 20, 3: 30}
+        numberOfUsers = 100
+        listLength = 10
+        expected = 0.74
+        calculated = novelty(predicted, pop, numberOfUsers, listLength)
+        self.assertAlmostEqual(calculated, expected, 2)
+
+    # Catalog Coverage
+    def test_catalogCoverage_correct(self):
+        predicted = [['A', 'B', 'C', 'D'], ['A', 'B', 'C', 'Z']]
+        catalog = ['A', 'B', 'C', 'X', 'Y', 'Z']
+        expected = 83.3
+        calculated = catalogCoverage(predicted, catalog)
+        self.assertAlmostEqual(calculated, expected, 1)
+
+    # Personalization
+    def test_personalization_correct(self):
+        predicted = [['A', 'B', 'C', 'D'], [
+            'A', 'B', 'C', 'X'], ['A', 'B', 'C', 'Z']]
+        expected = 0.25
+        calculated = personalization(predicted)
+        self.assertEqual(calculated, expected)
