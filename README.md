@@ -102,7 +102,7 @@ python -m unittest test.py
 
 ## ⚙️ Contributing
 
-There are many ways to contribute to **CAPRI**! You can contribute code, make improvements to the documentation, report or investigate [bugs and issues](https://github.com/RecSys-Lab/CAPRI/issues). We welcome all contributions from bug fixes to new features and extensions. Feel free to share with us your custom configuration files. We are creating a vault of reproducible experiments, and we would be glad of mentioning your contribution. Reference **CAPRI** in your blogs, papers, and articles. Also, talk about **CAPRI** on social media with the hashtag **#capri**.
+There are many ways to contribute to **CAPRI**! You can contribute code, make improvements to the documentation, report or investigate [bugs and issues](https://github.com/RecSys-Lab/CAPRI/issues). We welcome all contributions from bug fixes to new features and extensions. Feel free to share with us your custom configuration files. We are creating a vault of reproducible experiments, and we would be glad of mentioning your contribution. Reference **CAPRI** in your blogs, papers, and articles. Also, talk about **CAPRI** on social media with the hashtag **#capri_framework**.
 
 ## Team
 
@@ -133,8 +133,8 @@ If you find **CAPRI** useful for your research or development, please cite the f
 
 - Add a proper **caching policy** to check the _Generated_ directory
 - Add the impact of **fusions** when running models
-- Add a logging functionality
-- Add a separate metric class for fairness
-- Improve unit-tests for evaluations
+- Add a logging functionality for all modules
+- Add a separate metric evaluations class for fairness
+- Improve unit-tests for beyound accuracy evaluations and ndcg
 - Improve calling evaluations modules in Models
-- improved process of saving numpy arrays
+- improved process of saving numpy arrays and unifiying them
