@@ -1,6 +1,6 @@
 import unittest
 import numpy as np
-from metrics.accuracy import precisionk, recallk, mapk, ndcg, ndcgk
+from metrics.accuracy import precisionk, recallk, mapk, ndcgk
 from metrics.beyoundAccuracy import listDiversity, novelty, catalogCoverage, personalization
 
 
@@ -90,23 +90,20 @@ class TestMetrics(unittest.TestCase):
     def test_ndcgk1(self):
         actual = [2, 4, 5, 10]
         predicted = [5, 4, 3, 2]
-        expected = 1.0
+        dcg = 1.0 + (1.0 / np.log(2)) + (1.0 / np.log(4))
+        idcg = 1.0 + (1.0 / np.log(2)) + (1.0 / np.log(3)) + (1.0 / np.log(4))
+        expected = dcg / idcg
         calculated = ndcgk(actual, predicted)
-        self.assertEqual(calculated, expected)
+        self.assertAlmostEqual(calculated, expected, 2)
 
-    def test_ndcg1(self):
-        relevance = [5, 4, 3, 2]
-        rankedList = [1, 2, 3, 4, 5]
-        itemsPositions = np.asarray([2, 4, 5, 10])
-        idcg = ((2 ** 5 - 1) / np.log(2) +
-                (2 ** 4 - 1) / np.log(3) +
-                (2 ** 3 - 1) / np.log(4) +
-                (2 ** 2 - 1) / np.log(5))
-        expected = ((2 ** 5 - 1) / np.log(3) +
-                    (2 ** 4 - 1) / np.log(5) +
-                    (2 ** 3 - 1) / np.log(6)) / idcg
-        calculated = ndcg(rankedList, itemsPositions, relevance)
-        self.assertAlmostEqual(calculated, expected, 4)
+    def test_ndcgk2(self):
+        actual = [2, 4, 5, 10]
+        predicted = [2, 4, 5, 10]
+        dcg = 1.0 + (1.0 / np.log(2)) + (1.0 / np.log(3)) + (1.0 / np.log(4))
+        idcg = 1.0 + (1.0 / np.log(2)) + (1.0 / np.log(3)) + (1.0 / np.log(4))
+        expected = dcg / idcg
+        calculated = ndcgk(actual, predicted)
+        self.assertAlmostEqual(calculated, expected, 2)
 
     # -------------------- Beyound-Accuracy Metrics ------------------
     # Diversity

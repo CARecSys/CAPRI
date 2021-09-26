@@ -81,7 +81,7 @@ def mapk(actual: list, predicted: list, k: int = 10):
 
 def ndcgk(actual: list, predicted: list):
     """
-    Computes the Normalized Discounted Cumulative Gain (NDCG) for top k items in the ranked output
+    Calculates the implicit version of Normalized Discounted Cumulative Gain (NDCG) for top k items in the ranked output
 
     Parameters
     ----------
@@ -102,55 +102,16 @@ def ndcgk(actual: list, predicted: list):
     Jarvelin, K., & Kekalainen, J. (2002). Cumulated gain-based evaluation of IR techniques.
     ACM Transactions on Information Systems (TOIS), 20(4), 422-446.
     """
-    idcg = 1.0
+    idcg = 1.0  # the ideal DCG is 1
+    # The discounted cumulative gain sets to 1, if the first item of the predicted list exists in the ground-truth
     dcg = 1.0 if predicted[0] in actual else 0.0
     for i, p in enumerate(predicted[1:]):
+        # i is the index (0, 1, 2, ...) and p is the remaining predicted elements
         if p in actual:
+            # DCG is added by the value of relevance score divided by log, only if it exists in the ground-truth array
             dcg += 1.0 / np.log(i+2)
+        # Ideal DCG is added by the value of relevance score divided by log for all predicted elements
         idcg += 1.0 / np.log(i+2)
+    # Normalization
     ndcg = dcg / idcg
-    return ndcg
-
-
-def ndcg(rankedList: list, itemsPositions, relevance=None):
-    """
-    Computes the Normalized Discounted Cumulative Gain (NDCG) for top k items in the ranked output
-
-    Parameters
-    ----------
-    rankedList: list
-        -
-        example: [X, Y, Z]
-    itemsPositions: list
-        -
-        example: [x, y, z]
-    relevance:
-        -
-
-    Returns
-    ----------
-    ndcg:
-        Normalized DCG score
-
-    Metric Defintion
-    ----------
-    Jarvelin, K., & Kekalainen, J. (2002). Cumulated gain-based evaluation of IR techniques.
-    ACM Transactions on Information Systems (TOIS), 20(4), 422-446.
-    """
-    if relevance is None:
-        relevance = np.ones_like(itemsPositions)
-    assert len(relevance) == itemsPositions.shape[0]
-    # A dictionary for mapping the id of items to their corresponding relevance
-    mappedDictionary = {it: r for it, r in zip(itemsPositions, relevance)}
-    rankScores = np.asarray([mappedDictionary.get(it, 0.0)
-                            for it in rankedList[:None]], dtype=np.float32)
-    # Calculating ideal DCG
-    scores = np.sort(relevance)[::-1]
-    idealDCG = np.sum(np.divide(np.power(2, scores) - 1, np.log(np.arange(scores.shape[0], dtype=np.float32) + 2)),
-                      dtype=np.float32)
-    rankDCG = np.sum(np.divide(np.power(2, rankScores) - 1, np.log(np.arange(rankScores.shape[0], dtype=np.float32) + 2)),
-                     dtype=np.float32)
-    if rankDCG == 0.0:
-        return 0.0
-    ndcg = rankDCG / idealDCG
     return ndcg
