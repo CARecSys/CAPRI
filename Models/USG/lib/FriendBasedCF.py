@@ -1,5 +1,6 @@
 import time
 import numpy as np
+from utils import logger
 from collections import defaultdict
 
 
@@ -11,7 +12,7 @@ class FriendBasedCF(object):
 
     def friendsSimilarityCalculation(self, socialRelations, checkinMatrix):
         startTime = time.time()
-        print("Calculating friends similarity ...", )
+        logger('Calculating friends similarity ...')
         self.checkinMatrix = checkinMatrix
         for uid in socialRelations:
             for fid in socialRelations[uid]:
@@ -29,8 +30,8 @@ class FriendBasedCF(object):
                     if jaccardFriend > 0 and jaccardCheckin > 0:
                         self.socialProximity[uid].append(
                             [fid, jaccardFriend, jaccardCheckin])
-        elapsedTime = time.time() - startTime
-        print("Finished in", '{:.2f}'.format(elapsedTime), "seconds.")
+        elapsedTime = '{:.2f}'.format(time.time() - startTime)
+        logger(f'Finished in {elapsedTime} seconds.')
 
     def predict(self, i, j):
         if i in self.socialProximity:

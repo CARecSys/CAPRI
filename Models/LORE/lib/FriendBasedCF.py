@@ -1,7 +1,7 @@
 import time
 import math
 import numpy as np
-
+from utils import logger
 from collections import defaultdict
 
 
@@ -30,7 +30,7 @@ class FriendBasedCF(object):
     def friendsSimilarityCalculation(self, social_relations, poiCoos, sparseCheckinMatrix):
         self.sparseCheckinMatrix = sparseCheckinMatrix
         startTime = time.time()
-        print("Calculating friends similarity ...", )
+        logger('Calculating friends similarity ...')
         residenceLids = np.asarray(
             sparseCheckinMatrix.tocsr().argmax(axis=1)).reshape(-1)
         residenceCoos = [poiCoos[lid] for lid in residenceLids.tolist()]
@@ -47,8 +47,8 @@ class FriendBasedCF(object):
             # Max distance + 1 to smooth.
             self.socialProximity[uid] = [[fid, 1.0 - (dis / (1.0 + maxDistance[uid]))]
                                          for fid, dis in self.socialProximity[uid]]
-        elapsedTime = time.time() - startTime
-        print("Finished in", '{:.2f}'.format(elapsedTime), "seconds.")
+        elapsedTime = '{:.2f}'.format(time.time() - startTime)
+        logger(f'Finished in {elapsedTime} seconds.')
 
     def predict(self, i, j):
         if i in self.socialProximity:

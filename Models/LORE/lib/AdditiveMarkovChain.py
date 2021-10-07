@@ -1,5 +1,6 @@
 import time
 import numpy as np
+from utils import logger
 from collections import defaultdict
 
 
@@ -12,7 +13,7 @@ class AdditiveMarkovChain(object):
 
     def buildLocationToLocationTransitionGraph(self, sortedTrainingCheckins):
         startTime = time.time()
-        print("Building location-location transition graph (L2TG)...", )
+        logger('Building the location-location transition graph (L2TG) ...')
         S = sortedTrainingCheckins
         OCount = defaultdict(int)
         TCount = defaultdict(lambda: defaultdict(int))
@@ -24,8 +25,8 @@ class AdditiveMarkovChain(object):
                     OCount[lastL] += 1
                     TCount[lastL][l] += 1
                 lastL, lastT = l, t
-        elapsedTime = time.time() - startTime
-        print("Finished in", '{:.2f}'.format(elapsedTime), "seconds.")
+        elapsedTime = '{:.2f}'.format(time.time() - startTime)
+        logger(f'Finished in {elapsedTime} seconds.')
         self.S = S
         self.OCount = OCount
         self.TCount = TCount

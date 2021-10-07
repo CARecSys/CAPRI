@@ -1,4 +1,5 @@
 import time
+from utils import logger
 from numpy.linalg import norm
 
 
@@ -11,7 +12,7 @@ class UserBasedCF(object):
 
     def preComputeRecScores(self, C):
         startTime = time.time()
-        print("Training User-based Collaborative Filtering...", )
+        logger('Training User-based Collaborative Filtering ...')
         sim = C.dot(C.T)
         norms = [norm(C[i]) for i in range(C.shape[0])]
         for i in range(C.shape[0]):
@@ -21,7 +22,7 @@ class UserBasedCF(object):
                 sim[j][i] /= (norms[i] * norms[j])
         self.recScore = sim.dot(C)
         elapsedTime = '{:.2f}'.format(time.time() - startTime)
-        print(f"Finished in {elapsedTime} seconds.")
+        logger(f'Finished in {elapsedTime} seconds.')
 
     def predict(self, i, j):
         return self.recScore[i][j]

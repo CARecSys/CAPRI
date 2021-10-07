@@ -1,6 +1,7 @@
 import math
 import time
 import numpy as np
+from utils import logger
 from collections import defaultdict
 
 
@@ -52,7 +53,7 @@ class PowerLaw(object):
             self.visitedLids[uid] = checkinMatrix[uid, :].nonzero()[0]
 
         startTime = time.time()
-        print("Fitting distances distribution...", )
+        logger('Fitting distances distribution ...')
         self.poiCoos = poiCoos
         x, t = self.computeDistanceDistribution(checkinMatrix, poiCoos)
         x = np.log10(x)
@@ -74,7 +75,7 @@ class PowerLaw(object):
             Ew += 0.5 * lambda_w * (w0**2 + w1**2)
         self.a, self.b = 10**w0, w1
         elapsedTime = '{:.2f}'.format(time.time() - startTime)
-        print(f"Finished in {elapsedTime} seconds.")
+        logger(f'Finished in {elapsedTime} seconds.')
 
     def pr_d(self, d):
         d = max(0.01, d)

@@ -1,5 +1,6 @@
 import time
 import numpy as np
+from utils import logger
 
 
 class CategoricalCorrelation(object):
@@ -13,13 +14,13 @@ class CategoricalCorrelation(object):
 
     def computeGamma(self, checkinMatrix, poiCateMatrix):
         startTime = time.time()
-        print("Precomputing categorical correlation parameter beta...", )
+        logger('Precomputing categorical correlation parameter Beta ...')
         B = checkinMatrix.dot(poiCateMatrix)
         P = poiCateMatrix.T
         Y = B.dot(P)
         gamma = 1.0 + 1.0 / np.mean(np.log(1.0 + Y[Y > 0]))
-        elapsedTime = time.time() - startTime
-        print("Finished in", '{:.2f}'.format(elapsedTime), "seconds.")
+        elapsedTime = '{:.2f}'.format(time.time() - startTime)
+        logger(f'Finished in {elapsedTime} seconds.')
         self.gamma = gamma
         self.Y = Y
 

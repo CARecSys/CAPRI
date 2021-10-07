@@ -1,5 +1,6 @@
 import time
 import numpy as np
+from utils import logger
 
 
 class SocialCorrelation(object):
@@ -13,7 +14,7 @@ class SocialCorrelation(object):
 
     def computeBeta(self, checkinMatrix, socialMatrix):
         startTime = time.time()
-        print("Precomputing social correlation parameter Beta...", )
+        logger('Precomputing social correlation parameter Beta ...')
         S = socialMatrix
         R = checkinMatrix
         X = S.dot(R)
@@ -21,7 +22,7 @@ class SocialCorrelation(object):
         self.beta = beta
         self.X = X
         elapsedTime = '{:.2f}'.format(time.time() - startTime)
-        print(f"Finished in {elapsedTime} seconds.")
+        logger(f'Finished in {elapsedTime} seconds.')
 
     def predict(self, u, l):
         return 1.0 - (1.0 + self.X[u, l]) ** (1 - self.beta)

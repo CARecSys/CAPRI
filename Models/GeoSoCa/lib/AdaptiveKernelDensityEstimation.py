@@ -1,6 +1,7 @@
 import time
 import math
 import numpy as np
+from utils import logger
 from collections import defaultdict
 
 
@@ -17,7 +18,7 @@ class AdaptiveKernelDensityEstimation(object):
     def precomputeKernelParameters(self, checkinMatrix, poiCoos):
         self.poiCoos = poiCoos
         startTime = time.time()
-        print("Precomputing kernel parameters...", )
+        logger('Precomputing kernel parameters ...')
         trainingLocations = defaultdict(list)
         for uid in range(checkinMatrix.shape[0]):
             trainingLocations[uid] = [[lid, np.array(poiCoos[lid])]
@@ -46,8 +47,8 @@ class AdaptiveKernelDensityEstimation(object):
                 for lid, f_geo_val in fGeoValues.items():
                     h[uid][lid] = (g / f_geo_val) ** self.alpha
         self.h = h
-        elapsedTime = time.time() - startTime
-        print("Finished in", '{:.2f}'.format(elapsedTime), "seconds.")
+        elapsedTime = '{:.2f}'.format(time.time() - startTime)
+        logger(f'Finished in {elapsedTime} seconds.')
 
     def fGeoWithFixedBandwidth(self, u, l, R):
         l, (lat, lng) = l

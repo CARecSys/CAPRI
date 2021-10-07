@@ -1,6 +1,7 @@
 import time
 import math
 import numpy as np
+from utils import logger
 from collections import defaultdict
 
 
@@ -13,7 +14,7 @@ class KernelDensityEstimation(object):
     def precomputeKernelParameters(self, sparseCheckinMatrix, poiCoos):
         self.poiCoos = poiCoos
         startTime = time.time()
-        print("Pre-computing kernel parameters...", )
+        logger('Pre-computing kernel parameters ...')
         trainingLocations = defaultdict(list)
         for uid in range(sparseCheckinMatrix.shape[0]):
             trainingLocations[uid] = [poiCoos[lid]
@@ -25,8 +26,8 @@ class KernelDensityEstimation(object):
                 std = np.std([coo for coo in L[u]], axis=0)
                 bw[u] = 1.0 / (len(L[u])**(1.0/6)) * \
                     np.sqrt(0.5 * std.dot(std))
-        elapsedTime = time.time() - startTime
-        print("Finished in", '{:.2f}'.format(elapsedTime), "seconds.")
+        elapsedTime = '{:.2f}'.format(time.time() - startTime)
+        logger(f'Finished in {elapsedTime} seconds.')
         self.L = L
         self.bw = bw
 
