@@ -70,7 +70,7 @@ def validateUserItems():
         else:
             difference = [
                 item for item in selectedModelScopes if item not in selectedDatasetScopes]
-            printMessage = f'{userInputs["Dataset"]} database does not cover {difference} scope(s) of {userInputs["Model"]}!'
+            printMessage = f'{userInputs["Dataset"]} dataset does not cover {difference} scope(s) of {userInputs["Model"]}!'
             logger(printMessage, 'error')
     else:
         print('See you later!')

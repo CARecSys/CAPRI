@@ -1,4 +1,5 @@
 import numpy as np
+from utils import logger
 from Models.LORE.lib.FriendBasedCF import FriendBasedCF
 from Evaluations.metrics.accuracy import precisionk, recallk
 from Models.LORE.lib.AdditiveMarkovChain import AdditiveMarkovChain
@@ -8,7 +9,7 @@ from Models.utils import readFriendData, readPoiCoos, readSparseTrainingData, re
 
 class LOREMain:
     def main(datasetFiles, parameters):
-        print("Started processing in LORE model ...")
+        logger('Started processing in LORE model ...')
         # Reading data from selected dataset
         numberOfUsers, numberOfPoI = open(datasetFiles['dataSize'], 'r').readlines()[
             0].strip('\n').split()
@@ -32,7 +33,7 @@ class LOREMain:
         FCF = FriendBasedCF()
         KDE = KernelDensityEstimation()
         AMC = AdditiveMarkovChain(deltaT, alpha)
-        print("Reading dataset instances ...")
+        logger('Reading dataset instances ...')
         # Loading trainin items
         sparseTrainingMatrix, trainingTuples = readSparseTrainingData(
             datasetFiles['train'], numberOfUsers, numberOfPoI)
@@ -57,7 +58,7 @@ class LOREMain:
         executionRecord = open(
             f"./Generated/LORE_{datasetName}_top" + str(topRestricted) + ".txt", 'w+')
         # Processing items
-        print("Preparing Friend-based CF matrix ...")
+        logger('Preparing Friend-based CF matrix ...')
         loadedModel = loadModel(modelName, datasetName,
                                 f'FCF_{sparsityRatio}')
         if loadedModel == []:  # It should be created
@@ -69,7 +70,7 @@ class LOREMain:
                       f'FCF_{sparsityRatio}')
         else:  # It should be loaded
             FCFScores = loadedModel
-        print("Preparing Kernel Density Estimation matrix ...")
+        logger('Preparing Kernel Density Estimation matrix ...')
         loadedModel = loadModel(modelName, datasetName,
                                 f'KDE_{sparsityRatio}')
         if loadedModel == []:  # It should be created
@@ -81,7 +82,7 @@ class LOREMain:
                       f'KDE_{sparsityRatio}')
         else:  # It should be loaded
             KDEScores = loadedModel
-        print("Preparing Additive Markov Chain matrix ...")
+        logger('Preparing Additive Markov Chain matrix ...')
         loadedModel = loadModel(modelName, datasetName,
                                 f'AMC_{sparsityRatio}')
         if loadedModel == []:  # It should be created
@@ -94,7 +95,7 @@ class LOREMain:
         else:  # It should be loaded
             AMCScores = loadedModel
         # Calculating
-        print("Evaluating results ...")
+        logger('Evaluating results ...')
         for cnt, uid in enumerate(usersList):
             if uid in groundTruth:
                 overallScores = [KDEScores[uid, lid] * FCFScores[uid, lid] * AMCScores[uid, lid]

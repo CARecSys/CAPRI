@@ -4,6 +4,8 @@ import numpy as np
 import scipy.sparse as sparse
 from collections import defaultdict
 
+from utils import logger
+
 
 def readSparseTrainingData(trainFile, numberOfUsers, numberOfPoI):
     trainingData = open(trainFile, 'r').readlines()
@@ -117,26 +119,27 @@ def normalize(scores):
 
 def loadModel(modelName, datasetName, moduleName):
     fileName = f'{modelName}_{datasetName}_{moduleName}.npy'
-    print(f"Searching for {fileName} in previously saved models ...",)
+    logger(f"Searching for {fileName} in previously saved models ...")
     path = os.path.abspath(f'./Models/{modelName}/savedModels/{fileName}')
     fileExists = os.path.exists(path)
     if fileExists == True:
         content = np.load(path)
-        print(f"Model {fileName} loaded from previously execution results!")
+        logger(f"Model {fileName} loaded from previously execution results!")
         return content
     else:
-        print(f"Model {fileName} doesn't exist! It should be created!")
+        logger(
+            f"Model {fileName} doesn't exist! It should be created!", 'warn')
         return []
 
 
 def saveModel(content, modelName, datasetName, moduleName):
     startTime = time.time()
     fileName = f'{modelName}_{datasetName}_{moduleName}.npy'
-    print(f"Saving model {fileName} ...",)
+    logger(f"Saving model {fileName} ...")
     path = os.path.abspath(f'./Models/{modelName}/savedModels/{fileName}')
     fileExists = os.path.exists(path)
     if fileExists == False:
         open(path, 'w+')
     np.save(path, content)
     elapsedTime = '{:.2f}'.format(time.time() - startTime)
-    print(f"Model saved in {path}\{fileName} (took {elapsedTime} seconds)")
+    logger(f"Model saved in {path}\{fileName} (took {elapsedTime} seconds)")

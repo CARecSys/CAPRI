@@ -1,4 +1,5 @@
 import numpy as np
+from utils import logger
 from Models.USG.lib.PowerLaw import PowerLaw
 from Models.USG.lib.UserBasedCF import UserBasedCF
 from Models.USG.lib.FriendBasedCF import FriendBasedCF
@@ -8,7 +9,7 @@ from Models.utils import normalize, readTrainingData, readFriendData, readTestDa
 
 class USGMain:
     def main(datasetFiles, parameters):
-        print("Started processing in USG model ...")
+        logger('Started processing in USG model ...')
         # Reading data from selected dataset
         numberOfUsers, numberOfPoI = open(datasetFiles['dataSize'], 'r').readlines()[
             0].strip('\n').split()
@@ -32,7 +33,7 @@ class USGMain:
         U = UserBasedCF()
         S = FriendBasedCF(eta=0.05)
         G = PowerLaw()
-        print("Reading dataset instances ...")
+        logger('Reading dataset instances ...')
         # Loading training items
         trainingMatrix = readTrainingData(
             datasetFiles['train'], numberOfUsers, numberOfPoI, False)
@@ -56,7 +57,7 @@ class USGMain:
         executionRecord = open(
             f"./Generated/USG_{datasetName}_top" + str(topRestricted) + ".txt", 'w+')
         # Processing items
-        print("Preparing User-based CF matrix ...")
+        logger('Preparing User-based CF matrix ...')
         loadedModel = loadModel(modelName, datasetName,
                                 f'U_{sparsityRatio}')
         if loadedModel == []:  # It should be created
@@ -69,7 +70,7 @@ class USGMain:
                       f'U_{sparsityRatio}')
         else:  # It should be loaded
             UScores = loadedModel
-        print("Preparing Friend Based CF matrix ...")
+        logger('Preparing Friend-based CF matrix ...')
         loadedModel = loadModel(modelName, datasetName,
                                 f'S_{sparsityRatio}')
         if loadedModel == []:  # It should be created
@@ -82,7 +83,7 @@ class USGMain:
                       f'S_{sparsityRatio}')
         else:  # It should be loaded
             SScores = loadedModel
-        print("Preparing Power Law matrix ...")
+        logger('Preparing Power Law matrix ...')
         loadedModel = loadModel(modelName, datasetName,
                                 f'G_{sparsityRatio}')
         if loadedModel == []:  # It should be created
@@ -96,7 +97,7 @@ class USGMain:
         else:  # It should be loaded
             GScores = loadedModel
         # Calculating
-        print("Evaluating results ...")
+        logger('Evaluating results ...')
         for cnt, uid in enumerate(usersList):
             if uid in groundTruth:
                 U_scores = normalize([UScores[uid, lid]

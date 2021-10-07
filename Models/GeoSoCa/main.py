@@ -1,4 +1,5 @@
 import numpy as np
+from utils import logger
 from Evaluations.metrics.accuracy import precisionk, recallk
 from Models.GeoSoCa.lib.SocialCorrelation import SocialCorrelation
 from Models.GeoSoCa.lib.CategoricalCorrelation import CategoricalCorrelation
@@ -8,7 +9,7 @@ from Models.utils import readPoiCoos, readTestData, readCategoryData, readTraini
 
 class GeoSoCaMain:
     def main(datasetFiles, parameters):
-        print("Started processing in GeoSoCa model ...")
+        logger('Started processing in GeoSoCa model ...')
         # Reading data from selected dataset
         numberOfUsers, numberOfPoI, numberOfCategories = open(datasetFiles['dataSize'], 'r').readlines()[
             0].strip('\n').split()
@@ -32,7 +33,7 @@ class GeoSoCaMain:
         AKDE = AdaptiveKernelDensityEstimation(alpha)
         SC = SocialCorrelation()
         CC = CategoricalCorrelation()
-        print("Reading dataset instances ...")
+        logger('Reading dataset instances ...')
         # Loading training items
         trainingMatrix = readTrainingData(
             datasetFiles['train'], numberOfUsers, numberOfPoI, True)
@@ -75,7 +76,7 @@ class GeoSoCaMain:
                       f'AKDE_{sparsityRatio}')
         else:  # It should be loaded
             AKDEScores = loadedModel
-        print("Preparing Social Correlation matrix ...")
+        logger('Preparing Social Correlation matrix ...')
         loadedModel = loadModel(modelName, datasetName,
                                 f'SC_{sparsityRatio}')
         if loadedModel == []:  # It should be created
@@ -87,7 +88,7 @@ class GeoSoCaMain:
                       f'SC_{sparsityRatio}')
         else:  # It should be loaded
             SCScores = loadedModel
-        print("Preparing Categorical Correlation matrix ...")
+        logger('Preparing Categorical Correlation matrix ...')
         loadedModel = loadModel(modelName, datasetName,
                                 f'CC_{sparsityRatio}')
         if loadedModel == []:  # It should be created
@@ -100,7 +101,7 @@ class GeoSoCaMain:
         else:  # It should be loaded
             CCScores = loadedModel
         # Evaluating
-        print("Evaluating results ...")
+        logger('Evaluating results ...')
         for cnt, uid in enumerate(usersList):
             if uid in groundTruth:
                 overallScores = [AKDEScores[uid, lid] * SCScores[uid, lid] * CCScores[uid, lid]
