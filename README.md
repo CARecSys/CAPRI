@@ -133,7 +133,6 @@ If you find **CAPRI** useful for your research or development, please cite the f
 
 - Add a proper **caching policy** to check the _Generated_ directory
 - Add the impact of **fusions** when running models
-- Add a logging functionality for all modules
 - Add a separate metric evaluations class for fairness
 - Improve unit-tests for beyound accuracy evaluations and ndcg
 - Improve calling evaluations modules in Models

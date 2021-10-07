@@ -1,4 +1,5 @@
 import os
+import logging
 from config import datasets, dataDirectory
 
 
@@ -7,7 +8,9 @@ def loadDataset(datasetName):
     # If model was not among supported models
     supportedDatasets = list(datasets.keys())
     if not datasetName in supportedDatasets:
-        print('[Error] Dataset not supported!')
+        printMessage = 'The selected dataset was not among the supported dataset!'
+        print(f'[Error] {printMessage}')
+        logging.error(printMessage)
         return
     # Otherwise, list the files existing in dataset directories
     print(f'Preparing {datasetName} dataset items ...')
