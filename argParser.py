@@ -1,4 +1,4 @@
-import logging
+from utils import logger
 from PyInquirer import prompt
 from config import datasets, models, fusions
 
@@ -65,13 +65,12 @@ def validateUserItems():
         isCovered = all(
             item in selectedDatasetScopes for item in selectedModelScopes)
         if (isCovered):
-            logging.info(f'User inputs: {userInputs}')
+            logger(f'User inputs: {userInputs}', 'info', True)
             return userInputs
         else:
             difference = [
                 item for item in selectedModelScopes if item not in selectedDatasetScopes]
             printMessage = f'{userInputs["Dataset"]} database does not cover {difference} scope(s) of {userInputs["Model"]}!'
-            print(printMessage)
-            logging.error(printMessage)
+            logger(printMessage, 'error')
     else:
         print('See you later!')
