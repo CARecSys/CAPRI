@@ -1,5 +1,5 @@
 import numpy as np
-from utils import logger
+from utils import logger, textToOperator
 from Models.USG.lib.PowerLaw import PowerLaw
 from Models.USG.lib.UserBasedCF import UserBasedCF
 from Models.USG.lib.FriendBasedCF import FriendBasedCF
@@ -23,6 +23,7 @@ class USGMain:
         modelName = 'USG'
         precision, recall = [], []
         topK = parameters['topK']
+        fusion = parameters['fusion']
         datasetName = parameters['datasetName']
         topRestricted = parameters['topRestricted']
         sparsityRatio = parameters['sparsityRatio']
@@ -112,8 +113,9 @@ class USGMain:
                 U_scores = np.array(U_scores)
                 S_scores = np.array(S_scores)
                 G_scores = np.array(G_scores)
-                overallScores = (1.0 - alpha - beta) * U_scores + \
-                    alpha * S_scores + beta * G_scores
+                # overallScores = (1.0 - alpha - beta) * U_scores + alpha * S_scores + beta * G_scores
+                overallScores = textToOperator(
+                    fusion, [(1.0 - alpha - beta) * U_scores, alpha * S_scores, beta * G_scores])
                 predicted = list(reversed(overallScores.argsort()))[
                     :topRestricted]
                 actual = groundTruth[uid]

@@ -4,7 +4,8 @@ import datetime
 from typing_extensions import Literal
 
 logLevelType = Literal["info", "warn", "error"]
-operators = {"Sum": operator.add, "Product": operator.mul}
+operators = {"Sum": operator.add,
+             "Product": operator.mul, "WeightedSum": operator.add}
 
 
 def logger(message: str, logLevel: logLevelType = "info", noConsolePrint: bool = False):
@@ -37,13 +38,17 @@ def logger(message: str, logLevel: logLevelType = "info", noConsolePrint: bool =
         logging.info(printMessage)
 
 
-def textToOperator(operator: str):
+def textToOperator(operator: str, operands: list):
     """
     Converts a pre-defined text into operator
     Parameters
     ----------
     operator: str
         A message to be shown in both logger file and command line
-        example: "My Sample Message"
+        example: "Sum"
     """
-    return (operators[operator](1, 1))
+    # Final result initialized by effect-less value
+    result = 1 if operator == 'Product' else 0
+    for operand in operands:
+        result = operators[operator](result, operand)
+    return result

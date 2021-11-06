@@ -1,5 +1,5 @@
 import numpy as np
-from utils import logger
+from utils import logger, textToOperator
 from Evaluations.metrics.accuracy import precisionk, recallk
 from Models.GeoSoCa.lib.SocialCorrelation import SocialCorrelation
 from Models.GeoSoCa.lib.CategoricalCorrelation import CategoricalCorrelation
@@ -22,6 +22,7 @@ class GeoSoCaMain:
         alpha = 0.5
         modelName = 'GeoSoCa'
         topK = parameters['topK']
+        fusion = parameters['fusion']
         datasetName = parameters['datasetName']
         topRestricted = parameters['topRestricted']
         sparsityRatio = parameters['sparsityRatio']
@@ -104,7 +105,7 @@ class GeoSoCaMain:
         logger('Evaluating results ...')
         for cnt, uid in enumerate(usersList):
             if uid in groundTruth:
-                overallScores = [AKDEScores[uid, lid] * SCScores[uid, lid] * CCScores[uid, lid]
+                overallScores = [textToOperator(fusion, [AKDEScores[uid, lid], SCScores[uid, lid], CCScores[uid, lid]])
                                  if trainingMatrix[uid, lid] == 0 else -1
                                  for lid in poiList]
                 overallScores = np.array(overallScores)

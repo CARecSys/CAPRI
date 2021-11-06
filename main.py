@@ -6,10 +6,9 @@ from config import topK, topRestricted, sparsityRatio
 
 
 def __init__():
-    print("Welcome! Here you can select the desired sources:")
     # Creating log file
     logging.basicConfig(filename='logger.log', level=logging.INFO)
-    logger('Framework started!')
+    logger('CAPRI framework started!')
     # Getting inputs from users
     userInputs = validateUserItems()
     # If selections were not empty

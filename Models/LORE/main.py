@@ -1,5 +1,5 @@
 import numpy as np
-from utils import logger
+from utils import logger, textToOperator
 from Models.LORE.lib.FriendBasedCF import FriendBasedCF
 from Evaluations.metrics.accuracy import precisionk, recallk
 from Models.LORE.lib.AdditiveMarkovChain import AdditiveMarkovChain
@@ -23,6 +23,7 @@ class LOREMain:
         modelName = 'LORE'
         precision, recall = [], []
         topK = parameters['topK']
+        fusion = parameters['fusion']
         datasetName = parameters['datasetName']
         topRestricted = parameters['topRestricted']
         sparsityRatio = parameters['sparsityRatio']
@@ -98,7 +99,7 @@ class LOREMain:
         logger('Evaluating results ...')
         for cnt, uid in enumerate(usersList):
             if uid in groundTruth:
-                overallScores = [KDEScores[uid, lid] * FCFScores[uid, lid] * AMCScores[uid, lid]
+                overallScores = [textToOperator(fusion, [KDEScores[uid, lid], FCFScores[uid, lid], AMCScores[uid, lid]])
                                  if (uid, lid) not in trainingTuples else -1
                                  for lid in poiList]
                 overallScores = np.array(overallScores)

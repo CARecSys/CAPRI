@@ -131,10 +131,8 @@ If you find **CAPRI** useful for your research or development, please cite the f
 
 ## ⚠️ TODOs
 
-- Add the impact of **fusions** when running models
-- Improve unit-tests for beyound accuracy evaluations and ndcg
+- Add the impact of **Weighted Sum Fusion** when running models
 - Evaluations should be a separate module, running at the end of each model
-- Add a proper **caching policy** to check the _Generated_ directory
-- Add a separate metric evaluations class for fairness
-- Improve calling evaluations modules in Models
 - improved process of saving numpy arrays and unifiying them
+- Improve unit-tests for beyound accuracy evaluations
+- Add a separate metric evaluations class for fairness
