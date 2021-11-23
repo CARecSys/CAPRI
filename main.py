@@ -1,7 +1,7 @@
 import logging
 from utils import logger
 from loadDataset import loadDataset
-from argParser import validateUserItems
+from commandParser import getUserChoices
 from config import topK, topRestricted, sparsityRatio
 
 
@@ -10,7 +10,7 @@ def __init__():
     logging.basicConfig(filename='logger.log', level=logging.INFO)
     logger('CAPRI framework started!')
     # Getting inputs from users
-    userInputs = validateUserItems()
+    userInputs = getUserChoices()
     # If selections were not empty
     if (userInputs != None):
         # Initialize dataset items

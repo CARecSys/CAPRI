@@ -8,7 +8,18 @@ datasetChoices = []
 evaluatorChoices = []
 
 
-def parametersToChoices():
+def initChoices():
+    """
+    Preparing choices for the questions
+
+    Parameters
+    ----------
+    None
+
+    Returns
+    -------
+    None
+    """
     # Preparing model items
     for model in models:
         modelChoices.append(model)
@@ -23,9 +34,21 @@ def parametersToChoices():
         evaluatorChoices.append({'name': evaluator})
 
 
-def getUserInput():
+def interactiveCommandForm():
+    """
+    Generating the interactive form for the user to select the parameters
+
+    Parameters
+    ----------
+    None
+
+    Returns
+    -------
+    userInputs: dict
+        Dictionary containing the user inputs
+    """
     # Initiate choices
-    parametersToChoices()
+    initChoices()
     # Appy choices to the questions
     questions = [
         {
@@ -64,8 +87,20 @@ def getUserInput():
     return userInputs
 
 
-def validateUserItems():
-    userInputs = getUserInput()
+def getUserChoices():
+    """
+    Getting the user inputs and validating them
+
+    Parameters
+    ----------
+    None
+
+    Returns
+    -------
+    userInputs: dict
+        Dictionary containing the user inputs
+    """
+    userInputs = interactiveCommandForm()
     confirmation = userInputs['Confirmation']
     if (confirmation == True):
         print('Validating your choices ...')
