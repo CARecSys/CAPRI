@@ -24,3 +24,6 @@ datasets = {
 
 # An array of selected operations
 fusions = ["Product", "Sum", "WeightedSum"]
+
+# List of evaluation metrics
+evaluationMetrics = ["Precision", "Recall", "mAP", "NDCG"]

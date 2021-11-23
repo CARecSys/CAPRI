@@ -136,3 +136,4 @@ If you find **CAPRI** useful for your research or development, please cite the f
 - improved process of saving numpy arrays and unifiying them
 - Improve unit-tests for beyound accuracy evaluations
 - Add a separate metric evaluations class for fairness
+- GridSearch for all the parameters as weighted sum

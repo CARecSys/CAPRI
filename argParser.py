@@ -1,10 +1,11 @@
 from utils import logger
 from PyInquirer import prompt
-from config import datasets, models, fusions
+from config import datasets, models, fusions, evaluationMetrics
 
 modelChoices = []
 fusionChoices = []
 datasetChoices = []
+evaluatorChoices = []
 
 
 def parametersToChoices():
@@ -17,6 +18,9 @@ def parametersToChoices():
     # Preparing fusion items
     for fusion in fusions:
         fusionChoices.append(fusion)
+    # Preparing evaluation metrics items
+    for evaluator in evaluationMetrics:
+        evaluatorChoices.append({'name': evaluator})
 
 
 def getUserInput():
@@ -43,6 +47,12 @@ def getUserInput():
             'choices': fusionChoices
         },
         {
+            'type': 'checkbox',
+            'name': 'Evaluation',
+            'message': 'Choose at least one evaluation metric:',
+            'choices': evaluatorChoices
+        },
+        {
             'type': 'confirm',
             'message': 'Do you confirm your selected choices?',
             'name': 'Confirmation',
@@ -64,13 +74,16 @@ def validateUserItems():
         # Checking if dataset covers all scopes of models
         isCovered = all(
             item in selectedDatasetScopes for item in selectedModelScopes)
-        if (isCovered):
-            logger(f'User inputs: {userInputs}', 'info', True)
-            return userInputs
-        else:
+        if (not isCovered):
             difference = [
                 item for item in selectedModelScopes if item not in selectedDatasetScopes]
             printMessage = f'{userInputs["Dataset"]} dataset does not cover {difference} scope(s) of {userInputs["Model"]}!'
             logger(printMessage, 'error')
-    else:
-        print('See you later!')
+            return
+        # Checking if at least one evaluation metric is selected
+        if (len(userInputs['Evaluation']) == 0):
+            printMessage = 'No evaluation metric has been selected!'
+            logger(printMessage, 'error')
+            return
+        logger(f'User inputs: {userInputs}', 'info', True)
+        return userInputs
