@@ -129,8 +129,8 @@ dmypy.json
 .pyre/
 
 # Generated execution results
-Generated/*
-!Generated/.gitkeep
+outputsDir/*
+!outputsDir/.gitkeep
 
 # Saved models
 Models/**/savedModels/*

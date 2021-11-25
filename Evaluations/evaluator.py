@@ -1,8 +1,8 @@
 import numpy as np
 from Models.utils import normalize
 from utils import logger, textToOperator
-from Evaluations.metrics.accuracy import precisionk, recallk
-from config import USGDict, topK, topRestricted, evaluationResultsDir
+from config import USGDict, topK, topRestricted, outputsDir
+from Evaluations.metrics.accuracy import precisionk, recallk, ndcgk, mapk
 
 
 def overallScoreCalculator(modelName: str, userId, evalParams, modelParams):
@@ -41,19 +41,19 @@ def overallScoreCalculator(modelName: str, userId, evalParams, modelParams):
     elif (modelName == 'USG'):
         alpha, beta = USGDict['alpha'], USGDict['beta']
         UScores, SScores, GScores = modelParams['U'], modelParams['S'], modelParams['G']
-        U_scores = normalize([UScores[userId, lid]
-                              if trainingMatrix[userId, lid] == 0 else -1
-                              for lid in poiList])
-        S_scores = normalize([SScores[userId, lid]
-                              if trainingMatrix[userId, lid] == 0 else -1
-                              for lid in poiList])
-        G_scores = normalize([GScores[userId, lid]
-                              if trainingMatrix[userId, lid] == 0 else -1
-                              for lid in poiList])
-        U_scores, S_scores, G_scores = np.array(
-            U_scores), np.array(S_scores), np.array(G_scores)
+        UScoresNormal = normalize([UScores[userId, lid]
+                                   if trainingMatrix[userId, lid] == 0 else -1
+                                   for lid in poiList])
+        SScoresNormal = normalize([SScores[userId, lid]
+                                   if trainingMatrix[userId, lid] == 0 else -1
+                                   for lid in poiList])
+        GScoresNormal = normalize([GScores[userId, lid]
+                                   if trainingMatrix[userId, lid] == 0 else -1
+                                   for lid in poiList])
+        UScoresNormal, SScoresNormal, GScoresNormal = np.array(
+            UScoresNormal), np.array(SScoresNormal), np.array(GScoresNormal)
         overallScores = textToOperator(
-            fusion, [(1.0 - alpha - beta) * U_scores, alpha * S_scores, beta * G_scores])
+            fusion, [(1.0 - alpha - beta) * UScoresNormal, alpha * SScoresNormal, beta * GScoresNormal])
     return np.array(overallScores)
 
 
@@ -79,7 +79,7 @@ def evaluator(modelName: str, datasetName: str, evalParams: dict, modelParams: d
     precision, recall, map, ndcg = [], [], [], []
     # Add caching policy (prevent a similar setting to be executed again)
     fileName = f'Eval_{modelName}_{datasetName}_{fusion}_top{topK}_limit{topRestricted}'
-    evaluationResults = open(f"./{evaluationResultsDir}{fileName}.txt", 'w+')
+    evaluationResults = open(f"./{outputsDir}{fileName}.txt", 'w+')
     for counter, userId in enumerate(usersList):
         if userId in groundTruth:
             overallScores = []
@@ -91,6 +91,8 @@ def evaluator(modelName: str, datasetName: str, evalParams: dict, modelParams: d
             actual = groundTruth[userId]
             precision.append(precisionk(actual, predicted[:topK]))
             recall.append(recallk(actual, predicted[:topK]))
+            ndcg.append(ndcgk(actual, predicted[:topK]))
+            map.append(mapk(actual, predicted[:topK]))
             print(counter, userId, f"Precision@{topK}:", '{:.4f}'.format(np.mean(precision)),
                   f", Recall@{topK}:", '{:.4f}'.format(np.mean(recall)))
             evaluationResults.write('\t'.join([
