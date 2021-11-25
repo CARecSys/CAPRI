@@ -1,8 +1,7 @@
 import numpy as np
-from utils import logger, textToOperator
+from utils import logger
 from Evaluations.evaluator import evaluator
-from Evaluations.metrics.accuracy import precisionk, recallk
-from config import topK, sparsityRatio, topRestricted, GeoSoCaDict
+from config import sparsityRatio, GeoSoCaDict
 from Models.GeoSoCa.lib.SocialCorrelation import SocialCorrelation
 from Models.GeoSoCa.lib.CategoricalCorrelation import CategoricalCorrelation
 from Models.GeoSoCa.lib.AdaptiveKernelDensityEstimation import AdaptiveKernelDensityEstimation

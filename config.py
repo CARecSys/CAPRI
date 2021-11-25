@@ -2,7 +2,7 @@ import os
 
 # Paths
 dataDirectory = os.path.abspath('./Data/')
-cachingDirectory = os.path.abspath('./Generated/')
+evaluationResultsDir = os.path.abspath('./Generated/')
 
 # Default Parameters
 topK = 10

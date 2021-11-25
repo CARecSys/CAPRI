@@ -1,12 +1,11 @@
 import numpy as np
-from utils import logger, textToOperator
+from utils import logger
+from config import sparsityRatio
 from Evaluations.evaluator import evaluator
 from Models.USG.lib.PowerLaw import PowerLaw
 from Models.USG.lib.UserBasedCF import UserBasedCF
 from Models.USG.lib.FriendBasedCF import FriendBasedCF
-from Evaluations.metrics.accuracy import precisionk, recallk
-from config import topK, sparsityRatio, topRestricted, USGDict
-from Models.utils import normalize, readTrainingData, readFriendData, readTestData, readPoiCoos, saveModel, loadModel
+from Models.utils import readTrainingData, readFriendData, readTestData, readPoiCoos, saveModel, loadModel
 
 
 class USGMain:

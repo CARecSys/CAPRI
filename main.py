@@ -2,7 +2,6 @@ import logging
 from utils import logger
 from loadDataset import loadDataset
 from commandParser import getUserChoices
-from config import topK, topRestricted, sparsityRatio
 
 
 def __init__():
@@ -18,9 +17,6 @@ def __init__():
         logger(f'Dataset files: {datasetFiles}', 'info', True)
         # Initializing parameters
         parameters = {
-            "topK": topK,
-            "topRestricted": topRestricted,
-            "sparsityRatio": sparsityRatio,
             "fusion": userInputs['Fusion'],
             "datasetName": userInputs['Dataset'],
         }
