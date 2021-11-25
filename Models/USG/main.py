@@ -4,6 +4,7 @@ from Models.USG.lib.PowerLaw import PowerLaw
 from Models.USG.lib.UserBasedCF import UserBasedCF
 from Models.USG.lib.FriendBasedCF import FriendBasedCF
 from Evaluations.metrics.accuracy import precisionk, recallk
+from config import topK, sparsityRatio, topRestricted, USGDict
 from Models.utils import normalize, readTrainingData, readFriendData, readTestData, readPoiCoos, saveModel, loadModel
 
 
@@ -18,15 +19,11 @@ class USGMain:
         poiList = list(range(numberOfPoI))
         np.random.shuffle(usersList)
         # Init values
-        beta = 0.1
-        alpha = 0.1
         modelName = 'USG'
+        alpha, beta = USGDict['alpha'], USGDict['beta']
         precision, recall = [], []
-        topK = parameters['topK']
         fusion = parameters['fusion']
         datasetName = parameters['datasetName']
-        topRestricted = parameters['topRestricted']
-        sparsityRatio = parameters['sparsityRatio']
         UScores = np.zeros((numberOfUsers, numberOfPoI))
         SScores = np.zeros((numberOfUsers, numberOfPoI))
         GScores = np.zeros((numberOfUsers, numberOfPoI))

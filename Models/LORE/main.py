@@ -2,6 +2,7 @@ import numpy as np
 from utils import logger, textToOperator
 from Models.LORE.lib.FriendBasedCF import FriendBasedCF
 from Evaluations.metrics.accuracy import precisionk, recallk
+from config import topK, sparsityRatio, topRestricted, LoreDict
 from Models.LORE.lib.AdditiveMarkovChain import AdditiveMarkovChain
 from Models.LORE.lib.KernelDensityEstimation import KernelDensityEstimation
 from Models.utils import readFriendData, readPoiCoos, readSparseTrainingData, readTestData, readTrainingCheckins, saveModel, loadModel
@@ -18,15 +19,11 @@ class LOREMain:
         poiList = list(range(numberOfPoI))
         np.random.shuffle(usersList)
         # Init values
-        alpha = 0.05
-        deltaT = 3600 * 24
         modelName = 'LORE'
+        alpha, deltaT = LoreDict['alpha'], LoreDict['deltaT']
         precision, recall = [], []
-        topK = parameters['topK']
         fusion = parameters['fusion']
         datasetName = parameters['datasetName']
-        topRestricted = parameters['topRestricted']
-        sparsityRatio = parameters['sparsityRatio']
         FCFScores = np.zeros((numberOfUsers, numberOfPoI))
         KDEScores = np.zeros((numberOfUsers, numberOfPoI))
         AMCScores = np.zeros((numberOfUsers, numberOfPoI))
@@ -36,7 +33,7 @@ class LOREMain:
         AMC = AdditiveMarkovChain(deltaT, alpha)
         logger('Reading dataset instances ...')
         # Loading trainin items
-        sparseTrainingMatrix, trainingTuples = readSparseTrainingData(
+        sparseTrainingMatrix, trainingMatrix = readSparseTrainingData(
             datasetFiles['train'], numberOfUsers, numberOfPoI)
         # Loading a sorted list of check-ins
         trainingCheckins = readTrainingCheckins(
@@ -100,7 +97,7 @@ class LOREMain:
         for cnt, uid in enumerate(usersList):
             if uid in groundTruth:
                 overallScores = [textToOperator(fusion, [KDEScores[uid, lid], FCFScores[uid, lid], AMCScores[uid, lid]])
-                                 if (uid, lid) not in trainingTuples else -1
+                                 if (uid, lid) not in trainingMatrix else -1
                                  for lid in poiList]
                 overallScores = np.array(overallScores)
                 predicted = list(reversed(overallScores.argsort()))[

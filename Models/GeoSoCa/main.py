@@ -1,6 +1,7 @@
 import numpy as np
 from utils import logger, textToOperator
 from Evaluations.metrics.accuracy import precisionk, recallk
+from config import topK, sparsityRatio, topRestricted, GeoSoCaDict
 from Models.GeoSoCa.lib.SocialCorrelation import SocialCorrelation
 from Models.GeoSoCa.lib.CategoricalCorrelation import CategoricalCorrelation
 from Models.GeoSoCa.lib.AdaptiveKernelDensityEstimation import AdaptiveKernelDensityEstimation
@@ -19,13 +20,10 @@ class GeoSoCaMain:
         poiList = list(range(numberOfPoI))
         np.random.shuffle(usersList)
         # Init values
-        alpha = 0.5
         modelName = 'GeoSoCa'
-        topK = parameters['topK']
+        alpha = GeoSoCaDict['alpha']
         fusion = parameters['fusion']
         datasetName = parameters['datasetName']
-        topRestricted = parameters['topRestricted']
-        sparsityRatio = parameters['sparsityRatio']
         precision, recall = [], []
         SCScores = np.zeros((numberOfUsers, numberOfPoI))
         CCScores = np.zeros((numberOfUsers, numberOfPoI))

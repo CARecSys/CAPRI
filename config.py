@@ -27,3 +27,8 @@ fusions = ["Product", "Sum", "WeightedSum"]
 
 # List of evaluation metrics
 evaluationMetrics = ["Precision", "Recall", "mAP", "NDCG"]
+
+# Models Dictionaries
+GeoSoCaDict = {"alpha": 0.5}
+USGDict = {"alpha": 0.1, "beta": 0.1}
+LoreDict = {"alpha": 0.05, "deltaT": 3600 * 24}
