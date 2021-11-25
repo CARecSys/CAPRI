@@ -1,5 +1,6 @@
 import numpy as np
 from utils import logger, textToOperator
+from Evaluations.evaluator import evaluator
 from Models.LORE.lib.FriendBasedCF import FriendBasedCF
 from Evaluations.metrics.accuracy import precisionk, recallk
 from config import topK, sparsityRatio, topRestricted, LoreDict
@@ -21,7 +22,6 @@ class LOREMain:
         # Init values
         modelName = 'LORE'
         alpha, deltaT = LoreDict['alpha'], LoreDict['deltaT']
-        precision, recall = [], []
         fusion = parameters['fusion']
         datasetName = parameters['datasetName']
         FCFScores = np.zeros((numberOfUsers, numberOfPoI))
@@ -52,9 +52,6 @@ class LOREMain:
             socialRelations, poiCoos, sparseTrainingMatrix)
         KDE.precomputeKernelParameters(sparseTrainingMatrix, poiCoos)
         AMC.buildLocationToLocationTransitionGraph(sortedTrainingCheckins)
-        # Add caching policy (prevent a similar setting to be executed again)
-        executionRecord = open(
-            f"./Generated/LORE_{datasetName}_top" + str(topRestricted) + ".txt", 'w+')
         # Processing items
         logger('Preparing Friend-based CF matrix ...')
         loadedModel = loadModel(modelName, datasetName,
@@ -92,23 +89,8 @@ class LOREMain:
                       f'AMC_{sparsityRatio}')
         else:  # It should be loaded
             AMCScores = loadedModel
-        # Calculating
-        logger('Evaluating results ...')
-        for cnt, uid in enumerate(usersList):
-            if uid in groundTruth:
-                overallScores = [textToOperator(fusion, [KDEScores[uid, lid], FCFScores[uid, lid], AMCScores[uid, lid]])
-                                 if (uid, lid) not in trainingMatrix else -1
-                                 for lid in poiList]
-                overallScores = np.array(overallScores)
-                predicted = list(reversed(overallScores.argsort()))[
-                    :topRestricted]
-                actual = groundTruth[uid]
-                precision.append(precisionk(actual, predicted[:topK]))
-                recall.append(recallk(actual, predicted[:topK]))
-                print(cnt, uid, f"Precision@{topK}:", '{:.4f}'.format(np.mean(precision)),
-                      f", Recall@{topK}:", '{:.4f}'.format(np.mean(recall)))
-                executionRecord.write('\t'.join([
-                    str(cnt),
-                    str(uid),
-                    ','.join([str(lid) for lid in predicted])
-                ]) + '\n')
+        # Evaluation
+        evalParams = {'usersList': usersList,
+                      'groundTruth': groundTruth, 'fusion': fusion, 'poiList': poiList, 'trainingMatrix': trainingMatrix}
+        modelParams = {'FCF': FCFScores, 'KDE': KDEScores, 'AMC': AMCScores}
+        evaluator(modelName, datasetName, evalParams, modelParams)

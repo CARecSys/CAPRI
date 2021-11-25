@@ -1,5 +1,6 @@
 import numpy as np
 from utils import logger, textToOperator
+from Evaluations.evaluator import evaluator
 from Models.USG.lib.PowerLaw import PowerLaw
 from Models.USG.lib.UserBasedCF import UserBasedCF
 from Models.USG.lib.FriendBasedCF import FriendBasedCF
@@ -20,8 +21,6 @@ class USGMain:
         np.random.shuffle(usersList)
         # Init values
         modelName = 'USG'
-        alpha, beta = USGDict['alpha'], USGDict['beta']
-        precision, recall = [], []
         fusion = parameters['fusion']
         datasetName = parameters['datasetName']
         UScores = np.zeros((numberOfUsers, numberOfPoI))
@@ -51,9 +50,6 @@ class USGMain:
             U.loadModel(loadedModel)
         S.friendsSimilarityCalculation(socialRelations, trainingMatrix)
         G.fitDistanceDistribution(trainingMatrix, poiCoos)
-        # Add caching policy (prevent a similar setting to be executed again)
-        executionRecord = open(
-            f"./Generated/USG_{datasetName}_top" + str(topRestricted) + ".txt", 'w+')
         # Processing items
         logger('Preparing User-based CF matrix ...')
         loadedModel = loadModel(modelName, datasetName,
@@ -94,34 +90,8 @@ class USGMain:
                       f'G_{sparsityRatio}')
         else:  # It should be loaded
             GScores = loadedModel
-        # Calculating
-        logger('Evaluating results ...')
-        for cnt, uid in enumerate(usersList):
-            if uid in groundTruth:
-                U_scores = normalize([UScores[uid, lid]
-                                      if trainingMatrix[uid, lid] == 0 else -1
-                                      for lid in poiList])
-                S_scores = normalize([SScores[uid, lid]
-                                      if trainingMatrix[uid, lid] == 0 else -1
-                                      for lid in poiList])
-                G_scores = normalize([GScores[uid, lid]
-                                      if trainingMatrix[uid, lid] == 0 else -1
-                                      for lid in poiList])
-                U_scores = np.array(U_scores)
-                S_scores = np.array(S_scores)
-                G_scores = np.array(G_scores)
-                # overallScores = (1.0 - alpha - beta) * U_scores + alpha * S_scores + beta * G_scores
-                overallScores = textToOperator(
-                    fusion, [(1.0 - alpha - beta) * U_scores, alpha * S_scores, beta * G_scores])
-                predicted = list(reversed(overallScores.argsort()))[
-                    :topRestricted]
-                actual = groundTruth[uid]
-                precision.append(precisionk(actual, predicted[:topK]))
-                recall.append(recallk(actual, predicted[:topK]))
-                print(cnt, uid, f"Precision@{topK}:", '{:.4f}'.format(np.mean(precision)),
-                      f", Recall@{topK}:", '{:.4f}'.format(np.mean(recall)))
-                executionRecord.write('\t'.join([
-                    str(cnt),
-                    str(uid),
-                    ','.join([str(lid) for lid in predicted])
-                ]) + '\n')
+        # Evaluation
+        evalParams = {'usersList': usersList,
+                      'groundTruth': groundTruth, 'fusion': fusion, 'poiList': poiList, 'trainingMatrix': trainingMatrix}
+        modelParams = {'U': UScores, 'S': SScores, 'G': GScores}
+        evaluator(modelName, datasetName, evalParams, modelParams)

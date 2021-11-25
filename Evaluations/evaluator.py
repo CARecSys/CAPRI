@@ -28,7 +28,7 @@ def evaluator(modelName, datasetName, evalParams, modelParams):
     precision, recall = [], []
     # Add caching policy (prevent a similar setting to be executed again)
     executionRecord = open(
-        f"./Generated/GeoSoCa_{datasetName}_top" + str(topRestricted) + ".txt", 'w+')
+        f"./Generated/{modelName}_{datasetName}_top" + str(topRestricted) + ".txt", 'w+')
     for counter, userId in enumerate(usersList):
         if userId in groundTruth:
             overallScores = []

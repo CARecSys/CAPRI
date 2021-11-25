@@ -1,5 +1,6 @@
 import numpy as np
 from utils import logger, textToOperator
+from Evaluations.evaluator import evaluator
 from Evaluations.metrics.accuracy import precisionk, recallk
 from config import topK, sparsityRatio, topRestricted, GeoSoCaDict
 from Models.GeoSoCa.lib.SocialCorrelation import SocialCorrelation
@@ -24,7 +25,6 @@ class GeoSoCaMain:
         alpha = GeoSoCaDict['alpha']
         fusion = parameters['fusion']
         datasetName = parameters['datasetName']
-        precision, recall = [], []
         SCScores = np.zeros((numberOfUsers, numberOfPoI))
         CCScores = np.zeros((numberOfUsers, numberOfPoI))
         AKDEScores = np.zeros((numberOfUsers, numberOfPoI))
@@ -58,9 +58,6 @@ class GeoSoCaMain:
             saveModel(CC.Y, modelName, datasetName, 'Gamma')
         else:  # It should be loaded
             CC.loadModel(loadedModel)
-        # Add caching policy (prevent a similar setting to be executed again)
-        executionRecord = open(
-            f"./Generated/GeoSoCa_{datasetName}_top" + str(topRestricted) + ".txt", 'w+')
         # Processing items
         # usersList = usersList[0:9]  # ------------ Temp ------------
         print("Preparing Adaptive Kernel Density Estimation matrix ...")
@@ -99,23 +96,8 @@ class GeoSoCaMain:
                       f'CC_{sparsityRatio}')
         else:  # It should be loaded
             CCScores = loadedModel
-        # Evaluating
-        logger('Evaluating results ...')
-        for cnt, uid in enumerate(usersList):
-            if uid in groundTruth:
-                overallScores = [textToOperator(fusion, [AKDEScores[uid, lid], SCScores[uid, lid], CCScores[uid, lid]])
-                                 if trainingMatrix[uid, lid] == 0 else -1
-                                 for lid in poiList]
-                overallScores = np.array(overallScores)
-                predicted = list(reversed(overallScores.argsort()))[
-                    :topRestricted]
-                actual = groundTruth[uid]
-                precision.append(precisionk(actual, predicted[:topK]))
-                recall.append(recallk(actual, predicted[:topK]))
-                print(cnt, uid, f"Precision@{topK}:", '{:.4f}'.format(np.mean(precision)),
-                      f", Recall@{topK}:", '{:.4f}'.format(np.mean(recall)))
-                executionRecord.write('\t'.join([
-                    str(cnt),
-                    str(uid),
-                    ','.join([str(lid) for lid in predicted])
-                ]) + '\n')
+        # Evaluation
+        evalParams = {'usersList': usersList,
+                      'groundTruth': groundTruth, 'fusion': fusion, 'poiList': poiList, 'trainingMatrix': trainingMatrix}
+        modelParams = {'AKDE': AKDEScores, 'SC': SCScores, 'CC': CCScores}
+        evaluator(modelName, datasetName, evalParams, modelParams)

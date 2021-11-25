@@ -131,9 +131,9 @@ If you find **CAPRI** useful for your research or development, please cite the f
 
 ## ⚠️ TODOs
 
-- Add the impact of **Weighted Sum Fusion** when running models
-- Evaluations should be a separate module, running at the end of each model
+- Add proper saving procedure for evaluation results
 - improved process of saving numpy arrays and unifiying them
+- Add the impact of **Weighted Sum Fusion** when running models
 - Improve unit-tests for beyound accuracy evaluations
 - Add a separate metric evaluations class for fairness
 - GridSearch for all the parameters as weighted sum
