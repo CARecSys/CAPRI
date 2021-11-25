@@ -1,4 +1,5 @@
 import numpy as np
+import pandas as pd
 from Models.utils import normalize
 from utils import logger, textToOperator
 from config import USGDict, topK, topRestricted, outputsDir
@@ -78,8 +79,12 @@ def evaluator(modelName: str, datasetName: str, evalParams: dict, modelParams: d
     # Initializing the metrics
     precision, recall, map, ndcg = [], [], [], []
     # Add caching policy (prevent a similar setting to be executed again)
-    fileName = f'Eval_{modelName}_{datasetName}_{fusion}_top{topK}_limit{topRestricted}'
-    evaluationResults = open(f"./{outputsDir}{fileName}.txt", 'w+')
+    fileName = f'{modelName}_{datasetName}_{fusion}_top{topK}_limit{topRestricted}'
+    calculatedResults = open(f"{outputsDir}{fileName}.txt", 'w+')
+    # Initializing evaluation dataframe
+    evalDataFrame = pd.DataFrame(
+        columns=['userId', 'precision', 'recall', 'ndcg', 'map'])
+    # Iterating over the users
     for counter, userId in enumerate(usersList):
         if userId in groundTruth:
             overallScores = []
@@ -95,9 +100,17 @@ def evaluator(modelName: str, datasetName: str, evalParams: dict, modelParams: d
             map.append(mapk(actual, predicted[:topK]))
             print(counter, userId, f"Precision@{topK}:", '{:.4f}'.format(np.mean(precision)),
                   f", Recall@{topK}:", '{:.4f}'.format(np.mean(recall)))
-            evaluationResults.write('\t'.join([
+            # Appending the results to the dataframe
+            evalDataFrame = evalDataFrame.append(
+                {'userId': userId, 'precision': np.mean(precision), 'recall': np.mean(recall),
+                    'ndcg': np.mean(ndcg), 'map': np.mean(map)}, ignore_index=True)
+            # Writing the results to file
+            calculatedResults.write('\t'.join([
                 str(counter),
                 str(userId),
                 ','.join([str(lid) for lid in predicted])
             ]) + '\n')
-    evaluationResults.close()
+    # Saving evaluation results
+    evalDataFrame.to_csv(f"{outputsDir}Eval_{fileName}.csv", index=False)
+    # Closing the file
+    calculatedResults.close()
