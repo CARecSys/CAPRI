@@ -7,11 +7,13 @@ from Models.LORE.lib.AdditiveMarkovChain import AdditiveMarkovChain
 from Models.LORE.lib.KernelDensityEstimation import KernelDensityEstimation
 from Models.utils import readFriendData, readPoiCoos, readSparseTrainingData, readTestData, readTrainingCheckins, saveModel, loadModel
 
+modelName = 'LORE'
+
 
 class LOREMain:
     def main(datasetFiles, parameters):
-        logger('Started processing in LORE model ...')
-        # Reading data from selected dataset
+        logger(f'Started processing data using {modelName} ...')
+        # Reading data from the selected dataset
         numberOfUsers, numberOfPoI = open(datasetFiles['dataSize'], 'r').readlines()[
             0].strip('\n').split()
         numberOfUsers, numberOfPoI = int(numberOfUsers), int(numberOfPoI)
@@ -19,7 +21,6 @@ class LOREMain:
         poiList = list(range(numberOfPoI))
         np.random.shuffle(usersList)
         # Init values
-        modelName = 'LORE'
         alpha, deltaT = LoreDict['alpha'], LoreDict['deltaT']
         fusion, datasetName, evaluation = parameters[
             'fusion'], parameters['datasetName'], parameters['evaluation']

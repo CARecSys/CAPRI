@@ -7,11 +7,13 @@ from Models.GeoSoCa.lib.CategoricalCorrelation import CategoricalCorrelation
 from Models.GeoSoCa.lib.AdaptiveKernelDensityEstimation import AdaptiveKernelDensityEstimation
 from Models.utils import readPoiCoos, readTestData, readCategoryData, readTrainingData, readFriendData, saveModel, loadModel
 
+modelName = 'GeoSoCa'
+
 
 class GeoSoCaMain:
     def main(datasetFiles, parameters):
-        logger('Started processing in GeoSoCa model ...')
-        # Reading data from selected dataset
+        logger(f'Started processing data using {modelName} ...')
+        # Reading data from the selected dataset
         numberOfUsers, numberOfPoI, numberOfCategories = open(datasetFiles['dataSize'], 'r').readlines()[
             0].strip('\n').split()
         numberOfUsers, numberOfPoI, numberOfCategories = int(
@@ -20,7 +22,6 @@ class GeoSoCaMain:
         poiList = list(range(numberOfPoI))
         np.random.shuffle(usersList)
         # Init values
-        modelName = 'GeoSoCa'
         alpha = GeoSoCaDict['alpha']
         fusion, datasetName, evaluation = parameters[
             'fusion'], parameters['datasetName'], parameters['evaluation']

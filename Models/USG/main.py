@@ -7,11 +7,13 @@ from Models.USG.lib.UserBasedCF import UserBasedCF
 from Models.USG.lib.FriendBasedCF import FriendBasedCF
 from Models.utils import readTrainingData, readFriendData, readTestData, readPoiCoos, saveModel, loadModel
 
+modelName = 'USG'
+
 
 class USGMain:
     def main(datasetFiles, parameters):
-        logger('Started processing in USG model ...')
-        # Reading data from selected dataset
+        logger(f'Started processing data using {modelName} ...')
+        # Reading data from the selected dataset
         numberOfUsers, numberOfPoI = open(datasetFiles['dataSize'], 'r').readlines()[
             0].strip('\n').split()
         numberOfUsers, numberOfPoI = int(numberOfUsers), int(numberOfPoI)
@@ -19,7 +21,6 @@ class USGMain:
         poiList = list(range(numberOfPoI))
         np.random.shuffle(usersList)
         # Init values
-        modelName = 'USG'
         fusion, datasetName, evaluation = parameters[
             'fusion'], parameters['datasetName'], parameters['evaluation']
         UScores = np.zeros((numberOfUsers, numberOfPoI))

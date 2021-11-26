@@ -8,11 +8,11 @@ def __init__():
     # Creating log file
     logging.basicConfig(filename='logger.log', level=logging.INFO)
     logger('CAPRI framework started!')
-    # Getting inputs from users
+    # Fetching user choices
     userInputs = getUserChoices()
-    # If selections were not empty
+    # Checking if user wants to load a model
     if (userInputs != None):
-        # Initialize dataset items
+        # Initializing dataset items
         datasetFiles = loadDataset(userInputs['Dataset'])
         logger(f'Dataset files: {datasetFiles}', 'info', True)
         # Initializing parameters
@@ -22,11 +22,11 @@ def __init__():
             "evaluation": userInputs['Evaluation'],
         }
         logger(f'Processing parameters: {parameters}', 'info', True)
-        # Dynamically load Model modules
+        # Dynamically loading the model
         module = __import__(
             'Models.' + userInputs['Model'] + '.main', fromlist=[''])
         selectedModule = getattr(module, userInputs['Model'] + 'Main')
-        # From the model, select its 'main' class
+        # Select the 'main' class in the module
         selectedModule.main(datasetFiles, parameters)
     else:
         logger('Framework stopepd!')
