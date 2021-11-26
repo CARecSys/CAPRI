@@ -24,11 +24,12 @@ def loadDatasetFiles(datasetName: str):
         logger(f'{datasetName} was not among the supported datasets!', 'error')
         return
     # Otherwise, listing the files existing in dataset directories
-    print(f'Preparing {datasetName} dataset files ...')
+    print(f'Loading {datasetName} dataset files ...')
     fileList = os.listdir(f'{dataDirectory}/{datasetName}')
     # Creating a dictionary of dataset items
     for file in fileList:
         fileName = os.path.basename(file).split('.')[0]
         # Adding the absolute path to the items: e.g. 'checkins.txt' ==> 'C\\...\\Datacheckins.txt'
         datasetFiles[fileName] = f'{dataDirectory}\\{datasetName}\\{file}'
+    print(f'{datasetName} dataset files have been loaded for processing!')
     return datasetFiles

@@ -13,7 +13,7 @@ modelName = 'USG'
 
 class USGMain:
     def main(datasetFiles, parameters):
-        logger(f'Started processing data using {modelName} ...')
+        logger(f'Processing data using {modelName} model ...')
         # Initializing model parameters
         fusion, datasetName, evaluation = parameters[
             'fusion'], parameters['datasetName'], parameters['evaluation']

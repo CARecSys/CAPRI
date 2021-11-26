@@ -13,7 +13,7 @@ modelName = 'GeoSoCa'
 
 class GeoSoCaMain:
     def main(datasetFiles, parameters):
-        logger(f'Started processing data using {modelName} ...')
+        logger(f'Processing data using {modelName} model ...')
         # Initializing model parameters
         alpha = GeoSoCaDict['alpha']
         fusion, datasetName, evaluation = parameters[

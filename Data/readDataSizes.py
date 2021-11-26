@@ -1,4 +1,5 @@
 import numpy as np
+from utils import logger
 
 
 def readDataSizes(datasetName: str, datasetFiles: dict):
@@ -16,6 +17,7 @@ def readDataSizes(datasetName: str, datasetFiles: dict):
     -------
         data : dict
     """
+    print("Reading the 'dataSize' file to prepare further processing...")
     categoriesCount = 0
     # Loading required data based on the dataset name
     if (datasetName == 'Gowalla'):
@@ -32,6 +34,8 @@ def readDataSizes(datasetName: str, datasetFiles: dict):
         range(usersCount)), list(range(poisCount)), list(range(categoriesCount))
     # Shuffling the lists
     np.random.shuffle(usersList)
+    # Providing feedback to the user
+    logger(f'{datasetName} dataset contains {usersCount} users, {poisCount} locations, and {categoriesCount} categories!')
     # Returning the data
     return {'users': {'count': usersCount, 'list': usersList},
             'pois': {'count': poisCount, 'list': poisList},
