@@ -103,8 +103,9 @@ def evaluator(modelName: str, datasetName: str, evalParams: dict, modelParams: d
                 ndcg.append(ndcgk(actual, predicted[:topK]))
             if ('mAP' in evaluationList):
                 map.append(mapk(actual, predicted[:topK]))
-            print(counter, userId, f"Precision@{topK}:", '{:.4f}'.format(np.mean(precision)),
-                  f", Recall@{topK}:", '{:.4f}'.format(np.mean(recall)))
+            # Adding log to console
+            if (counter % 100 == 0):
+                print(f'{counter} users processed ...')
             # Appending the results to the dataframe
             evalDataFrame = evalDataFrame.append(
                 {'userId': userId, 'precision': np.mean(precision), 'recall': np.mean(recall),
@@ -116,6 +117,8 @@ def evaluator(modelName: str, datasetName: str, evalParams: dict, modelParams: d
                 ','.join([str(lid) for lid in predicted])
             ]) + '\n')
     # Saving evaluation results
-    evalDataFrame.to_csv(f"{outputsDir}Eval_{fileName}.csv", index=False)
+    evalDataFrame.to_csv(f"{outputsDir}/Eval_{fileName}.csv", index=False)
     # Closing the file
     calculatedResults.close()
+    # Logging the results
+    logger(f'Evaluation results saved to {outputsDir}')

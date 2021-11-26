@@ -22,13 +22,14 @@ class LOREMain:
         dataDictionary = readDataSizes(datasetName, datasetFiles)
         users, pois = dataDictionary['users'], dataDictionary['pois']
         # Creating model-related libraries
+        print('Creating model-related variables ...')
         FCFScores, KDEScores, AMCScores = np.zeros((users['count'], pois['count'])), np.zeros(
             (users['count'], pois['count'])), np.zeros((users['count'], pois['count']))
         FCF = FriendBasedCF()
         KDE = KernelDensityEstimation()
         AMC = AdditiveMarkovChain(deltaT, alpha)
-        logger('Reading dataset instances ...')
         # Loading trainin items
+        logger('Reading dataset instances ...')
         sparseTrainingMatrix, trainingMatrix = readSparseTrainingData(
             datasetFiles['train'], users['count'], pois['count'])
         # Loading a sorted list of check-ins

@@ -1,13 +1,30 @@
 import os
 import time
 import numpy as np
+from utils import logger
 import scipy.sparse as sparse
 from collections import defaultdict
 
-from utils import logger
 
+def readSparseTrainingData(trainFile: str, numberOfUsers: int, numberOfPoI: int):
+    """
+    Reads the training data from the file and returns a sparse matrix.
 
-def readSparseTrainingData(trainFile, numberOfUsers, numberOfPoI):
+    Parameters
+    ----------
+    trainFile : str
+        The path to the training data file.
+    numberOfUsers : int
+        The number of users in the dataset.
+    numberOfPoI : int
+        The number of points of interest in the dataset.
+
+    Returns
+    -------
+    sparseTrainingMatrix : sparse matrix
+        The sparse matrix representation of the training data.
+    """
+    print('Reading sparse training data...')
     trainingData = open(trainFile, 'r').readlines()
     sparseTrainingMatrix = sparse.dok_matrix((numberOfUsers, numberOfPoI))
     trainingTuples = set()
@@ -19,8 +36,27 @@ def readSparseTrainingData(trainFile, numberOfUsers, numberOfPoI):
     return sparseTrainingMatrix, trainingTuples
 
 
-# withFrequency: True for GeoSoCa, False for USG
-def readTrainingData(trainFile, numberOfUsers, numberOfPoI, withFrequency):
+def readTrainingData(trainFile: str, numberOfUsers: int, numberOfPoI: int, withFrequency: bool = False):
+    """
+    Reads the training data from the file and returns a dictionary.
+
+    Parameters
+    ----------
+    trainFile : str
+        The path to the training data file.
+    numberOfUsers : int
+        The number of users in the dataset.
+    numberOfPoI : int
+        The number of points of interest in the dataset.
+    withFrequency : bool
+        True for GeoSoCa, False for USG
+
+    Returns
+    -------
+    trainingMatrix : ndarray
+        The ndarray representation of the training data.
+    """
+    print('Reading training data...')
     trainingData = open(trainFile, 'r').readlines()
     trainingMatrix = np.zeros((numberOfUsers, numberOfPoI))
     # TODO: we may replace this condition with a more compact one
@@ -38,7 +74,23 @@ def readTrainingData(trainFile, numberOfUsers, numberOfPoI, withFrequency):
     return trainingMatrix
 
 
-def readTrainingCheckins(checkinFile, sparseTrainingMatrix):
+def readTrainingCheckins(checkinFile: str, sparseTrainingMatrix):
+    """
+    Reads the training checkins from the file and returns a dictionary.
+
+    Parameters
+    ----------
+    checkinFile : str
+        The path to the training checkins file.
+    sparseTrainingMatrix : sparse matrix
+        The sparse matrix representation of the training data.
+
+    Returns
+    -------
+    trainingCheckins : dict
+        The dictionary representation of the training checkins.
+    """
+    print('Reading training checkins...')
     checkinData = open(checkinFile, 'r').readlines()
     trainingCheckins = defaultdict(list)
     for dataInstance in checkinData:
@@ -80,7 +132,20 @@ def readFriendData(socialFile, appendType, numberOfUsers):
         return socialRelations
 
 
-def readTestData(testFile):
+def readTestData(testFile: str):
+    """
+    Reads the test data from the file and returns a dictionary.
+
+    Parameters
+    ----------
+    testFile : str
+        The path to the test data file.
+
+    Returns
+    -------
+    groundTruth : dict
+        The dictionary representation of the test data.
+    """
     groundTruth = defaultdict(set)
     truthData = open(testFile, 'r').readlines()
     for dataInstance in truthData:
@@ -90,7 +155,20 @@ def readTestData(testFile):
     return groundTruth
 
 
-def readPoiCoos(poiFile):
+def readPoiCoos(poiFile: str):
+    """
+    Reads the POI coordinates from the file and returns a dictionary.
+
+    Parameters
+    ----------
+    poiFile : str
+        The path to the POI coordinates file.
+
+    Returns
+    -------
+    poiCoos : dict
+        The dictionary representation of the POI coordinates.
+    """
     poiCoos = {}
     poiData = open(poiFile, 'r').readlines()
     for dataInstance in poiData:
@@ -117,9 +195,26 @@ def normalize(scores):
     return scores
 
 
-def loadModel(modelName, datasetName, moduleName):
+def loadModel(modelName: str, datasetName: str, moduleName: str):
+    """
+    Loads the model from the file.
+
+    Parameters
+    ----------
+    modelName : str
+        The name of the model.
+    datasetName : str
+        The name of the dataset.
+    moduleName : str
+        The name of the module.
+
+    Returns
+    -------
+    model : object
+        The model object.
+    """
     fileName = f'{modelName}_{datasetName}_{moduleName}.npy'
-    logger(f"Searching for {fileName} in previously saved models ...")
+    logger(f"Looking for {fileName} in previously saved models ...")
     path = os.path.abspath(f'./Models/{modelName}/savedModels/{fileName}')
     fileExists = os.path.exists(path)
     if fileExists == True:
@@ -132,7 +227,21 @@ def loadModel(modelName, datasetName, moduleName):
         return []
 
 
-def saveModel(content, modelName, datasetName, moduleName):
+def saveModel(content, modelName: str, datasetName: str, moduleName: str):
+    """
+    Saves the model to the file.
+
+    Parameters
+    ----------
+    content : any
+        The content to be saved.
+    modelName : str
+        The name of the model.
+    datasetName : str
+        The name of the dataset.
+    moduleName : str
+        The name of the module.
+    """
     startTime = time.time()
     fileName = f'{modelName}_{datasetName}_{moduleName}.npy'
     logger(f"Saving model {fileName} ...")

@@ -18,7 +18,7 @@ class AdaptiveKernelDensityEstimation(object):
     def precomputeKernelParameters(self, checkinMatrix, poiCoos):
         self.poiCoos = poiCoos
         startTime = time.time()
-        logger('Precomputing kernel parameters ...')
+        logger('Preparing Adaptive Kernel Density Estimation ...')
         trainingLocations = defaultdict(list)
         for uid in range(checkinMatrix.shape[0]):
             trainingLocations[uid] = [[lid, np.array(poiCoos[lid])]

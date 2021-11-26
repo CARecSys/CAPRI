@@ -21,13 +21,14 @@ class USGMain:
         dataDictionary = readDataSizes(datasetName, datasetFiles)
         users, pois = dataDictionary['users'], dataDictionary['pois']
         # Creating model-related libraries
+        print('Creating model-related variables ...')
         UScores, SScores, GScores = np.zeros((users['count'], pois['count'])), np.zeros(
             (users['count'], pois['count'])), np.zeros((users['count'], pois['count']))
         U = UserBasedCF()
         S = FriendBasedCF(USGDict['eta'])
         G = PowerLaw()
-        logger('Reading dataset instances ...')
         # Loading training items
+        logger('Reading dataset instances ...')
         trainingMatrix = readTrainingData(
             datasetFiles['train'], users['count'], pois['count'], False)
         # Reading Ground-truth data

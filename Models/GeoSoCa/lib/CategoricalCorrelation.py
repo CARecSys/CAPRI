@@ -14,7 +14,7 @@ class CategoricalCorrelation(object):
 
     def computeGamma(self, checkinMatrix, poiCateMatrix):
         startTime = time.time()
-        logger('Precomputing categorical correlation parameter Beta ...')
+        logger('Preparing Categorical Correlation Parameter Beta ...')
         B = checkinMatrix.dot(poiCateMatrix)
         P = poiCateMatrix.T
         Y = B.dot(P)

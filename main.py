@@ -31,6 +31,8 @@ def __init__():
         selectedModule = getattr(module, userInputs['Model'] + 'Main')
         # Select the 'main' class in the module
         selectedModule.main(datasetFiles, parameters)
+        # Closing the log file
+        logger('CAPRI framework finished!')
     else:
         logger('Framework stopepd!')
 

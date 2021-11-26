@@ -14,7 +14,7 @@ class SocialCorrelation(object):
 
     def computeBeta(self, checkinMatrix, socialMatrix):
         startTime = time.time()
-        logger('Precomputing social correlation parameter Beta ...')
+        logger('Preparing Social Correlation Parameter ...')
         S = socialMatrix
         R = checkinMatrix
         X = S.dot(R)
