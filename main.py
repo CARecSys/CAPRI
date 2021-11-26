@@ -1,7 +1,7 @@
 import logging
 from utils import logger
-from loadDataset import loadDataset
 from commandParser import getUserChoices
+from Data.loadDatasetFiles import loadDatasetFiles
 
 
 def __init__():
@@ -13,8 +13,11 @@ def __init__():
     # Checking if user wants to load a model
     if (userInputs != None):
         # Initializing dataset items
-        datasetFiles = loadDataset(userInputs['Dataset'])
+        datasetFiles = loadDatasetFiles(userInputs['Dataset'])
         logger(f'Dataset files: {datasetFiles}', 'info', True)
+        # Exiting the program if dataset is not found
+        if (datasetFiles == None):
+            return
         # Initializing parameters
         parameters = {
             "fusion": userInputs['Fusion'],

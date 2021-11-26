@@ -81,7 +81,7 @@ def evaluator(modelName: str, datasetName: str, evalParams: dict, modelParams: d
     precision, recall, map, ndcg = [], [], [], []
     # Add caching policy (prevent a similar setting to be executed again)
     fileName = f'{modelName}_{datasetName}_{fusion}_top{topK}_limit{topRestricted}'
-    calculatedResults = open(f"{outputsDir}{fileName}.txt", 'w+')
+    calculatedResults = open(f"{outputsDir}/{fileName}.txt", 'w+')
     # Initializing evaluation dataframe
     evalDataFrame = pd.DataFrame(
         columns=['userId', 'precision', 'recall', 'ndcg', 'map'])

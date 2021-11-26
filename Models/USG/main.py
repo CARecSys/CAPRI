@@ -1,7 +1,8 @@
 import numpy as np
 from utils import logger
-from config import sparsityRatio
+from config import sparsityRatio, USGDict
 from Evaluations.evaluator import evaluator
+from Data.readDataSizes import readDataSizes
 from Models.USG.lib.PowerLaw import PowerLaw
 from Models.USG.lib.UserBasedCF import UserBasedCF
 from Models.USG.lib.FriendBasedCF import FriendBasedCF
@@ -13,27 +14,22 @@ modelName = 'USG'
 class USGMain:
     def main(datasetFiles, parameters):
         logger(f'Started processing data using {modelName} ...')
-        # Reading data from the selected dataset
-        numberOfUsers, numberOfPoI = open(datasetFiles['dataSize'], 'r').readlines()[
-            0].strip('\n').split()
-        numberOfUsers, numberOfPoI = int(numberOfUsers), int(numberOfPoI)
-        usersList = list(range(numberOfUsers))
-        poiList = list(range(numberOfPoI))
-        np.random.shuffle(usersList)
-        # Init values
+        # Initializing model parameters
         fusion, datasetName, evaluation = parameters[
             'fusion'], parameters['datasetName'], parameters['evaluation']
-        UScores = np.zeros((numberOfUsers, numberOfPoI))
-        SScores = np.zeros((numberOfUsers, numberOfPoI))
-        GScores = np.zeros((numberOfUsers, numberOfPoI))
-        # Load libraries
+        # Reading data size from the selected dataset
+        dataDictionary = readDataSizes(datasetName, datasetFiles)
+        users, pois = dataDictionary['users'], dataDictionary['pois']
+        # Creating model-related libraries
+        UScores, SScores, GScores = np.zeros((users['count'], pois['count'])), np.zeros(
+            (users['count'], pois['count'])), np.zeros((users['count'], pois['count']))
         U = UserBasedCF()
-        S = FriendBasedCF(eta=0.05)
+        S = FriendBasedCF(USGDict['eta'])
         G = PowerLaw()
         logger('Reading dataset instances ...')
         # Loading training items
         trainingMatrix = readTrainingData(
-            datasetFiles['train'], numberOfUsers, numberOfPoI, False)
+            datasetFiles['train'], users['count'], pois['count'], False)
         # Reading Ground-truth data
         groundTruth = readTestData(datasetFiles['test'])
         # Reading social data
@@ -55,9 +51,9 @@ class USGMain:
         loadedModel = loadModel(modelName, datasetName,
                                 f'U_{sparsityRatio}')
         if loadedModel == []:  # It should be created
-            for cnt, uid in enumerate(usersList):
+            for cnt, uid in enumerate(users['list']):
                 if uid in groundTruth:
-                    for lid in poiList:
+                    for lid in pois['list']:
                         UScores[uid, lid] = U.predict(uid, lid)
                     UScores = np.array(UScores)
             saveModel(UScores, modelName, datasetName,
@@ -68,9 +64,9 @@ class USGMain:
         loadedModel = loadModel(modelName, datasetName,
                                 f'S_{sparsityRatio}')
         if loadedModel == []:  # It should be created
-            for cnt, uid in enumerate(usersList):
+            for cnt, uid in enumerate(users['list']):
                 if uid in groundTruth:
-                    for lid in poiList:
+                    for lid in pois['list']:
                         SScores[uid, lid] = S.predict(uid, lid)
                     SScores = np.array(SScores)
             saveModel(SScores, modelName, datasetName,
@@ -81,9 +77,9 @@ class USGMain:
         loadedModel = loadModel(modelName, datasetName,
                                 f'G_{sparsityRatio}')
         if loadedModel == []:  # It should be created
-            for cnt, uid in enumerate(usersList):
+            for cnt, uid in enumerate(users['list']):
                 if uid in groundTruth:
-                    for lid in poiList:
+                    for lid in pois['list']:
                         GScores[uid, lid] = G.predict(uid, lid)
                     GScores = np.array(GScores)
             saveModel(GScores, modelName, datasetName,
@@ -91,7 +87,7 @@ class USGMain:
         else:  # It should be loaded
             GScores = loadedModel
         # Evaluation
-        evalParams = {'usersList': usersList,
-                      'groundTruth': groundTruth, 'fusion': fusion, 'poiList': poiList, 'trainingMatrix': trainingMatrix, 'evaluation': evaluation}
+        evalParams = {'usersList': users['list'],
+                      'groundTruth': groundTruth, 'fusion': fusion, 'poiList': pois['list'], 'trainingMatrix': trainingMatrix, 'evaluation': evaluation}
         modelParams = {'U': UScores, 'S': SScores, 'G': GScores}
         evaluator(modelName, datasetName, evalParams, modelParams)

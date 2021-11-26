@@ -2,6 +2,7 @@ import numpy as np
 from utils import logger
 from config import sparsityRatio, LoreDict
 from Evaluations.evaluator import evaluator
+from Data.readDataSizes import readDataSizes
 from Models.LORE.lib.FriendBasedCF import FriendBasedCF
 from Models.LORE.lib.AdditiveMarkovChain import AdditiveMarkovChain
 from Models.LORE.lib.KernelDensityEstimation import KernelDensityEstimation
@@ -13,28 +14,23 @@ modelName = 'LORE'
 class LOREMain:
     def main(datasetFiles, parameters):
         logger(f'Started processing data using {modelName} ...')
-        # Reading data from the selected dataset
-        numberOfUsers, numberOfPoI = open(datasetFiles['dataSize'], 'r').readlines()[
-            0].strip('\n').split()
-        numberOfUsers, numberOfPoI = int(numberOfUsers), int(numberOfPoI)
-        usersList = list(range(numberOfUsers))
-        poiList = list(range(numberOfPoI))
-        np.random.shuffle(usersList)
-        # Init values
+        # Initializing model parameters
         alpha, deltaT = LoreDict['alpha'], LoreDict['deltaT']
         fusion, datasetName, evaluation = parameters[
             'fusion'], parameters['datasetName'], parameters['evaluation']
-        FCFScores = np.zeros((numberOfUsers, numberOfPoI))
-        KDEScores = np.zeros((numberOfUsers, numberOfPoI))
-        AMCScores = np.zeros((numberOfUsers, numberOfPoI))
-        # Load libraries
+        # Reading data size from the selected dataset
+        dataDictionary = readDataSizes(datasetName, datasetFiles)
+        users, pois = dataDictionary['users'], dataDictionary['pois']
+        # Creating model-related libraries
+        FCFScores, KDEScores, AMCScores = np.zeros((users['count'], pois['count'])), np.zeros(
+            (users['count'], pois['count'])), np.zeros((users['count'], pois['count']))
         FCF = FriendBasedCF()
         KDE = KernelDensityEstimation()
         AMC = AdditiveMarkovChain(deltaT, alpha)
         logger('Reading dataset instances ...')
         # Loading trainin items
         sparseTrainingMatrix, trainingMatrix = readSparseTrainingData(
-            datasetFiles['train'], numberOfUsers, numberOfPoI)
+            datasetFiles['train'], users['count'], pois['count'])
         # Loading a sorted list of check-ins
         trainingCheckins = readTrainingCheckins(
             datasetFiles['checkins'], sparseTrainingMatrix)
@@ -57,9 +53,9 @@ class LOREMain:
         loadedModel = loadModel(modelName, datasetName,
                                 f'FCF_{sparsityRatio}')
         if loadedModel == []:  # It should be created
-            for cnt, uid in enumerate(usersList):
+            for cnt, uid in enumerate(users['list']):
                 if uid in groundTruth:
-                    for lid in poiList:
+                    for lid in pois['list']:
                         FCFScores[uid, lid] = FCF.predict(uid, lid)
             saveModel(FCFScores, modelName, datasetName,
                       f'FCF_{sparsityRatio}')
@@ -69,9 +65,9 @@ class LOREMain:
         loadedModel = loadModel(modelName, datasetName,
                                 f'KDE_{sparsityRatio}')
         if loadedModel == []:  # It should be created
-            for cnt, uid in enumerate(usersList):
+            for cnt, uid in enumerate(users['list']):
                 if uid in groundTruth:
-                    for lid in poiList:
+                    for lid in pois['list']:
                         KDEScores[uid, lid] = KDE.predict(uid, lid)
             saveModel(KDEScores, modelName, datasetName,
                       f'KDE_{sparsityRatio}')
@@ -81,16 +77,16 @@ class LOREMain:
         loadedModel = loadModel(modelName, datasetName,
                                 f'AMC_{sparsityRatio}')
         if loadedModel == []:  # It should be created
-            for cnt, uid in enumerate(usersList):
+            for cnt, uid in enumerate(users['list']):
                 if uid in groundTruth:
-                    for lid in poiList:
+                    for lid in pois['list']:
                         AMCScores[uid, lid] = AMC.predict(uid, lid)
             saveModel(AMCScores, modelName, datasetName,
                       f'AMC_{sparsityRatio}')
         else:  # It should be loaded
             AMCScores = loadedModel
         # Evaluation
-        evalParams = {'usersList': usersList,
-                      'groundTruth': groundTruth, 'fusion': fusion, 'poiList': poiList, 'trainingMatrix': trainingMatrix, 'evaluation': evaluation}
+        evalParams = {'usersList': users['list'],
+                      'groundTruth': groundTruth, 'fusion': fusion, 'poiList': pois['list'], 'trainingMatrix': trainingMatrix, 'evaluation': evaluation}
         modelParams = {'FCF': FCFScores, 'KDE': KDEScores, 'AMC': AMCScores}
         evaluator(modelName, datasetName, evalParams, modelParams)
