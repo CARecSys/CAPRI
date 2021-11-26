@@ -22,8 +22,8 @@ class GeoSoCaMain:
         # Init values
         modelName = 'GeoSoCa'
         alpha = GeoSoCaDict['alpha']
-        fusion = parameters['fusion']
-        datasetName = parameters['datasetName']
+        fusion, datasetName, evaluation = parameters[
+            'fusion'], parameters['datasetName'], parameters['evaluation']
         SCScores = np.zeros((numberOfUsers, numberOfPoI))
         CCScores = np.zeros((numberOfUsers, numberOfPoI))
         AKDEScores = np.zeros((numberOfUsers, numberOfPoI))
@@ -97,6 +97,6 @@ class GeoSoCaMain:
             CCScores = loadedModel
         # Evaluation
         evalParams = {'usersList': usersList,
-                      'groundTruth': groundTruth, 'fusion': fusion, 'poiList': poiList, 'trainingMatrix': trainingMatrix}
+                      'groundTruth': groundTruth, 'fusion': fusion, 'poiList': poiList, 'trainingMatrix': trainingMatrix, 'evaluation': evaluation}
         modelParams = {'AKDE': AKDEScores, 'SC': SCScores, 'CC': CCScores}
         evaluator(modelName, datasetName, evalParams, modelParams)

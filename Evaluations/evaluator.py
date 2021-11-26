@@ -75,7 +75,8 @@ def evaluator(modelName: str, datasetName: str, evalParams: dict, modelParams: d
     """
     logger('Evaluating results ...')
     # Fetching the list of parameters
-    usersList, groundTruth, fusion = evalParams['usersList'], evalParams['groundTruth'], evalParams['fusion']
+    usersList, groundTruth, fusion, evaluationList = evalParams['usersList'], evalParams[
+        'groundTruth'], evalParams['fusion'], evalParams['evaluation']
     # Initializing the metrics
     precision, recall, map, ndcg = [], [], [], []
     # Add caching policy (prevent a similar setting to be executed again)
@@ -94,10 +95,14 @@ def evaluator(modelName: str, datasetName: str, evalParams: dict, modelParams: d
             predicted = list(reversed(overallScores.argsort()))[
                 :topRestricted]
             actual = groundTruth[userId]
-            precision.append(precisionk(actual, predicted[:topK]))
-            recall.append(recallk(actual, predicted[:topK]))
-            ndcg.append(ndcgk(actual, predicted[:topK]))
-            map.append(mapk(actual, predicted[:topK]))
+            if ('Precision' in evaluationList):
+                precision.append(precisionk(actual, predicted[:topK]))
+            if ('Recall' in evaluationList):
+                recall.append(recallk(actual, predicted[:topK]))
+            if ('NDCG' in evaluationList):
+                ndcg.append(ndcgk(actual, predicted[:topK]))
+            if ('mAP' in evaluationList):
+                map.append(mapk(actual, predicted[:topK]))
             print(counter, userId, f"Precision@{topK}:", '{:.4f}'.format(np.mean(precision)),
                   f", Recall@{topK}:", '{:.4f}'.format(np.mean(recall)))
             # Appending the results to the dataframe

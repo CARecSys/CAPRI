@@ -21,8 +21,8 @@ class LOREMain:
         # Init values
         modelName = 'LORE'
         alpha, deltaT = LoreDict['alpha'], LoreDict['deltaT']
-        fusion = parameters['fusion']
-        datasetName = parameters['datasetName']
+        fusion, datasetName, evaluation = parameters[
+            'fusion'], parameters['datasetName'], parameters['evaluation']
         FCFScores = np.zeros((numberOfUsers, numberOfPoI))
         KDEScores = np.zeros((numberOfUsers, numberOfPoI))
         AMCScores = np.zeros((numberOfUsers, numberOfPoI))
@@ -90,6 +90,6 @@ class LOREMain:
             AMCScores = loadedModel
         # Evaluation
         evalParams = {'usersList': usersList,
-                      'groundTruth': groundTruth, 'fusion': fusion, 'poiList': poiList, 'trainingMatrix': trainingMatrix}
+                      'groundTruth': groundTruth, 'fusion': fusion, 'poiList': poiList, 'trainingMatrix': trainingMatrix, 'evaluation': evaluation}
         modelParams = {'FCF': FCFScores, 'KDE': KDEScores, 'AMC': AMCScores}
         evaluator(modelName, datasetName, evalParams, modelParams)

@@ -19,6 +19,7 @@ def __init__():
         parameters = {
             "fusion": userInputs['Fusion'],
             "datasetName": userInputs['Dataset'],
+            "evaluation": userInputs['Evaluation'],
         }
         logger(f'Processing parameters: {parameters}', 'info', True)
         # Dynamically load Model modules

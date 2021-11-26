@@ -20,8 +20,8 @@ class USGMain:
         np.random.shuffle(usersList)
         # Init values
         modelName = 'USG'
-        fusion = parameters['fusion']
-        datasetName = parameters['datasetName']
+        fusion, datasetName, evaluation = parameters[
+            'fusion'], parameters['datasetName'], parameters['evaluation']
         UScores = np.zeros((numberOfUsers, numberOfPoI))
         SScores = np.zeros((numberOfUsers, numberOfPoI))
         GScores = np.zeros((numberOfUsers, numberOfPoI))
@@ -91,6 +91,6 @@ class USGMain:
             GScores = loadedModel
         # Evaluation
         evalParams = {'usersList': usersList,
-                      'groundTruth': groundTruth, 'fusion': fusion, 'poiList': poiList, 'trainingMatrix': trainingMatrix}
+                      'groundTruth': groundTruth, 'fusion': fusion, 'poiList': poiList, 'trainingMatrix': trainingMatrix, 'evaluation': evaluation}
         modelParams = {'U': UScores, 'S': SScores, 'G': GScores}
         evaluator(modelName, datasetName, evalParams, modelParams)
