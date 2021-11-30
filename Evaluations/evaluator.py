@@ -106,18 +106,20 @@ def evaluator(modelName: str, datasetName: str, evalParams: dict, modelParams: d
             # Adding log to console
             if (counter % 100 == 0):
                 print(f'{counter} users processed ...')
-            # Appending the results to the dataframe
-            evalDataFrame = evalDataFrame.append(
-                {'userId': userId, 'precision': np.mean(precision), 'recall': np.mean(recall),
-                    'ndcg': np.mean(ndcg), 'map': np.mean(map)}, ignore_index=True)
             # Writing the results to file
             calculatedResults.write('\t'.join([
                 str(counter),
                 str(userId),
                 ','.join([str(lid) for lid in predicted])
             ]) + '\n')
+    # Saving the results to file
+    evalDataFrame = evalDataFrame.append(
+        {'userId': userId, 'precision': np.mean(precision), 'recall': np.mean(recall),
+         'ndcg': np.mean(ndcg), 'map': np.mean(map)}, ignore_index=True)
     # Saving evaluation results
-    evalDataFrame.to_csv(f"{outputsDir}/Eval_{fileName}.csv", index=False)
+    evalDataFrame = evalDataFrame.astype({"userId": int})
+    evalDataFrame.round(3).dropna(how='all').to_csv(
+        f"{outputsDir}/Eval_{fileName}.csv", index=False)
     # Closing the file
     calculatedResults.close()
     # Logging the results

@@ -33,21 +33,25 @@ def socialCalculations(datasetName: str, users: dict, pois: dict, trainingMatrix
     """
     # Initializing parameters
     SCScores = np.zeros((users['count'], pois['count']))
-    # Creating object to AKDE Class
-    SC = SocialCorrelation()
-    # Social Correlation Calculations
-    loadedModel = loadModel(modelName, datasetName, 'Beta')
-    if loadedModel == []:  # It should be created
-        SC.computeBeta(trainingMatrix, socialRelations)
-        saveModel(SC.X, modelName, datasetName, 'Beta')
-    else:  # It should be loaded
-        SC.loadModel(loadedModel)
-    # Computing the final scores
     logger('Preparing Social Correlation matrix ...')
     loadedModel = loadModel(modelName, datasetName,
                             f'SC_{sparsityRatio}')
     if loadedModel == []:  # It should be created
-        for cnt, uid in enumerate(users['list']):
+        # Creating object to AKDE Class
+        SC = SocialCorrelation()
+        # Social Correlation Calculations
+        loadNumpyArray = loadModel(modelName, datasetName, 'Beta')
+        if loadNumpyArray == []:  # It should be created
+            SC.computeBeta(trainingMatrix, socialRelations)
+            saveModel(SC.X, modelName, datasetName, 'Beta')
+        else:  # It should be loaded
+            SC.loadModel(loadNumpyArray)
+        # Calculating SC scores
+        print("Now, training the model for each user ...")
+        for counter, uid in enumerate(users['list']):
+            # Adding log to console
+            if (counter % 100 == 0):
+                print(f'{counter} users processed ...')
             if uid in groundTruth:
                 for lid in pois['list']:
                     SCScores[uid, lid] = SC.predict(uid, lid)

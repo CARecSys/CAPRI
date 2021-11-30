@@ -14,14 +14,17 @@ modelName = 'LORE'
 class LOREMain:
     def main(datasetFiles, parameters):
         logger(f'Processing data using {modelName} model ...')
+
         # Initializing model parameters
         alpha, deltaT = LoreDict['alpha'], LoreDict['deltaT']
         fusion, datasetName, evaluation = parameters[
             'fusion'], parameters['datasetName'], parameters['evaluation']
+
         # Reading data size from the selected dataset
         dataDictionary = readDataSizes(datasetName, datasetFiles)
         users, pois = dataDictionary['users'], dataDictionary['pois']
-        # Creating model-related libraries
+
+        # Computing the final scores
         print('Creating model-related variables ...')
         FCFScores, KDEScores, AMCScores = np.zeros((users['count'], pois['count'])), np.zeros(
             (users['count'], pois['count'])), np.zeros((users['count'], pois['count']))

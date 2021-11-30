@@ -33,17 +33,20 @@ def geographicalCalculations(datasetName: str, users: dict, pois: dict, poiCoos:
     # Initializing parameters
     alpha = GeoSoCaDict['alpha']
     AKDEScores = np.zeros((users['count'], pois['count']))
-    # Creating object to AKDE Class
-    AKDE = AdaptiveKernelDensityEstimation(alpha)
-    # Calculating AKDE scores
-    # TODO: We may be able to load the model from disk
-    AKDE.precomputeKernelParameters(trainingMatrix, poiCoos)
-    # Computing the final scores
     print("Preparing Adaptive Kernel Density Estimation matrix ...")
     loadedModel = loadModel(modelName, datasetName,
                             f'AKDE_{sparsityRatio}')
     if loadedModel == []:  # It should be created
-        for cnt, uid in enumerate(users['list']):
+        # Creating object to AKDE Class
+        AKDE = AdaptiveKernelDensityEstimation(alpha)
+        # Calculating AKDE scores
+        # TODO: We may be able to load the model from disk
+        AKDE.precomputeKernelParameters(trainingMatrix, poiCoos)
+        print("Now, training the model for each user ...")
+        for counter, uid in enumerate(users['list']):
+            # Adding log to console
+            if (counter % 100 == 0):
+                print(f'{counter} users processed ...')
             if uid in groundTruth:
                 for lid in pois['list']:
                     AKDEScores[uid, lid] = AKDE.predict(uid, lid)

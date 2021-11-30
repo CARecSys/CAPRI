@@ -12,7 +12,6 @@ modelName = 'GeoSoCa'
 class GeoSoCaMain:
     def main(datasetFiles, params):
         logger(f'Processing data using {modelName} model ...')
-        # Initializing model parameters
 
         # Reading data size from the selected dataset
         dataDictionary = readDataSizes(params['datasetName'], datasetFiles)

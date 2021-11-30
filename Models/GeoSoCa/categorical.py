@@ -33,21 +33,25 @@ def categoricalCalculations(datasetName: str, users: dict, pois: dict, trainingM
     """
     # Initializing parameters
     CCScores = np.zeros((users['count'], pois['count']))
-    # Creating object to AKDE Class
-    CC = CategoricalCorrelation()
-    # Category Correlation Calculations
-    loadedModel = loadModel(modelName, datasetName, 'Gamma')
-    if loadedModel == []:  # It should be created
-        CC.computeGamma(trainingMatrix, poiCategoryMatrix)
-        saveModel(CC.Y, modelName, datasetName, 'Gamma')
-    else:  # It should be loaded
-        CC.loadModel(loadedModel)
-    # Computing the final scores
     logger('Preparing Categorical Correlation matrix ...')
     loadedModel = loadModel(modelName, datasetName,
                             f'CC_{sparsityRatio}')
     if loadedModel == []:  # It should be created
-        for cnt, uid in enumerate(users['list']):
+        # Creating object to AKDE Class
+        CC = CategoricalCorrelation()
+        # Category Correlation Calculations
+        loadedModel = loadModel(modelName, datasetName, 'Gamma')
+        if loadedModel == []:  # It should be created
+            CC.computeGamma(trainingMatrix, poiCategoryMatrix)
+            saveModel(CC.Y, modelName, datasetName, 'Gamma')
+        else:  # It should be loaded
+            CC.loadModel(loadedModel)
+        # Computing the final scores
+        print("Now, training the model for each user ...")
+        for counter, uid in enumerate(users['list']):
+            # Adding log to console
+            if (counter % 100 == 0):
+                print(f'{counter} users processed ...')
             if uid in groundTruth:
                 for lid in pois['list']:
                     CCScores[uid, lid] = CC.predict(uid, lid)
