@@ -1,5 +1,6 @@
 import numpy as np
 from utils import logger
+from config import limitUsers
 
 
 def readDataSizes(datasetName: str, datasetFiles: dict):
@@ -32,8 +33,9 @@ def readDataSizes(datasetName: str, datasetFiles: dict):
     # Creating lists for the data
     usersList, poisList, categoriesList = list(
         range(usersCount)), list(range(poisCount)), list(range(categoriesCount))
-    # Shuffling the lists
-    np.random.shuffle(usersList)
+    # IMPORTANT: Shuffle the users list only if not limit is set
+    if (limitUsers == -1):
+        np.random.shuffle(usersList)
     # Providing feedback to the user
     logger(f'{datasetName} dataset contains {usersCount} users, {poisCount} locations, and {categoriesCount} categories!')
     # Returning the data

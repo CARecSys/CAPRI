@@ -1,6 +1,5 @@
 import numpy as np
 from utils import logger
-from config import sparsityRatio
 from Models.utils import loadModel, saveModel
 from Models.GeoSoCa.lib.SocialCorrelation import SocialCorrelation
 
@@ -32,10 +31,13 @@ def socialCalculations(datasetName: str, users: dict, pois: dict, trainingMatrix
         The dictionary containing the social correlation of the dataset.
     """
     # Initializing parameters
-    SCScores = np.zeros((users['count'], pois['count']))
+    userCount = users['count']
+    logDuration = 1 if userCount < 20 else 10
+    SCScores = np.zeros((userCount, pois['count']))
+    # Checking for existing model
     logger('Preparing Social Correlation matrix ...')
     loadedModel = loadModel(modelName, datasetName,
-                            f'SC_{sparsityRatio}')
+                            f'SC_{userCount}User')
     if loadedModel == []:  # It should be created
         # Creating object to AKDE Class
         SC = SocialCorrelation()
@@ -50,13 +52,13 @@ def socialCalculations(datasetName: str, users: dict, pois: dict, trainingMatrix
         print("Now, training the model for each user ...")
         for counter, uid in enumerate(users['list']):
             # Adding log to console
-            if (counter % 100 == 0):
-                print(f'{counter} users processed ...')
+            if (counter % logDuration == 0):
+                print(f'User#{counter} processed ...')
             if uid in groundTruth:
                 for lid in pois['list']:
                     SCScores[uid, lid] = SC.predict(uid, lid)
         saveModel(SCScores, modelName, datasetName,
-                  f'SC_{sparsityRatio}')
+                  f'SC_{userCount}User')
     else:  # It should be loaded
         SCScores = loadedModel
     # Returning the scores

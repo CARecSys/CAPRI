@@ -1,6 +1,6 @@
 import numpy as np
 from utils import logger
-from config import sparsityRatio, USGDict
+from config import USGDict
 from Evaluations.evaluator import evaluator
 from Data.readDataSizes import readDataSizes
 from Models.USG.lib.PowerLaw import PowerLaw
@@ -50,7 +50,7 @@ class USGMain:
         # Processing items
         logger('Preparing User-based CF matrix ...')
         loadedModel = loadModel(modelName, datasetName,
-                                f'U_{sparsityRatio}')
+                                f'U')
         if loadedModel == []:  # It should be created
             for cnt, uid in enumerate(users['list']):
                 if uid in groundTruth:
@@ -58,12 +58,12 @@ class USGMain:
                         UScores[uid, lid] = U.predict(uid, lid)
                     UScores = np.array(UScores)
             saveModel(UScores, modelName, datasetName,
-                      f'U_{sparsityRatio}')
+                      f'U')
         else:  # It should be loaded
             UScores = loadedModel
         logger('Preparing Friend-based CF matrix ...')
         loadedModel = loadModel(modelName, datasetName,
-                                f'S_{sparsityRatio}')
+                                f'S')
         if loadedModel == []:  # It should be created
             for cnt, uid in enumerate(users['list']):
                 if uid in groundTruth:
@@ -71,12 +71,12 @@ class USGMain:
                         SScores[uid, lid] = S.predict(uid, lid)
                     SScores = np.array(SScores)
             saveModel(SScores, modelName, datasetName,
-                      f'S_{sparsityRatio}')
+                      f'S')
         else:  # It should be loaded
             SScores = loadedModel
         logger('Preparing Power Law matrix ...')
         loadedModel = loadModel(modelName, datasetName,
-                                f'G_{sparsityRatio}')
+                                f'G')
         if loadedModel == []:  # It should be created
             for cnt, uid in enumerate(users['list']):
                 if uid in groundTruth:
@@ -84,7 +84,7 @@ class USGMain:
                         GScores[uid, lid] = G.predict(uid, lid)
                     GScores = np.array(GScores)
             saveModel(GScores, modelName, datasetName,
-                      f'G_{sparsityRatio}')
+                      f'G')
         else:  # It should be loaded
             GScores = loadedModel
         # Evaluation

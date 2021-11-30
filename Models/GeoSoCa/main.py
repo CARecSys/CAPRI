@@ -1,4 +1,5 @@
 from utils import logger
+from config import limitUsers
 from Evaluations.evaluator import evaluator
 from Data.readDataSizes import readDataSizes
 from Models.GeoSoCa.social import socialCalculations
@@ -27,6 +28,12 @@ class GeoSoCaMain:
         groundTruth = readTestData(datasetFiles['test'])
         poiCategoryMatrix = readCategoryData(
             datasetFiles['poiCategories'], categories['count'], pois['count'])
+
+        # Limit the number of users
+        if (limitUsers != -1):
+            logger(f'Limiting the number of users to {limitUsers} ...')
+            users['count'] = limitUsers
+            users['list'] = users['list'][:limitUsers]
 
         # Computing the final scores
         AKDEScores = geographicalCalculations(

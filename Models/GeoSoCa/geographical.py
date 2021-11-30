@@ -1,5 +1,5 @@
 import numpy as np
-from config import GeoSoCaDict, sparsityRatio
+from config import GeoSoCaDict
 from Models.utils import loadModel, saveModel
 from Models.GeoSoCa.lib.AdaptiveKernelDensityEstimation import AdaptiveKernelDensityEstimation
 
@@ -31,11 +31,14 @@ def geographicalCalculations(datasetName: str, users: dict, pois: dict, poiCoos:
         The AKDE scores of the dataset
     """
     # Initializing parameters
+    userCount = users['count']
     alpha = GeoSoCaDict['alpha']
-    AKDEScores = np.zeros((users['count'], pois['count']))
+    logDuration = 1 if userCount < 20 else 10
+    AKDEScores = np.zeros((userCount, pois['count']))
+    # Checking for existing model
     print("Preparing Adaptive Kernel Density Estimation matrix ...")
     loadedModel = loadModel(modelName, datasetName,
-                            f'AKDE_{sparsityRatio}')
+                            f'AKDE_{userCount}User')
     if loadedModel == []:  # It should be created
         # Creating object to AKDE Class
         AKDE = AdaptiveKernelDensityEstimation(alpha)
@@ -45,13 +48,13 @@ def geographicalCalculations(datasetName: str, users: dict, pois: dict, poiCoos:
         print("Now, training the model for each user ...")
         for counter, uid in enumerate(users['list']):
             # Adding log to console
-            if (counter % 100 == 0):
-                print(f'{counter} users processed ...')
+            if (counter % logDuration == 0):
+                print(f'User#{counter} processed ...')
             if uid in groundTruth:
                 for lid in pois['list']:
                     AKDEScores[uid, lid] = AKDE.predict(uid, lid)
         saveModel(AKDEScores, modelName, datasetName,
-                  f'AKDE_{sparsityRatio}')
+                  f'AKDE_{userCount}User')
     else:  # It should be loaded
         AKDEScores = loadedModel
     # Returning the scores

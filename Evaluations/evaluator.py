@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd
 from Models.utils import normalize
 from utils import logger, textToOperator
-from config import USGDict, topK, topRestricted, outputsDir
+from config import USGDict, topK, listLimit, outputsDir, limitUsers
 from Evaluations.metrics.accuracy import precisionk, recallk, ndcgk, mapk
 
 
@@ -78,13 +78,14 @@ def evaluator(modelName: str, datasetName: str, evalParams: dict, modelParams: d
     usersList, groundTruth, fusion, evaluationList = evalParams['usersList'], evalParams[
         'groundTruth'], evalParams['fusion'], evalParams['evaluation']
     # Initializing the metrics
+    logDuration = 1 if len(usersList) < 20 else 10
     precision, recall, map, ndcg = [], [], [], []
     # Add caching policy (prevent a similar setting to be executed again)
-    fileName = f'{modelName}_{datasetName}_{fusion}_top{topK}_limit{topRestricted}'
-    calculatedResults = open(f"{outputsDir}/{fileName}.txt", 'w+')
+    fileName = f'{modelName}_{datasetName}_{fusion}_{limitUsers}user_top{topK}_limit{listLimit}'
+    calculatedResults = open(f"{outputsDir}/Rec_{fileName}.txt", 'w+')
     # Initializing evaluation dataframe
     evalDataFrame = pd.DataFrame(
-        columns=['userId', 'precision', 'recall', 'ndcg', 'map'])
+        columns=['precision', 'recall', 'ndcg', 'map'])
     # Iterating over the users
     for counter, userId in enumerate(usersList):
         if userId in groundTruth:
@@ -93,7 +94,7 @@ def evaluator(modelName: str, datasetName: str, evalParams: dict, modelParams: d
             overallScores = overallScoreCalculator(
                 modelName, userId, evalParams, modelParams)
             predicted = list(reversed(overallScores.argsort()))[
-                :topRestricted]
+                :listLimit]
             actual = groundTruth[userId]
             if ('Precision' in evaluationList):
                 precision.append(precisionk(actual, predicted[:topK]))
@@ -104,7 +105,7 @@ def evaluator(modelName: str, datasetName: str, evalParams: dict, modelParams: d
             if ('mAP' in evaluationList):
                 map.append(mapk(actual, predicted[:topK]))
             # Adding log to console
-            if (counter % 100 == 0):
+            if (counter % logDuration == 0):
                 print(f'{counter} users processed ...')
             # Writing the results to file
             calculatedResults.write('\t'.join([
@@ -114,11 +115,10 @@ def evaluator(modelName: str, datasetName: str, evalParams: dict, modelParams: d
             ]) + '\n')
     # Saving the results to file
     evalDataFrame = evalDataFrame.append(
-        {'userId': userId, 'precision': np.mean(precision), 'recall': np.mean(recall),
+        {'precision': np.mean(precision), 'recall': np.mean(recall),
          'ndcg': np.mean(ndcg), 'map': np.mean(map)}, ignore_index=True)
     # Saving evaluation results
-    evalDataFrame = evalDataFrame.astype({"userId": int})
-    evalDataFrame.round(3).dropna(how='all').to_csv(
+    evalDataFrame.round(5).to_csv(
         f"{outputsDir}/Eval_{fileName}.csv", index=False)
     # Closing the file
     calculatedResults.close()

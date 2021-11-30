@@ -5,9 +5,9 @@ dataDirectory = os.path.abspath('./Data/')
 outputsDir = os.path.abspath('./Outputs/')
 
 # Default Parameters
-topK = 10
-topRestricted = 100  # Restricted list for computation
-sparsityRatio = 100
+topK = 10  # Top-k items to evaluate (default: 10)
+limitUsers = 10  # Limit the number of users (default: -1)
+listLimit = 15  # Limit the length of recommendation list (default: 10)
 
 # Key: Model name, Value: Covered Contexts
 models = {
@@ -23,7 +23,8 @@ datasets = {
 }
 
 # An array of selected operations
-fusions = ["Product", "Sum", "WeightedSum"]
+# TODO: "WeightedSum" is not implemented yet
+fusions = ["Product", "Sum"]
 
 # List of evaluation metrics
 evaluationMetrics = ["Precision", "Recall", "mAP", "NDCG"]
