@@ -24,6 +24,8 @@ def geographicalCalculations(datasetName: str, users: dict, pois: dict, poiCoos:
         The ground truth of the dataset
     trainingMatrix : dict
         The training matrix of the dataset
+    groundTruth : dict
+        The ground truth of the dataset
 
     Returns
     -------

@@ -251,4 +251,4 @@ def saveModel(content, modelName: str, datasetName: str, moduleName: str):
         open(path, 'w+')
     np.save(path, content)
     elapsedTime = '{:.2f}'.format(time.time() - startTime)
-    logger(f"Model saved in {path}\{fileName} (took {elapsedTime} seconds)")
+    logger(f"Model saved in {path} (took {elapsedTime} seconds)")

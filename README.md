@@ -132,7 +132,8 @@ If you find **CAPRI** useful for your research or development, please cite the f
 ## ⚠️ TODOs
 
 - Add proper saving procedure for evaluation results
-- improved process of saving numpy arrays and unifiying them
+- Loading AKDE of GeoSoCa from disk
+- Loading FCF, AMK, KDE of LORE from disk
 - Add the impact of **Weighted Sum Fusion** when running models
 - Improve unit-tests for beyound accuracy evaluations
 - Add a separate metric evaluations class for fairness
