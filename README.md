@@ -134,6 +134,7 @@ If you find **CAPRI** useful for your research or development, please cite the f
 - Add proper saving procedure for evaluation results
 - Loading AKDE of GeoSoCa from disk
 - Loading FCF, AMK, KDE of LORE from disk
+- Loading S, G of USG from disk
 - Add the impact of **Weighted Sum Fusion** when running models
 - Improve unit-tests for beyound accuracy evaluations
 - Add a separate metric evaluations class for fairness
