@@ -131,7 +131,7 @@ If you find **CAPRI** useful for your research or development, please cite the f
 
 ## ⚠️ TODOs
 
-- Add proper saving procedure for evaluation results
+- Save ground-truth as well in the Outputs folder
 - Loading AKDE of GeoSoCa from disk
 - Loading FCF, AMK, KDE of LORE from disk
 - Loading S, G of USG from disk

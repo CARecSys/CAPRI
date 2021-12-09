@@ -6,7 +6,7 @@ outputsDir = os.path.abspath('./Outputs/')
 
 # Default Parameters
 topK = 10  # Top-k items to evaluate (default: 10)
-limitUsers = 10  # Limit the number of users (default: -1)
+limitUsers = -1  # Limit the number of users (default: -1)
 listLimit = 15  # Limit the length of recommendation list (default: 10)
 
 # Key: Model name, Value: Covered Contexts
@@ -18,8 +18,8 @@ models = {
 
 # Key: Dataset name, Value: Covered Contexts
 datasets = {
-    "Gowalla": ["Geographical", "Social", "Temporal"],
-    "Yelp":  ["Geographical", "Social", "Temporal", "Categorical"],
+    "Gowalla": ["Geographical", "Social", "Temporal", "Interaction"],
+    "Yelp":  ["Geographical", "Social", "Temporal", "Categorical", "Interaction"],
 }
 
 # An array of selected operations
