@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd
 from Models.utils import normalize
 from utils import logger, textToOperator
-from config import USGDict, topK, listLimit, outputsDir, limitUsers
+from config import USGDict, topK, listLimit, outputsDir
 from Evaluations.metrics.accuracy import precisionk, recallk, ndcgk, mapk
 
 
@@ -75,13 +75,13 @@ def evaluator(modelName: str, datasetName: str, evalParams: dict, modelParams: d
     """
     logger('Evaluating results ...')
     # Fetching the list of parameters
-    usersList, groundTruth, fusion, evaluationList = evalParams['usersList'], evalParams[
+    usersList, usersCount, groundTruth, fusion, evaluationList = evalParams['usersList'], evalParams['usersCount'], evalParams[
         'groundTruth'], evalParams['fusion'], evalParams['evaluation']
     # Initializing the metrics
     logDuration = 1 if len(usersList) < 20 else 10
     precision, recall, map, ndcg = [], [], [], []
     # Add caching policy (prevent a similar setting to be executed again)
-    fileName = f'{modelName}_{datasetName}_{fusion}_{limitUsers}user_top{topK}_limit{listLimit}'
+    fileName = f'{modelName}_{datasetName}_{fusion}_{usersCount}user_top{topK}_limit{listLimit}'
     calculatedResults = open(f"{outputsDir}/Rec_{fileName}.txt", 'w+')
     # Initializing evaluation dataframe
     evalDataFrame = pd.DataFrame(

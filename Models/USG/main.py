@@ -43,7 +43,7 @@ class USGMain:
             params['datasetName'], users, pois, trainingMatrix, poiCoos, groundTruth)
 
         # Evaluation
-        evalParams = {'usersList': users['list'],
+        evalParams = {'usersList': users['list'], 'usersCount': users['count'],
                       'groundTruth': groundTruth, 'fusion': params['fusion'], 'poiList': pois['list'], 'trainingMatrix': trainingMatrix, 'evaluation': params['evaluation']}
         modelParams = {'U': UScores, 'S': SScores, 'G': GScores}
         evaluator(modelName, params['datasetName'], evalParams, modelParams)
