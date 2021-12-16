@@ -11,15 +11,15 @@ def dist(loc1, loc2):
     if abs(lat1 - lat2) < 1e-6 and abs(long1 - long2) < 1e-6:
         return 0.0
     degreesToRadians = math.pi/180.0
-    phi1 = (90.0 - lat1)*degreesToRadians
-    phi2 = (90.0 - lat2)*degreesToRadians
-    theta1 = long1*degreesToRadians
-    theta2 = long2*degreesToRadians
-    cos = (math.sin(phi1)*math.sin(phi2)*math.cos(theta1 - theta2) +
-           math.cos(phi1)*math.cos(phi2))
+    phi1 = (90.0 - lat1) * degreesToRadians
+    phi2 = (90.0 - lat2) * degreesToRadians
+    theta1 = long1 * degreesToRadians
+    theta2 = long2 * degreesToRadians
+    cos = (math.sin(phi1) * math.sin(phi2) * math.cos(theta1 - theta2) +
+           math.cos(phi1) * math.cos(phi2))
     arc = math.acos(cos)
-    earth_radius = 6371
-    return arc * earth_radius
+    earthRadius = 6371
+    return arc * earthRadius
 
 
 class FriendBasedCF(object):
@@ -27,7 +27,7 @@ class FriendBasedCF(object):
         self.socialProximity = defaultdict(list)
         self.sparseCheckinMatrix = None
 
-    def friendsSimilarityCalculation(self, social_relations, poiCoos, sparseCheckinMatrix):
+    def friendsSimilarityCalculation(self, socialRelations, poiCoos, sparseCheckinMatrix):
         self.sparseCheckinMatrix = sparseCheckinMatrix
         startTime = time.time()
         logger('Calculating friends similarity ...')
@@ -36,7 +36,7 @@ class FriendBasedCF(object):
         residenceCoos = [poiCoos[lid] for lid in residenceLids.tolist()]
         maxDistance = [-1.0 for _ in range(sparseCheckinMatrix.shape[0])]
 
-        for uid1, uid2 in social_relations:
+        for uid1, uid2 in socialRelations:
             dis = dist(residenceCoos[uid1], residenceCoos[uid2])
             maxDistance[uid1] = max(maxDistance[uid1], dis)
             maxDistance[uid2] = max(maxDistance[uid2], dis)

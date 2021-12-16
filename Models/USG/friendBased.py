@@ -2,7 +2,8 @@ import numpy as np
 from utils import logger
 from config import USGDict
 from Models.utils import loadModel, saveModel
-from Models.LORE.lib.FriendBasedCF import FriendBasedCF
+from Models.USG.lib.FriendBasedCF import FriendBasedCF
+
 
 modelName = 'USG'
 
@@ -11,14 +12,14 @@ def friendBasedCalculations(datasetName: str, users: dict, pois: dict, socialRel
     # Initializing parameters
     userCount = users['count']
     logDuration = 1 if userCount < 20 else 10
-    deltaT = USGDict['alpha']
+    eta = USGDict['eta']
     SScores = np.zeros((users['count'], pois['count']))
     # Checking for existing model
     logger('Preparing Friend-based CF matrix ...')
     loadedModel = loadModel(modelName, datasetName, f'S_{userCount}User')
     if loadedModel == []:  # It should be created
         # Creating object to S Class
-        S = FriendBasedCF(USGDict['eta'])
+        S = FriendBasedCF(eta)
         # Calculating S scores
         # TODO: We may be able to load the model from disk
         S.friendsSimilarityCalculation(socialRelations, trainingMatrix)
