@@ -131,7 +131,7 @@ If you find **CAPRI** useful for your research or development, please cite the f
 
 ## ⚠️ TODOs
 
-- We should be able to ignore some uncovered Model-Data contexts
+- We should gnore some uncovered Model-Data contexts
 - Save ground-truth as well in the Outputs folder
 - Loading AKDE of GeoSoCa from disk
 - Loading FCF, AMK, KDE of LORE from disk
