@@ -106,19 +106,21 @@ def getUserChoices():
         print('Validating your choices ...')
         selectedModelScopes = models[userInputs['Model']]
         selectedDatasetScopes = datasets[userInputs['Dataset']]
+        ignoredContexts = []
         # Checking if dataset covers all scopes of models
         isCovered = all(
             item in selectedDatasetScopes for item in selectedModelScopes)
         if (not isCovered):
             difference = [
                 item for item in selectedModelScopes if item not in selectedDatasetScopes]
-            printMessage = f'{userInputs["Dataset"]} dataset does not cover {difference} scope(s) of {userInputs["Model"]}!'
-            logger(printMessage, 'error')
-            return
+            printMessage = f'Ignoring {difference} scope(s) of {userInputs["Model"]}, as not covered in {userInputs["Dataset"]}!'
+            logger(printMessage, 'warn')
+            ignoredContexts = difference
         # Checking if at least one evaluation metric is selected
         if (len(userInputs['Evaluation']) == 0):
             printMessage = 'No evaluation metric has been selected!'
             logger(printMessage, 'error')
             return
         logger(f'User inputs: {userInputs}', 'info', True)
+        userInputs['Ignored'] = ignoredContexts
         return userInputs

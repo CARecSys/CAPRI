@@ -21,6 +21,7 @@ def __init__():
         # Initializing parameters
         parameters = {
             "fusion": userInputs['Fusion'],
+            "ignored": userInputs['Ignored'],
             "datasetName": userInputs['Dataset'],
             "evaluation": userInputs['Evaluation'],
         }
