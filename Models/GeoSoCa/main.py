@@ -1,3 +1,4 @@
+import numpy as np
 from utils import logger
 from config import limitUsers
 from Evaluations.evaluator import evaluator
@@ -18,6 +19,9 @@ class GeoSoCaMain:
         dataDictionary = readDataSizes(params['datasetName'], datasetFiles)
         users, pois, categories = dataDictionary['users'], dataDictionary['pois'], dataDictionary['categories']
 
+        # Skipped context
+        skipCategory = bool(categories['count'] == 0)
+
         # Loading data from the selected dataset
         logger('Reading dataset instances ...')
         poiCoos = readPoiCoos(datasetFiles['poiCoos'])
@@ -26,8 +30,11 @@ class GeoSoCaMain:
         socialRelations = readFriendData(
             datasetFiles['socialRelations'], 'ndarray', users['count'])
         groundTruth = readTestData(datasetFiles['test'])
-        poiCategoryMatrix = readCategoryData(
-            datasetFiles['poiCategories'], categories['count'], pois['count'])
+        # If the dataset does not cover categories, do not read them
+        poiCategoryMatrix = np.empty((0, 0))
+        if not skipCategory:
+            poiCategoryMatrix = readCategoryData(
+                datasetFiles['poiCategories'], categories['count'], pois['count'])
 
         # Limit the number of users
         if (limitUsers != -1):
@@ -40,8 +47,10 @@ class GeoSoCaMain:
             params['datasetName'], users, pois, poiCoos, trainingMatrix, groundTruth)
         SCScores = socialCalculations(
             params['datasetName'], users, pois, trainingMatrix, socialRelations, groundTruth)
-        CCScores = categoricalCalculations(
-            params['datasetName'], users, pois, trainingMatrix, poiCategoryMatrix, groundTruth)
+        CCScores = None
+        if not skipCategory:
+            CCScores = categoricalCalculations(
+                params['datasetName'], users, pois, trainingMatrix, poiCategoryMatrix, groundTruth)
 
         # Evaluation
         evalParams = {'usersList': users['list'], 'usersCount': users['count'],

@@ -104,6 +104,7 @@ def readTrainingCheckins(checkinFile: str, sparseTrainingMatrix):
 # appendType: 'list' for LORE, 2) 'dictionary' for USG, 3) 'ndarray' for GeoSoCa
 # numberOfUsers is only needed for GeoSoCa, others should get None
 def readFriendData(socialFile, appendType, numberOfUsers):
+    print('Reading friendship checkins...')
     socialData = open(socialFile, 'r').readlines()
     # TODO: we may replace this condition with a more compact one
     if appendType == 'list':  # LORE
@@ -146,6 +147,7 @@ def readTestData(testFile: str):
     groundTruth : dict
         The dictionary representation of the test data.
     """
+    print('Reading test data...')
     groundTruth = defaultdict(set)
     truthData = open(testFile, 'r').readlines()
     for dataInstance in truthData:
@@ -169,6 +171,7 @@ def readPoiCoos(poiFile: str):
     poiCoos : dict
         The dictionary representation of the POI coordinates.
     """
+    print('Reading PoI coordinates...')
     poiCoos = {}
     poiData = open(poiFile, 'r').readlines()
     for dataInstance in poiData:
@@ -179,6 +182,10 @@ def readPoiCoos(poiFile: str):
 
 
 def readCategoryData(categoryFile, numberOfCategories, numberOfPoI):
+    """
+    Reads the category data from the file and returns a dictionary.
+    """
+    print('Reading Categories data...')
     categoryData = open(categoryFile, 'r').readlines()
     poiCategoryMatrix = np.zeros((numberOfPoI, numberOfCategories))
     for dataInstance in categoryData:

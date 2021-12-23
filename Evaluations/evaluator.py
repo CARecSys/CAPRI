@@ -31,7 +31,8 @@ def overallScoreCalculator(modelName: str, userId, evalParams, modelParams):
     # Checking for proper model
     if (modelName == 'GeoSoCa'):
         AKDEScores, SCScores, CCScores = modelParams['AKDE'], modelParams['SC'], modelParams['CC']
-        overallScores = [textToOperator(fusion, [AKDEScores[userId, lid], SCScores[userId, lid], CCScores[userId, lid]])
+        # Check if Category is skipped
+        overallScores = [textToOperator(fusion, [AKDEScores[userId, lid], SCScores[userId, lid], CCScores[userId, lid]] if CCScores != None else [AKDEScores[userId, lid], SCScores[userId, lid]])
                          if trainingMatrix[userId, lid] == 0 else -1
                          for lid in poiList]
     elif (modelName == 'LORE'):
