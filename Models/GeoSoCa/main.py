@@ -4,6 +4,7 @@ from config import limitUsers
 from Evaluations.evaluator import evaluator
 from Data.readDataSizes import readDataSizes
 from Models.GeoSoCa.social import socialCalculations
+from Data.calculateActiveUsers import calculateActiveUsers
 from Models.GeoSoCa.categorical import categoricalCalculations
 from Models.GeoSoCa.geographical import geographicalCalculations
 from Models.utils import readPoiCoos, readTestData, readCategoryData, readTrainingData, readFriendData
@@ -51,6 +52,9 @@ class GeoSoCaMain:
         if not skipCategory:
             CCScores = categoricalCalculations(
                 params['datasetName'], users, pois, trainingMatrix, poiCategoryMatrix, groundTruth)
+
+        # Segmenting active users
+        calculateActiveUsers(params['datasetName'], datasetFiles['train'])
 
         # Evaluation
         evalParams = {'usersList': users['list'], 'usersCount': users['count'],

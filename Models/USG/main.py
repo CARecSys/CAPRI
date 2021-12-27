@@ -6,6 +6,7 @@ from Data.readDataSizes import readDataSizes
 from Models.USG.powerLaw import powerLawCalculations
 from Models.USG.userBased import userBasedCalculations
 from Models.USG.friendBased import friendBasedCalculations
+from Data.calculateActiveUsers import calculateActiveUsers
 from Models.utils import readTrainingData, readFriendData, readTestData, readPoiCoos
 
 modelName = 'USG'
@@ -41,6 +42,9 @@ class USGMain:
             params['datasetName'], users, pois, socialRelations, trainingMatrix, groundTruth)
         GScores = powerLawCalculations(
             params['datasetName'], users, pois, trainingMatrix, poiCoos, groundTruth)
+
+        # Segmenting active users
+        calculateActiveUsers(params['datasetName'], datasetFiles['train'])
 
         # Evaluation
         evalParams = {'usersList': users['list'], 'usersCount': users['count'],

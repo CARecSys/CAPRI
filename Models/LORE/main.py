@@ -3,6 +3,7 @@ from utils import logger
 from config import limitUsers
 from Evaluations.evaluator import evaluator
 from Data.readDataSizes import readDataSizes
+from Data.calculateActiveUsers import calculateActiveUsers
 from Models.LORE.friendBased import friendBasedCalculations
 from Models.LORE.additiveMarkovChain import additiveMarkovChainCalculations
 from Models.LORE.kernelDensityEstimation import kernelDensityEstimationCalculations
@@ -45,6 +46,9 @@ class LOREMain:
             params['datasetName'], users, pois, poiCoos, sparseTrainingMatrix, groundTruth)
         AMCScores = additiveMarkovChainCalculations(
             params['datasetName'], users, pois, sortedTrainingCheckins, groundTruth)
+
+        # Segmenting active users
+        calculateActiveUsers(params['datasetName'], datasetFiles['train'])
 
         # Evaluation
         evalParams = {'usersList': users['list'], 'usersCount': users['count'],
