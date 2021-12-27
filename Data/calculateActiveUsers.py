@@ -43,14 +43,18 @@ def calculateActiveUsers(dataset: str, trainFilePath: str):
             continue
         # Calculate active users
         limit = int(processedDataFrame.shape[0] * percentage / 100)
-        print(f'Calculating {fileName} ...')
+        activeUsers = orderedList[:limit]
+        inactiveUsers = orderedList[limit:]
         # Sort main dataFrame based on orderedList
-        orderedDataFrame = dataFrame
-        orderedDataFrame['userId'] = pd.Categorical(
-            dataFrame['userId'],
-            categories=orderedList,
-            ordered=True
-        )
-        print(orderedDataFrame)
-        # Limit users based on limit
-        # Export to file
+        # NOTE: We need to keep the order of the users based on the orderedList, so we should set userId as index
+        print(f'Calculating {fileName} ...')
+        activeUsersDF = dataFrame.set_index(
+            'userId').loc[activeUsers].reset_index()
+        inactiveUsersDF = dataFrame.set_index(
+            'userId').loc[inactiveUsers].reset_index()
+        # Limit users based on limit and export to file
+        print('Exporting to file ...')
+        activeUsersDF.to_csv(
+            path, sep='\t', index=False, header=False)
+        inactiveUsersDF.to_csv(path.replace(
+            'Active', 'Inactive'), sep='\t', index=False, header=False)
