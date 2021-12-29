@@ -58,6 +58,7 @@ class GeoSoCaMain:
 
         # Evaluation
         evalParams = {'usersList': users['list'], 'usersCount': users['count'],
-                      'groundTruth': groundTruth, 'fusion': params['fusion'], 'poiList': pois['list'], 'trainingMatrix': trainingMatrix, 'evaluation': params['evaluation']}
+                      'groundTruth': groundTruth, 'fusion': params['fusion'], 'poiList': pois['list'],
+                      'trainingMatrix': trainingMatrix, 'evaluation': params['evaluation']}
         modelParams = {'AKDE': AKDEScores, 'SC': SCScores, 'CC': CCScores}
         evaluator(modelName, params['datasetName'], evalParams, modelParams)
