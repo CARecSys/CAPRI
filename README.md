@@ -131,8 +131,7 @@ If you find **CAPRI** useful for your research or development, please cite the f
 
 ## ⚠️ TODOs
 
-- We should gnore some uncovered Model-Data contexts
-- Save ground-truth as well in the Outputs folder
+- Saving only userIds in Active/Inactive lists (groupby and drop freq)
 - Loading AKDE of GeoSoCa from disk
 - Loading FCF, AMK, KDE of LORE from disk
 - Loading S, G of USG from disk
