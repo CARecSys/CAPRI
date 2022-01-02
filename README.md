@@ -20,7 +20,7 @@ You will need below libraries to be installed before running the application:
 For a simple solution, you can simply run the below command in the root directory:
 
 ```python
-pip install -r prerequisites.txt
+pip install -r requirements.txt
 ```
 
 ## 🚀 Launch the Application
