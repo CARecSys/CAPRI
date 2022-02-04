@@ -125,7 +125,7 @@ def ndcgk(actual: list, predicted: list, relevance=None, at=None):
     ACM Transactions on Information Systems (TOIS), 20(4), 422-446.
     """
     # Convert list to numpy array
-    actual, predicted = np.asarray(actual), np.asarray(predicted)
+    actual, predicted = np.asarray(list(actual)), np.asarray(list(predicted))
     # Check the relevance value
     if relevance is None:
         relevance = np.ones_like(actual)

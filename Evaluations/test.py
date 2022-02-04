@@ -89,18 +89,22 @@ class TestMetrics(unittest.TestCase):
     # NDCG
     def test_ndcgk1(self):
         actual = [2, 4, 5, 10]
-        predicted = [5, 4, 3, 2]
-        dcg = 1.0 + (1.0 / np.log(2)) + (1.0 / np.log(4))
-        idcg = 1.0 + (1.0 / np.log(2)) + (1.0 / np.log(3)) + (1.0 / np.log(4))
+        predicted = [6, 7, 3, 8, 9]
+        dcg = (0 / np.log2(2)) + (0 / np.log2(3)) + (0 / np.log2(4)) + \
+            (0 / np.log2(5)) + (0 / np.log2(6))
+        idcg = (1 / np.log2(2)) + (1 / np.log2(3)) + \
+            (1 / np.log2(4)) + (1 / np.log2(5))
         expected = dcg / idcg
         calculated = ndcgk(actual, predicted)
         self.assertAlmostEqual(calculated, expected, 2)
 
     def test_ndcgk2(self):
         actual = [2, 4, 5, 10]
-        predicted = [2, 4, 5, 10]
-        dcg = 1.0 + (1.0 / np.log(2)) + (1.0 / np.log(3)) + (1.0 / np.log(4))
-        idcg = 1.0 + (1.0 / np.log(2)) + (1.0 / np.log(3)) + (1.0 / np.log(4))
+        predicted = [1, 2, 3, 40, 50]
+        dcg = (0 / np.log2(2)) + (1 / np.log2(3)) + (0 / np.log2(4)) + \
+            (0 / np.log2(5)) + (0 / np.log2(6))
+        idcg = (1 / np.log2(2)) + (1 / np.log2(3)) + \
+            (1 / np.log2(4)) + (1 / np.log2(5))
         expected = dcg / idcg
         calculated = ndcgk(actual, predicted)
         self.assertAlmostEqual(calculated, expected, 2)
