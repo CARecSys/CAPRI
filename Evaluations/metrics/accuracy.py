@@ -79,7 +79,25 @@ def mapk(actual: list, predicted: list, k: int = 10):
     return score
 
 
-def ndcgk(actual: list, predicted: list):
+def dcg(scores: list):
+    """
+    Computes the Discounted Cumulative Gain (DCG) for a list of scores
+
+    Parameters
+    ----------
+    scores: list
+        A list of scores
+
+    Returns
+    ----------
+    dcg: float
+        The Discounted Cumulative Gain (DCG)
+    """
+    return np.sum(np.divide(np.power(2, scores) - 1, np.log(np.arange(scores.shape[0], dtype=np.float32) + 2)),
+                  dtype=np.float32)
+
+
+def ndcgk(actual: list, predicted: list, relevance=None, at=None):
     """
     Calculates the implicit version of Normalized Discounted Cumulative Gain (NDCG) for top k items in the ranked output
 
@@ -91,6 +109,10 @@ def ndcgk(actual: list, predicted: list):
     predicted: list
         A list of predicted items, recommended by the system
         example: [x, y, z]
+    relevance: list, optional (default to None)
+        A list of relevance scores for the items in the ground truth
+    at: any, optional (default to None)
+        The number of items to consider in the calculation
 
     Returns
     ----------
@@ -102,16 +124,22 @@ def ndcgk(actual: list, predicted: list):
     Jarvelin, K., & Kekalainen, J. (2002). Cumulated gain-based evaluation of IR techniques.
     ACM Transactions on Information Systems (TOIS), 20(4), 422-446.
     """
-    idcg = 1.0  # the ideal DCG is 1
-    # The discounted cumulative gain sets to 1, if the first item of the predicted list exists in the ground-truth
-    dcg = 1.0 if predicted[0] in actual else 0.0
-    for i, p in enumerate(predicted[1:]):
-        # i is the index (0, 1, 2, ...) and p is the remaining predicted elements
-        if p in actual:
-            # DCG is added by the value of relevance score divided by log, only if it exists in the ground-truth array
-            dcg += 1.0 / np.log(i+2)
-        # Ideal DCG is added by the value of relevance score divided by log for all predicted elements
-        idcg += 1.0 / np.log(i+2)
-    # Normalization
-    ndcg = dcg / idcg
-    return ndcg
+    # Convert list to numpy array
+    actual, predicted = np.asarray(actual), np.asarray(predicted)
+    # Check the relevance value
+    if relevance is None:
+        relevance = np.ones_like(actual)
+    assert len(relevance) == actual.shape[0]
+    # Creating a dictionary associating itemId to its relevance
+    item2rel = {it: r for it, r in zip(actual, relevance)}
+    # Creates array of length "at" with the relevance associated to the item in that position
+    rankScores = np.asarray([item2rel.get(it, 0.0)
+                            for it in predicted[:at]], dtype=np.float32)
+    # IDCG has all relevances to 1, up to the number of items in the test set
+    idcg = dcg(np.sort(relevance)[::-1])
+    # Calculating rank-DCG, DCG uses the relevance of the recommended items
+    rdcg = dcg(rankScores)
+    if rdcg == 0.0:
+        return 0.0
+    # Return items
+    return round(rdcg / idcg, 4)
